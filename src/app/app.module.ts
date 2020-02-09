@@ -13,6 +13,8 @@ import { LoansComponent } from './components/shared/loans/loans.component';
 import { LayoutComponent } from './components/layout/layout.component';
 import { routing, appRoutingProviders } from './app.routing';
 import { HomeComponent } from './components/home/home.component'
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
 
 
 
@@ -32,7 +34,9 @@ import { HomeComponent } from './components/home/home.component'
     BrowserModule,
     FormsModule,
     routing,
-    HttpClientModule
+    HttpClientModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot()
   ],
   providers: [appRoutingProviders],
   bootstrap: [AppComponent]

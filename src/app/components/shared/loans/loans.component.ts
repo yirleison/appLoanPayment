@@ -3,7 +3,10 @@ import * as moment from 'moment';
 import { loansModel } from '../../../models/loans.model'
 import { from } from 'rxjs';
 import { LoanService } from '../../../services/loan-services/loan.services';
+import { ToastrService } from 'ngx-toastr';
+
 declare var $;
+declare var native;
 
 
 @Component({
@@ -13,12 +16,11 @@ declare var $;
   providers: [LoanService]
 })
 export class LoansComponent implements OnInit {
- 
-  @ViewChild('dataTable', { static: true }) table;
+
   dataTable: any;
   dtOptions: any;
   public loan: loansModel;
-  constructor(private loanService: LoanService) {
+  constructor(private loanService: LoanService, private toastr: ToastrService, ) {
     this.loan = new loansModel('', 0, 0, false, null, '')
   }
 
@@ -37,54 +39,93 @@ export class LoansComponent implements OnInit {
       }).datepicker('update', new Date());
     });
 
-    this.chargerTable();
-    this.showMOdal();
+    this.getdataLoans();
+    this.showModalEdit();
+    this.showModalDelete();
   }
 
-  chargerTable() {
-    this.dataTable = $(this.table.nativeElement);
-    this.dataTable.dataTable(this.getdataLoans());
-  }
 
   getdataLoans() {
 
-    return this.dtOptions = {
-      "ajax": {
-        url: ' http://localhost:3000/prestamos',
-        type: 'GET'
-      },
-      columns: [
-        {
-          title: 'Fecha Prestamo',
-          data: 'dateLoan'
+    $(document).ready(function () {
+
+      $('#table-loans').DataTable({
+        "processing": true,
+        "ajax": {
+          url: ' http://localhost:3000/prestamos',
+          type: 'GET'
         },
-        {
-          title: 'Valor',
-          data: 'amount'
+        "language": {
+          "sProcessing": "Procesando...",
+          "sLengthMenu": "Mostrar _MENU_ registros",
+          "sZeroRecords": "No se encontraron resultados",
+          "sEmptyTable": "Ningún dato disponible en esta tabla",
+          "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+          "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+          "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+          "sInfoPostFix": "",
+          "sSearch": "Buscar:",
+          "sUrl": "",
+          "sInfoThousands": ",",
+          "sLoadingRecords": "Cargando...",
+          "decimal": ",",
+          "thousands": ".",
+          "oPaginate": {
+            "sFirst": "Primero",
+            "sLast": "Último",
+            "sNext": "Siguiente",
+            "sPrevious": "Anterior"
+          },
+          "oAria": {
+            "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+            "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+          }
         },
-        {
-          title: 'Tasa Interes',
-          data: 'rateInterest'
-        },
-        {
-          title: 'Estado',
-          data: 'statusLoan'
-        },
-        {
-          title: 'Fecha Cancelacion',
-          data: 'finishedDatePayment'
-        },
-        {
-          //adds td row for button
-          data: null,
-          render:
-            //return '<button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#exampleModal" (click)="showModal()" >Edit</button>';
-            function (data, type, row) {
-              return `<a type="button" class="btn btn-sm btn-primary" data-target="#exampleModal"> <span class="glyphicon glyphicon-edit"></span></a> <a type="button" class="btn btn-sm btn-danger"><span class="span glyphicon glyphicon-trash"></span></a>`
+        columns: [
+          {
+            title: 'Fecha Prestamo',
+            data: 'dateLoan', render: function (data) {
+              return moment(data).format('YYYY-MM-DD')
             }
-        }
-      ]
-    }
+          },
+          {
+            title: 'Valor',
+            data: 'amount', render: $.fn.dataTable.render.number(',', '.', 2)
+          },
+          {
+            title: 'Tasa Interes',
+            data: 'rateInterest'
+          },
+          {
+            title: 'Estado',
+            data: 'statusLoan', render: function (data) {
+              if (data == false) {
+                data = 'Pendiente'
+              }
+              if (data == true) {
+                data = 'Pagado'
+              }
+              return data;
+            }
+          },
+          {
+            title: 'Fecha Cancelacion',
+            data: 'finishedDatePayment'
+          },
+          {
+            //adds td row for button
+            data: null,
+            render:
+              //return '<button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#exampleModal" (click)="showModal()" >Edit</button>';
+              (data, type, row) => {
+                return `<a type="button"  class="btn btn-sm btn-primary edit" data-target="#exampleModal"> <span class="glyphicon glyphicon-edit"></span></a> <a type="button" class="btn btn-sm btn-danger delete"><span class="span glyphicon glyphicon-trash"></span></a>`
+              }
+          },
+
+        ]
+      });
+    });
+
   }
 
   showModalLoan() {
@@ -132,23 +173,28 @@ export class LoansComponent implements OnInit {
       finishedDatePayment,
       idUser
     }
-
-    this.loanService.createLoan(this.loan).subscribe(data => {
-      console.log('Mostrando datos',data)
-    })
-    console.log(this.loan = dat)
-    //console.log(dat)
+    this.loan = dat
+    //this.loanService.createLoan(this.loan).subscribe();
   }
 
-  showMOdal() {
+  showModalEdit() {
     $(document).ready(function () {
-      var table = $('#p').DataTable();
-      $('#p tbody').on('click', 'tr', function () {
-        var data = table.row(this).data();
-        console.log(data);
-        $("#exampleModal").modal('show')
-      });
-    });
+      var table = $('#table-loans').DataTable();
+      $('#table-loans tbody').on("click", "a.edit", function () {
+        var datos = table.row($(this).parents("tr")).data();
+        console.log('Edit',datos);
+      })
+    })
+  }
+
+  showModalDelete() {
+    $(document).ready(function () {
+      var table = $('#table-loans').DataTable();
+      $('#table-loans tbody').on("click", "a.delete", function () {
+        var datos = table.row($(this).parents("tr")).data();
+        console.log('Delete',datos);
+      })
+    })
   }
 
   listUsersToSelect() {
@@ -161,7 +207,8 @@ export class LoansComponent implements OnInit {
             results: data.message
           };
         }
-      }
+      },
+      theme: "classic"
     });
   }
 }
