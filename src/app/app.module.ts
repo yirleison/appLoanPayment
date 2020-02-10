@@ -15,6 +15,7 @@ import { routing, appRoutingProviders } from './app.routing';
 import { HomeComponent } from './components/home/home.component'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
+import { PaytmentsComponent } from './components/shared/paytments/paytments.component';
 
 
 
@@ -28,7 +29,8 @@ import { ToastrModule } from 'ngx-toastr';
     SettingComponent,
     LoansComponent,
     LayoutComponent,
-    HomeComponent
+    HomeComponent,
+    PaytmentsComponent
   ],
   imports: [
     BrowserModule,

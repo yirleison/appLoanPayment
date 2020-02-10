@@ -26,7 +26,7 @@
         </table>
     </div>
     <!-- Modal edit-->
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    <div class="modal fade" id="loan-edit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -37,11 +37,12 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form>
+                    <form #formLoan="ngForm">
                         <div class="form-group">
                             <label for="formGroupExampleInput">Fecha Prestamo</label>
-                            <div class='input-group date' id='datetimepicker1'>
-                                <input type='text' class="form-control" />
+                            <div class='input-group date' id='datetimepicker2'>
+                                <input type='text' id="loan-date-edit" name="dateLoan" #name="ngModel"
+                                    [(ngModel)]="loan.dateLoan" class="form-control" />
                                 <span class="input-group-addon">
                                     <span class="glyphicon glyphicon-calendar"></span>
                                 </span>
@@ -49,23 +50,38 @@
                         </div>
                         <div class="form-group">
                             <label for="formGroupExampleInput2">Valor Prestamo</label>
-                            <input type="text" class="form-control" id="valor-prestamo-edit"
-                                placeholder="Valor Prestamo">
+                            <input type="text" class="form-control" name="amount" #name="ngModel"
+                                [(ngModel)]="loan.amount" id="valor-prestamo-edit" placeholder="Valor Prestamo">
                         </div>
                         <div class="form-group">
                             <label for="formGroupExampleInput2">Tasa de interes</label>
-                            <input type="text" class="form-control" id="interes-edit"
-                                placeholder="Tasa de interes">
+                            <select class="form-control" id="interes-edit">
+                                <option>Seleccione el interes</option>
+                                <option value="1">7 %</option>
+                                <option value="2">8 %</option>
+                                <option value="3">9 %</option>
+                                <option value="4">10 %</option>
+                            </select>
                         </div>
                         <div class="form-group">
-                            <label for="formGroupExampleInput2">Estado</label>
-                            <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="Estado">
+                            <label for="exampleFormControlSelect1">Estado</label>
+                            <select class="form-control" id="select-estado-edit">
+                                <option>Seleccione el estado</option>
+                                <option value="0">Pendiente</option>
+                                <option value="1">Pagado</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label id="" for="exampleFormControlSelect1">Cliente</label>
+                            <select id="select-user-edit" aria-placeholder="Seleccione el cliente"
+                            class="js-example-responsive form-control" multiple="multiple" style="width: 100%">
+                            </select>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="button" (click)="editLoan()" class="btn btn-primary">Editar Prestamo</button>
                 </div>
             </div>
         </div>
@@ -85,7 +101,7 @@
                     <form #formLoan="ngForm">
                         <div class="form-group">
                             <label for="formGroupExampleInput">Fecha Prestamo</label>
-                            <div class='input-group date' id='datetimepicker2'>
+                            <div class='input-group date' id='datetimepicker1'>
                                 <input type='text' id="loan-date" name="dateLoan" #name="ngModel"
                                     [(ngModel)]="loan.dateLoan" class="form-control" />
                                 <span class="input-group-addon">
@@ -100,9 +116,13 @@
                         </div>
                         <div class="form-group">
                             <label for="formGroupExampleInput2">Tasa de interes</label>
-                            <input type="text" class="form-control" name="rateInterest" #name="ngModel"
-                                [(ngModel)]="loan.rateInterest" id="interes"
-                                placeholder="Tasa de interes">
+                            <select class="form-control" id="interes">
+                                <option>Seleccione el interes</option>
+                                <option value="1">7 %</option>
+                                <option value="2">8 %</option>
+                                <option value="3">9 %</option>
+                                <option value="4">10 %</option>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label for="exampleFormControlSelect1">Estado</label>
@@ -114,12 +134,14 @@
                         </div>
                         <div class="form-group">
                             <label id="" for="exampleFormControlSelect1">Cliente</label>
-                            <select id="select-user-create" class="js-example-responsive form-control" multiple="multiple" style="width: 100%"></select>
+                            <select id="select-user-create" aria-placeholder="Seleccione el cliente"
+                                class="js-example-responsive form-control" multiple="multiple" style="width: 100%">
+                            </select>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                     <button type="button" (click)="createLoan()" class="btn btn-primary">Crear Prestamo</button>
                 </div>
             </div>
