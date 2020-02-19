@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 import * as moment from 'moment';
 import { ToastrService, Toast } from 'ngx-toastr';
 
@@ -12,11 +13,20 @@ var table = null;
 })
 export class PaytmentsComponent implements OnInit {
 
-  constructor() {
+  constructor(private _router: ActivatedRoute) {
 
   }
 
   ngOnInit() {
+    this.paramsByRoute()
+  }
+
+  paramsByRoute() {
+    this._router.params.subscribe(
+      (params: Params) => {
+        console.log(params.idPayment)
+      }
+    );
   }
 
   table = $(document).ready(function () {

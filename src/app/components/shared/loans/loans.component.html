@@ -1,4 +1,4 @@
-<div class="row">
+<!-- <div class="row">
     <div class="col-lg-12 col-md-12">
         <div class="btn-loan">
             <button id="lblLoan" (click)="showModalLoan()" class="btn btn-primary">Crear Prestamo</button>
@@ -25,7 +25,6 @@
 
         </table>
     </div>
-    <!-- Modal edit-->
     <div class="modal fade" id="loan-edit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -86,7 +85,6 @@
             </div>
         </div>
     </div>
-    <!-- Modal create-->
     <div class="modal fade" id="createLan" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -146,5 +144,54 @@
                 </div>
             </div>
         </div>
+    </div>
+</div> -->
+
+
+<!--New DataTable-->
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-striped table-bordered" cellspacing="0" width="100%" [mfData]="loans" #mf="mfDataTable" [mfRowsOnPage]="5">
+            <thead>
+                <tr>
+                    <th style="width: 20%">
+                        <mfDefaultSorter by="dateLoan">Fecha Prestamo</mfDefaultSorter>
+                    </th>
+                    <th style="width: 20%">
+                        <mfDefaultSorter by="amount">Valor</mfDefaultSorter>
+                    </th>
+                    <th style="width: 20%">
+                        <mfDefaultSorter by="rateInterest">Tasa interes</mfDefaultSorter>
+                    </th>
+                    <th style="width: 20%">
+                        <mfDefaultSorter by="finishedDatePayment">Estado</mfDefaultSorter>
+                    </th>
+                    <th style="width: 20%">
+                        <mfDefaultSorter by="statusLoan">Fecha Cancelacion</mfDefaultSorter>
+                    </th>
+                    <th style="width: 50%">
+                        <mfDefaultSorter by="statusLoan">Acciones</mfDefaultSorter>
+                    </th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of mf.data">
+                    <td>{{item.dateLoan.substring(0,10)}}</td>
+                    <td>{{formatterNumber(item.amount)}}</td>
+                    <td>{{item.rateInterest}}</td>
+                    <td>{{ statusLoan(item.statusLoan)}}</td>
+                    <td>{{item.finishedDatePayment}}</td>
+                    <td style="display: inline-flex"><a type="button" class="btn btn-sm btn-primary edit mr-2" data-target="#exampleModal"> <span class="glyphicon glyphicon-edit button-magin"></span></a> <a type="button"  class="btn btn-sm btn-info payment button-magin" data-target="#exampleModal"> <span class="glyphicon glyphicon-usd"></span></a> <a type="button" class="btn btn-sm btn-danger delete button-magin"><span class="span glyphicon glyphicon-trash"></span></a></td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="4">
+                        <mfBootstrapPaginator [rowsOnPageSet]="[5,10,25]"></mfBootstrapPaginator>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
     </div>
 </div>

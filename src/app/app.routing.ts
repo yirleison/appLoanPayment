@@ -8,7 +8,7 @@ import { PaytmentsComponent } from './components/shared/paytments/paytments.comp
 const appRutes: Routes = [
     { path: '', component: HomeComponent },
     {path: 'prestamos', component: LoansComponent},
-    {path: 'pagos', component: PaytmentsComponent},
+    {path: 'pagos/:idLoan', component: PaytmentsComponent},
     { path: '**', component: LayoutComponent }
 ]
 

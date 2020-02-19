@@ -16,6 +16,8 @@ import { HomeComponent } from './components/home/home.component'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { PaytmentsComponent } from './components/shared/paytments/paytments.component';
+import { DataTableModule } from "angular2-datatable";
+
 
 
 
@@ -38,6 +40,8 @@ import { PaytmentsComponent } from './components/shared/paytments/paytments.comp
     routing,
     HttpClientModule,
     BrowserAnimationsModule,
+    DataTableModule,
+    
     ToastrModule.forRoot()
   ],
   providers: [appRoutingProviders],
