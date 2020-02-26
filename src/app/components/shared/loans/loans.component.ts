@@ -1,13 +1,20 @@
 import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import * as moment from 'moment';
 import { loansModel } from '../../../models/loans.model'
-import { from, ReplaySubject } from 'rxjs';
+import { from, ReplaySubject, Subject } from 'rxjs';
 import { LoanService } from '../../../services/loan-services/loan.services';
 import { ToastrService, Toast } from 'ngx-toastr';
+import { DataTableDirective } from 'angular-datatables';
+import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 declare var $;
 var table = null;
+const MODALS = {
+  createPayment: 'createPayment',
+  updatePayment: 'updatePayment'
+};
 
 
 @Component({
@@ -18,20 +25,25 @@ var table = null;
 })
 export class LoansComponent implements OnInit {
   dataTable: any;
-  dtOptions: any;
   idLoan: String = "";
   loans: any;
+  dtOptions: DataTables.Settings = {};
+  dtTrigger: Subject<any> = new Subject();
+  @ViewChild(DataTableDirective, { static: false }) dtElement: DataTableDirective;
 
   public loan: loansModel;
   constructor(
     private loanService: LoanService,
     private toastr: ToastrService,
-    private _route: Router
+    private _route: Router,
+    private http: HttpClient,
+    private _modalService: NgbModal
   ) {
     this.loan = new loansModel("", 0, 0, false, null, "");
   }
 
   ngOnInit(): void {
+
     $(function () {
       $("#datetimepicker1")
         .datepicker({
@@ -50,26 +62,29 @@ export class LoansComponent implements OnInit {
         .datepicker("update", new Date());
     });
 
-    $(document).ready(function () {
-      $('#datatable').dataTable();
-
-      $("[data-toggle=tooltip]").tooltip();
-
-    });
-
     this.showModalEdit();
     this.showModalDelete();
     this.getLoans();
   }
 
 
-
   getLoans() {
+
+    this.dtOptions = {
+      pagingType: "full_numbers",
+      pageLength: 5,
+      autoWidth: true,
+      order: [[0, 'desc']],
+      language: {
+        url: '//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json'
+    }
+    };
     this.loanService.listLoan().subscribe(
       (loans: any) => {
         if (loans) {
           this.loans = loans.data;
           console.log(this.loans);
+          this.dtTrigger.next();
         }
       },
       error => {
@@ -77,6 +92,13 @@ export class LoansComponent implements OnInit {
       }
     );
   }
+
+ modalCreatePayment(modal) {
+   console.log('hola', modal)
+    this._modalService.open(modal)
+ }
+
+
 
   formatterNumber(data: number) {
     //numero = Number(new Intl.NumberFormat().format(numero));

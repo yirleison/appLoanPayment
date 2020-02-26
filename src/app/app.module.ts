@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule }   from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/shared/header/header.component';
@@ -16,9 +17,7 @@ import { HomeComponent } from './components/home/home.component'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { PaytmentsComponent } from './components/shared/paytments/paytments.component';
-import { DataTableModule } from "angular2-datatable";
-
-
+import { DataTablesModule } from 'angular-datatables';
 
 
 @NgModule({
@@ -40,8 +39,8 @@ import { DataTableModule } from "angular2-datatable";
     routing,
     HttpClientModule,
     BrowserAnimationsModule,
-    DataTableModule,
-    
+    DataTablesModule,
+    NgbModule,
     ToastrModule.forRoot()
   ],
   providers: [appRoutingProviders],
