@@ -26,11 +26,11 @@ export class LoansComponent implements OnInit {
   public rateInterest: Number[];
   dtOptions: DataTables.Settings = {};
   dtTrigger: Subject<any> = new Subject();
-  @ViewChild(DataTableDirective) dtElement: DataTableDirective;
+  @ViewChild(DataTableDirective, { static: true }) dtElement: DataTableDirective;
 
   public users: any;
   public loan: loansModel;
-
+  intr: Number = 0;
   constructor(
     private loanService: LoanService,
     private userService: UserService,
@@ -38,8 +38,8 @@ export class LoansComponent implements OnInit {
     private _route: Router,
     private http: HttpClient,
   ) {
-    this.loan = new loansModel('12/02/2020', 0, 0, false, '', "");
-    this.rateInterest = [5,6,7,8,9,10]
+    this.loan = new loansModel('12/02/2020', "", 0, false, '', "");
+    this.rateInterest = [5, 6, 7, 8, 9, 10];
   }
 
 
@@ -164,18 +164,8 @@ export class LoansComponent implements OnInit {
     let finishedDatePayment = null;
     let idUser = $("#select2 option:selected").val();
 
-    let interest = {
-      1: 7,
-      2: 8,
-      3: 9,
-      4: 10
-    };
-
-    console.log($('#amoutn').val())
-    this.loan.rateInterest = interest[this.loan.rateInterest]
     this.loan.finishedDatePayment = null
     this.loan.idUser = $("#select2 option:selected").val()
-    console.log(this.loan)
     this.loanService.createLoan(this.loan).subscribe(
       response => {
         if (!response) {
@@ -192,7 +182,7 @@ export class LoansComponent implements OnInit {
           $("#select2").val("");
           //$("#select-estado").val("");
           // $("#select-user-create option:selected").val("");
-          this.loan = new loansModel('', 0, 0, false, null, "");
+          this.loan = new loansModel('', "", 0, false, null, "");
         }
       },
       error => {
@@ -201,6 +191,33 @@ export class LoansComponent implements OnInit {
     );
   }
 
+  setFormat(e) {
+
+    let amount;
+    amount += '';
+    amount = e.target.value;
+    amount = parseFloat(amount.replace(/[^0-9\.]/g, '')); // elimino cualquier cosa que no sea numero o punto
+    amount = '' + amount.toFixed(0);
+    var amount_parts = amount.split('.'),
+      regexp = /(\d+)(\d{3})/;
+    while (regexp.test(amount_parts[0]))
+      amount_parts[0] = amount_parts[0].replace(regexp, '$1' + ',' + '$2');
+
+    this.loan.amount = amount_parts.join('.');
+
+    console.log(amount_parts.join('.'))
+
+    //console.log(priceValue)
+  }
+
+  goToPage(id) {
+    this._route.navigate(['pagos/', id]);
+  }
+
+  changeinterest(e) {
+    this.intr = e.target.value;
+    this.loan.rateInterest = e.target.value;
+  }
 
   editLoan() {
     let dateLoan = moment($("#loan-date-edit").val()).format("YYYY-MM-DD");
@@ -230,16 +247,15 @@ export class LoansComponent implements OnInit {
   }
 
   getUsers() {
-      this.userService.listUsers().subscribe(
-        (user: any) => {
-          this.users = user.message;
-          console.log(this.users)
-        },
-        error => {
-          console.log(error)
-        }
-
-      )
+    this.userService.listUsers().subscribe(
+      (user: any) => {
+        this.users = user.message;
+        console.log(this.users)
+      },
+      error => {
+        console.log(error)
+      }
+    )
   }
 
   showModalDelete() {
