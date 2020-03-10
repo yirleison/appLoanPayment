@@ -1,11 +1,12 @@
-import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input, AfterViewInit, ComponentFactoryResolver } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { HttpClient, HttpResponse } from '@angular/common/http';
+import { ToastrService } from 'ngx-toastr';
+
 import * as moment from 'moment';
 import { loansModel } from '../../../models/loans.model'
 import { from, ReplaySubject, Subject, pipe } from 'rxjs';
 import { LoanService } from '../../../services/loan-services/loan.services';
-import { ToastrService } from 'ngx-toastr';
 import { DataTableDirective } from 'angular-datatables';
 import { UserService } from 'src/app/services/user-services/user.service';
 
@@ -18,14 +19,16 @@ declare var $;
   providers: [LoanService, UserService]
 })
 export class LoansComponent implements OnInit {
+
   dataTable: any;
   idLoan: String = "";
   loans: any;
+  public rateInterest: Number[];
   dtOptions: DataTables.Settings = {};
   dtTrigger: Subject<any> = new Subject();
-  @ViewChild(DataTableDirective, { static: false }) dtElement: DataTableDirective;
+  @ViewChild(DataTableDirective) dtElement: DataTableDirective;
 
-  verSeleccion: string = '';
+  public users: any;
   public loan: loansModel;
 
   constructor(
@@ -35,31 +38,17 @@ export class LoansComponent implements OnInit {
     private _route: Router,
     private http: HttpClient,
   ) {
-    this.loan = new loansModel("", 0, 0, false, null, "");
+    this.loan = new loansModel('12/02/2020', 0, 0, false, '', "");
+    this.rateInterest = [5,6,7,8,9,10]
   }
+
 
   ngOnInit(): void {
 
+    this.getUsers();
+
     $(document).ready(function () {
-      $('#select2').select2({
-        placeholder: 'Select an option',
-        ajax: {
-          url: 'http://localhost:3000/usuarios',
-          processResults: function (data) {
-            console.log(data);
-            // Transforms the top-level key of the response object from 'items' to 'results'
-            return {
-              results: data.message.map((item) => {
-                return {
-                  id: item._id,
-                  text: item.fullName
-                }
-              })
-            }
-          }
-        },
-        cache: true
-      });
+      $('#select2').select2();
     });
 
     $(function () {
@@ -84,9 +73,20 @@ export class LoansComponent implements OnInit {
     this.getLoans();
   }
 
-  showToaster(){
-    this.toastr.success("Hello, I'm the toastr message.")
-}
+  showToaster(status, title, message) {
+    switch (status) {
+      case '1':
+        this.toastr.success(title, message);
+        break;
+      case '2':
+        this.toastr.error(title, message);
+        break
+      default:
+        this.toastr.error(title, message);
+        break;
+    }
+
+  }
 
   showModal(id) {
     $('#' + id).modal()
@@ -157,56 +157,48 @@ export class LoansComponent implements OnInit {
   createLoan() {
     // console.log($('#loan-date').val());
     //var valor = $("#select-user-create option:selecte").val();
-    $("#show-md-crea-loan").modal('hide');
-    this.showToaster()
-    this.toastr.show("Prestamo!", "Prestamo creado con éxito");
-    console.log(this.toastr)
-   // let dateLoan = moment($("#loan-date").val()).format("YYYY-MM-DD");
+    // let dateLoan = moment($("#loan-date").val()).format("YYYY-MM-DD");
     let amount = $("#valor-prestamo").val();
     let rateInterest = $("#interes").val();
     let statusLoan = $("#select-estado option:selected").val();
     let finishedDatePayment = null;
     let idUser = $("#select2 option:selected").val();
 
-    let interes = {
+    let interest = {
       1: 7,
       2: 8,
       3: 9,
       4: 10
     };
 
-    var dat = {
-      amount,
-      rateInterest: interes[$("#interes option:selected").val()],
-      statusLoan,
-      finishedDatePayment,
-      idUser
-    };
-
-    this.loan = dat;
-   /* this.loanService.createLoan(this.loan).subscribe(
+    console.log($('#amoutn').val())
+    this.loan.rateInterest = interest[this.loan.rateInterest]
+    this.loan.finishedDatePayment = null
+    this.loan.idUser = $("#select2 option:selected").val()
+    console.log(this.loan)
+    this.loanService.createLoan(this.loan).subscribe(
       response => {
         if (!response) {
           //Muestro el error
         } else {
           //Muestro alert de confirmacion
-          this.toastr.success("Prestamo!", "Prestamo creado con éxito");
-          this.toastr.success('Hello world!', 'Toastr fun!');
-         $("#show-md-crea-loan").modal('hide');
+          $("#show-md-crea-loan").modal('hide');
+          this.showToaster('1', 'Prestamo', 'Prestamo creado con éxito')
           $("#example").dataTable().fnDestroy();
           this.getLoans();
-         
-          let dateLoan = moment($("#loan-date").val()).format("YYYY-MM-DD");
-          $("#valor-prestamo").val("");
-          $("#interes").val("");
-          $("#select-estado").val("");
-          $("#select-user-create option:selected").val("");
+
+          // let dateLoan = moment($("#loan-date").val()).format("YYYY-MM-DD");
+          // $("#valor-prestamo").val("");
+          $("#select2").val("");
+          //$("#select-estado").val("");
+          // $("#select-user-create option:selected").val("");
+          this.loan = new loansModel('', 0, 0, false, null, "");
         }
       },
       error => {
         let body = JSON.parse(error._body);
       }
-    );*/
+    );
   }
 
 
@@ -238,7 +230,16 @@ export class LoansComponent implements OnInit {
   }
 
   getUsers() {
+      this.userService.listUsers().subscribe(
+        (user: any) => {
+          this.users = user.message;
+          console.log(this.users)
+        },
+        error => {
+          console.log(error)
+        }
 
+      )
   }
 
   showModalDelete() {

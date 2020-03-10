@@ -3,6 +3,7 @@ import { FormsModule }   from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { ToastrModule } from 'ngx-toastr';
 
 
 import { AppComponent } from './app.component';
@@ -16,7 +17,6 @@ import { LayoutComponent } from './components/layout/layout.component';
 import { routing, appRoutingProviders } from './app.routing';
 import { HomeComponent } from './components/home/home.component'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ToastrModule } from 'ngx-toastr';
 import { PaytmentsComponent } from './components/shared/paytments/paytments.component';
 import { DataTablesModule } from 'angular-datatables';
 
@@ -42,7 +42,7 @@ import { DataTablesModule } from 'angular-datatables';
     BrowserAnimationsModule,
     DataTablesModule,
     NgbModule,
-    ToastrModule.forRoot()
+    ToastrModule.forRoot() 
   ],
   providers: [appRoutingProviders],
   bootstrap: [AppComponent]
