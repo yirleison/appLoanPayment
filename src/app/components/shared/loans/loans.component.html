@@ -31,8 +31,8 @@
             <tbody>
                 <tr *ngFor="let item of loans">
                     <td>{{item.dateLoan.substring(0,10)}}</td>
-                    <td>{{formatterNumber(item.amount)}}</td>
-                    <td>{{item.rateInterest}}</td>
+                    <td>{{item.amount | number:'1.2-2'}}</td>
+                    <td>{{item.rateInterest}} %</td>
                     <td>{{ statusLoan(item.statusLoan)}}</td>
                     <td>{{item.finishedDatePayment}}</td>
                     <td style="display: inline-flex">

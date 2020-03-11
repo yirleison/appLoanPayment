@@ -38,7 +38,7 @@ export class LoansComponent implements OnInit {
     private _route: Router,
     private http: HttpClient,
   ) {
-    this.loan = new loansModel('12/02/2020', "", 0, false, '', "");
+    this.loan = new loansModel('12/02/2020', '', 0, false, '', "");
     this.rateInterest = [5, 6, 7, 8, 9, 10];
   }
 
@@ -116,6 +116,7 @@ export class LoansComponent implements OnInit {
       }
     );
   }
+
   formatterNumber(data: number) {
     //numero = Number(new Intl.NumberFormat().format(numero));
     //var rounded = data.toFixed(2);
@@ -166,6 +167,10 @@ export class LoansComponent implements OnInit {
 
     this.loan.finishedDatePayment = null
     this.loan.idUser = $("#select2 option:selected").val()
+
+    let inter = this.loan.amount;
+    let p = inter.toString().split(',');
+    this.loan.amount = p.join('');
     this.loanService.createLoan(this.loan).subscribe(
       response => {
         if (!response) {
@@ -182,7 +187,7 @@ export class LoansComponent implements OnInit {
           $("#select2").val("");
           //$("#select-estado").val("");
           // $("#select-user-create option:selected").val("");
-          this.loan = new loansModel('', "", 0, false, null, "");
+          this.loan = new loansModel('', '', 0, false, null, "");
         }
       },
       error => {
