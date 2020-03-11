@@ -42,7 +42,6 @@ export class LoansComponent implements OnInit {
     this.rateInterest = [5, 6, 7, 8, 9, 10];
   }
 
-
   ngOnInit(): void {
 
     this.getUsers();
@@ -126,7 +125,7 @@ export class LoansComponent implements OnInit {
   }
 
   statusLoan(status) {
-    return status == false ? 'Pendiente' : 'Pagado'
+    return status == false || status == null || status == 'null' ? 'Pendiente' : 'Pagado'
   }
 
   showModalLoan() {
@@ -232,23 +231,6 @@ export class LoansComponent implements OnInit {
     let finishedDatePayment = null;
     let idUser = $("#select-user-edit option:selected").val();
 
-    let interes = {
-      1: 7,
-      2: 8,
-      3: 9,
-      4: 10
-    };
-
-    var dat = {
-      dateLoan,
-      amount,
-      rateInterest: interes[$("#interes-edit option:selected").val()],
-      statusLoan,
-      finishedDatePayment,
-      idUser
-    };
-    this.loan = dat;
-    console.log(this.loan);
   }
 
   getUsers() {
