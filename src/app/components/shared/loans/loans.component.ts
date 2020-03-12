@@ -4,7 +4,7 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 
 import * as moment from 'moment';
-import { loansModel } from '../../../models/loans.model'
+import { loansModel } from '../../../models/loan/loans.model'
 import { from, ReplaySubject, Subject, pipe } from 'rxjs';
 import { LoanService } from '../../../services/loan-services/loan.services';
 import { DataTableDirective } from 'angular-datatables';
@@ -92,7 +92,6 @@ export class LoansComponent implements OnInit {
   }
 
   getLoans() {
-
     this.dtOptions = {
       pagingType: "full_numbers",
       pageLength: 5,
@@ -196,12 +195,15 @@ export class LoansComponent implements OnInit {
   }
 
   setFormat(e) {
-
     let amount;
     amount += '';
     amount = e.target.value;
     amount = parseFloat(amount.replace(/[^0-9\.]/g, '')); // elimino cualquier cosa que no sea numero o punto
+    // si es mayor o menor que cero retorno el valor formateado como numero
     amount = '' + amount.toFixed(0);
+    // si no es un numero o es igual a cero retorno el mismo cero
+    if (isNaN(amount) || amount === 0)
+      return parseFloat("0").toFixed(2);
     var amount_parts = amount.split('.'),
       regexp = /(\d+)(\d{3})/;
     while (regexp.test(amount_parts[0]))

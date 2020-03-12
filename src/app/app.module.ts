@@ -19,6 +19,7 @@ import { HomeComponent } from './components/home/home.component'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PaytmentsComponent } from './components/shared/paytments/paytments.component';
 import { DataTablesModule } from 'angular-datatables';
+import { IonicModule } from '@ionic/angular';
 
 
 @NgModule({
@@ -42,7 +43,8 @@ import { DataTablesModule } from 'angular-datatables';
     BrowserAnimationsModule,
     DataTablesModule,
     NgbModule,
-    ToastrModule.forRoot() 
+    ToastrModule.forRoot(),
+    IonicModule.forRoot() 
   ],
   providers: [appRoutingProviders],
   bootstrap: [AppComponent]
