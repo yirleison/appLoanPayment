@@ -75,7 +75,7 @@
         </thead>
         <tbody>
             <tr *ngFor="let item of payments">
-                <td>{{statusPaymenDate(item.dateDeposit)}}</td>
+                <td>{{formateDate(item.dateDeposit)}}</td>
                 <td>{{item.amount | number:'1.2-2'}}</td>
                 <td>{{item.interest | number:'1.2-2'}}</td>
                 <td>{{item.nextDatePayment.substring(0,10)}}</td>

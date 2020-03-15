@@ -64,6 +64,12 @@ export class PaytmentsComponent implements OnInit {
     return status == false || status == null || status == 'null' ? 'Pendiente' : 'Pagado'
   }
 
+  formateDate(date) {
+    if(date != 'Pendiente') {
+      return date.substring(0,10)
+    }
+  }
+
   //Funcionabilidad para pagos...
   openModal(id,idPaymen) {
    localStorage.setItem('idPayment',idPaymen);
