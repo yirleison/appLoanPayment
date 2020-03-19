@@ -1,10 +1,11 @@
 export class PaymentModel {
     constructor(
+        public _id: String,
         public dateDeposit: String,
         public amount: String,
-        public interest: Number,
+        public interest: String,
         public nextDatePayment: String,
-        public balanceLoand: Number,
+        public balanceLoand: String,
         public statusDeposit: String,
         public idLoan: String
     ){}

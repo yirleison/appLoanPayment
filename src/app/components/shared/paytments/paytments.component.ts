@@ -34,7 +34,7 @@ export class PaytmentsComponent implements OnInit {
 
   constructor(private _router: ActivatedRoute, private paymentService: PaymenService, private toastr: ToastrService, ) {
     this.paymentNormal = new paymenPaymentModel('0');
-    this.paymentFull = new PaymentModel('', '0', 0, '', 0, '0', '');
+    this.paymentFull = new PaymentModel('','', '0', '0', '', '0', '0', '');
     this.statusPayment = ['Pendiente', 'Pagado'];
   }
 
@@ -99,7 +99,10 @@ export class PaytmentsComponent implements OnInit {
 
   //Funcionabilidad para pagos...
   openModal(id, idPaymen) {
-    localStorage.setItem('idPayment', idPaymen);
+    if(idPaymen!= null || idPaymen!= 'undefined' || idPaymen != ''){
+      localStorage.setItem('idPayment', idPaymen);
+      console.log('idPayment',idPaymen)
+    }
     $("#" + id).modal("show");
   }
 
@@ -140,6 +143,11 @@ export class PaytmentsComponent implements OnInit {
     //   console.log(amount_parts.join('.'))
   }
 
+  formatPrice(value) {
+    let val = (value/1)
+    return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+  }
+
   changeinterest(e) {
     let status = {
       Pendiente: '1',
@@ -177,31 +185,77 @@ export class PaytmentsComponent implements OnInit {
 
   editPayment(idModal, idPaymen){
     console.log(idModal, idPaymen)
+    this.paymentService.listPaymentBId(idPaymen)
+      .subscribe(
+        (payment: any) => {
+          if(payment) {
+            console.log(payment.message);
+            this.paymentFull = payment.message;
+            if( this.paymentFull.dateDeposit == 'null' || this.paymentFull.dateDeposit == null){
+              this.paymentFull.dateDeposit = this.formateDate(this.paymentFull.dateDeposit)
+            }
+            this.paymentFull.statusDeposit = this.statusPaymenDate(this.paymentFull.dateDeposit)
+            this.paymentFull.balanceLoand = this.formatPrice(this.paymentFull.balanceLoand)
+            this.paymentFull.interest = this.formatPrice(this.paymentFull.interest)
+            this.paymentFull.amount = this.formatPrice(this.paymentFull.amount)
+            console.log(this.paymentFull);
+            this.openModal(idModal,idPaymen)
+          }
+        },
+        error => {
+          console.log(error);
+        }
+      )
+
   }
 
   updatePayment() {
-    console.log(moment($("#payment-date").val()).format("YYYY-MM-DD"))
-    this.paymentFull.dateDeposit = moment($("#payment-date").val()).format("YYYY-MM-DD");
+    //console.log(moment($("#payment-date").val()).format("YYYY-MM-DD"))
+
+    this.paymentFull.dateDeposit = ($("#payment-date").val() == 'Pendiente' ?  this.paymentFull.dateDeposit = 'null' :  this.paymentFull.dateDeposit = moment($("#payment-date").val()).format("YYYY-MM-DD"))
+    //this.paymentFull.dateDeposit = moment($("#payment-date").val()).format("YYYY-MM-DD");
     this.paymentFull.nextDatePayment = moment($("#payment-next-date").val()).format("YYYY-MM-DD");
     this.paymentFull.statusDeposit = this.status;
-    console.log(this.paymentFull)
+    this.paymentFull.balanceLoand = this.resetAmount(this.paymentFull.balanceLoand)
+    this.paymentFull.interest = this.resetAmount(this.paymentFull.interest)
+    this.paymentFull.amount = this.resetAmount(this.paymentFull.amount)
+    this.paymentFull._id = localStorage.getItem('idPayment');
+    this.paymentFull.idLoan = localStorage.getItem('idPayment');
+    //console.log(this.paymentFull)
+    this.paymentService.updatePayment(this.paymentFull,this.paymentFull._id)
+      .subscribe(
+        (paymetUpdate: any) => {
+          console.log(paymetUpdate)
+          if(paymetUpdate.status == 'OK') {
+            this.closeModal('show-md-update-payment');
+            this.paymentFull = new PaymentModel('','', '0', '0', '', '0', '0', '');
+            this.showToaster('1', 'Actualización pago', 'Actuañización pago reaizada con exitoso');
+          }
+        }
+      )
+    
   }
 
   showToaster(status, title, message) {
     switch (status) {
       case '1':
-        this.toastr.success(message, title);
+        this.toastr.success(message+'.', title);
         break;
       case '2':
-        this.toastr.error(message, title);
+        this.toastr.error(message+'.', title);
         break
       default:
-        this.toastr.error(message, title);
+        this.toastr.error(message+'.', title);
         break;
     }
 
   }
 
+  resetAmount(value) {
+     value.toString().split(',');
+     let p = value.toString().split(',');
+     return p.join('');
+  }
 }
 
 

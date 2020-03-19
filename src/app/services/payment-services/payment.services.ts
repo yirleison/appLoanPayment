@@ -23,8 +23,7 @@ createPayment(payload, typepayment, id) {
         'typepayment': typepayment
       })
     };
-    return this.httpClient.put(this.urlBase +'pago/'+id,payload,httpOptions);
- 
+    return this.httpClient.post(this.urlBase +'pago/'+id,payload,httpOptions);
   }
 
   listPaymentByLoan(id) {
@@ -36,4 +35,26 @@ createPayment(payload, typepayment, id) {
       headers: headers
     });
   }
+
+  listPaymentBId(id) {
+    const headers = new HttpHeaders({
+      "Content-Type": "application/json; charset=utf-8"
+    });
+
+    return this.httpClient.get( this.urlBase+ 'pago/' + id, {
+      headers: headers
+    });
+  }
+
+  updatePayment(payload, id) {
+    console.log(payload)
+    console.log(id)
+     
+      const httpOptions = {
+        headers: new HttpHeaders({
+          'Content-Type':  'application/json',
+        })
+      };
+      return this.httpClient.put(this.urlBase +'pago/'+id,payload,httpOptions);
+    }
 }
