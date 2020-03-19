@@ -53,6 +53,7 @@ createPayment(payload, typepayment, id) {
       const httpOptions = {
         headers: new HttpHeaders({
           'Content-Type':  'application/json',
+          'typepayment': '0'
         })
       };
       return this.httpClient.put(this.urlBase +'pago/'+id,payload,httpOptions);

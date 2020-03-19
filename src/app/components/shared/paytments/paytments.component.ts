@@ -90,10 +90,11 @@ export class PaytmentsComponent implements OnInit {
 
   formateDate(date) {
     if (date == null || date == 'null') {
-      return date = 'Pendiente'
+      return 'Pendiente'
     }
     else {
-      return date.substring(0, 10)
+     return moment(date).format("YYYY-MM-DD");
+       // return moment(date).year() + '-' + moment(date).month() +'-' + moment(date).day()
     }
   }
 
@@ -154,7 +155,6 @@ export class PaytmentsComponent implements OnInit {
       Pagado: '2'
     }
     this.status = status[e.target.value];
-
   }
 
   createPayment() {
@@ -192,8 +192,12 @@ export class PaytmentsComponent implements OnInit {
             console.log(payment.message);
             this.paymentFull = payment.message;
             if( this.paymentFull.dateDeposit == 'null' || this.paymentFull.dateDeposit == null){
+              this.paymentFull.dateDeposit = 'Pendiente'
+            }
+            else {
               this.paymentFull.dateDeposit = this.formateDate(this.paymentFull.dateDeposit)
             }
+            this.paymentFull.nextDatePayment = this.formateDate(this.paymentFull.nextDatePayment);
             this.paymentFull.statusDeposit = this.statusPaymenDate(this.paymentFull.dateDeposit)
             this.paymentFull.balanceLoand = this.formatPrice(this.paymentFull.balanceLoand)
             this.paymentFull.interest = this.formatPrice(this.paymentFull.interest)
@@ -210,18 +214,27 @@ export class PaytmentsComponent implements OnInit {
   }
 
   updatePayment() {
-    //console.log(moment($("#payment-date").val()).format("YYYY-MM-DD"))
-
+    let status = {
+      Pendiente: '1',
+      Pagado: '2'
+    }
     this.paymentFull.dateDeposit = ($("#payment-date").val() == 'Pendiente' ?  this.paymentFull.dateDeposit = 'null' :  this.paymentFull.dateDeposit = moment($("#payment-date").val()).format("YYYY-MM-DD"))
     //this.paymentFull.dateDeposit = moment($("#payment-date").val()).format("YYYY-MM-DD");
     this.paymentFull.nextDatePayment = moment($("#payment-next-date").val()).format("YYYY-MM-DD");
-    this.paymentFull.statusDeposit = this.status;
+    if(this.paymentFull.statusDeposit){
+      this.paymentFull.statusDeposit = status[ $("#statusPayment").val()];
+     // console.log('entro1',this.paymentFull.statusDeposit)
+    }
+    else {
+      this.paymentFull.statusDeposit = this.status;
+      console.log('entro2',this.paymentFull) 
+    }
     this.paymentFull.balanceLoand = this.resetAmount(this.paymentFull.balanceLoand)
     this.paymentFull.interest = this.resetAmount(this.paymentFull.interest)
     this.paymentFull.amount = this.resetAmount(this.paymentFull.amount)
     this.paymentFull._id = localStorage.getItem('idPayment');
     this.paymentFull.idLoan = localStorage.getItem('idPayment');
-    //console.log(this.paymentFull)
+    console.log(this.paymentFull)
     this.paymentService.updatePayment(this.paymentFull,this.paymentFull._id)
       .subscribe(
         (paymetUpdate: any) => {

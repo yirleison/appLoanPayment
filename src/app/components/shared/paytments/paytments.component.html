@@ -78,7 +78,7 @@
         </thead>
         <tbody>
             <tr *ngFor="let item of payments">
-                <td>{{formateDate(item.dateDeposit)}}</td>
+                <td *ngIf="item.dateDeposit == 'null' || item.dateDeposit == null; else thenBlock">Pendiente</td>
                 <td>{{item.amount | number:'1.2-2'}}</td>
                 <td>{{item.interest | number:'1.2-2'}}</td>
                 <td>{{item.nextDatePayment | date: 'yyyy'}}-{{item.nextDatePayment | date:'MM'}}-{{item.nextDatePayment | date: 'dd'}}</td>
@@ -96,6 +96,7 @@
                         </a>
                     </div>
                 </td>
+                <ng-template #thenBlock> <td>{{item.dateDeposit | date: 'yyyy'}}-{{item.dateDeposit | date:'MM'}}-{{item.dateDeposit | date: 'dd'}}</td></ng-template>
             </tr>
         </tbody>
 
@@ -177,7 +178,7 @@
                     </div>
                     <div class="form-group">
                         <label for="">Estado Pago</label>
-                        <select class="form-control" (change)="changeinterest($event)"
+                        <select id="statusPayment" class="form-control" (change)="changeinterest($event)"
                             name="statusDeposit" #name="ngModel" [(ngModel)]="paymentFull.statusDeposit">
                             <option value="0">Seleccione el Estado</option>
                             <option value="{{item}}" *ngFor="let item of statusPayment let index">{{item}}</option>
