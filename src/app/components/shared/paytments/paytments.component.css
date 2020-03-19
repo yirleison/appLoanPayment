@@ -1,3 +1,35 @@
 .button-magin {
     margin-left: 3px;
 }
+
+.balanceInteres {
+    color: #fff;
+    background-color: #007bff;
+    padding-right: .6em;
+    padding-left: .6em;
+    border-radius: 10rem;
+    text-align: center;
+}
+
+.balancePago {
+    color: #fff;
+    background-color: #28a745;
+    padding-right: .6em;
+    padding-left: .6em;
+    border-radius: 10rem;
+    text-align: center;
+}
+
+.cuotas {
+    color: #fff;
+    background-color: #ffc107;
+    margin: auto;
+    margin-top: -9px;
+    padding-right: 27px;
+    padding-left: 18px;
+    padding-top: 0.5em;
+    padding-bottom: .5em;
+    border-radius: 10rem;
+    text-align: center;
+    width: 35px;
+}

@@ -27,6 +27,10 @@ export class PaytmentsComponent implements OnInit {
   activateTablet: boolean = false;
   public payments: any;
   public status: String = '';
+  public balances: any;
+  public balancePago: any = 0;
+  public balanceInteres: any = 0;
+  public cuotas: any = 0;
 
   constructor(private _router: ActivatedRoute, private paymentService: PaymenService, private toastr: ToastrService, ) {
     this.paymentNormal = new paymenPaymentModel('0');
@@ -63,6 +67,15 @@ export class PaytmentsComponent implements OnInit {
       (payments: any) => {
         //console.log(payments)
         this.payments = payments.message;
+        this.balances = payments.message;
+
+        for (let i = 0; i < this.balances.length; i++) {
+          if (this.balances[i].statusDeposit) {
+            this.balancePago += parseFloat(this.balances[i].balanceLoand);
+            this.balanceInteres += parseFloat(this.balances[i].interest);
+            this.cuotas++;
+          }
+        }
         this.dtTrigger.next();
       },
       error => {
@@ -133,7 +146,7 @@ export class PaytmentsComponent implements OnInit {
       Pagado: '2'
     }
     this.status = status[e.target.value];
-   
+
   }
 
   createPayment() {
@@ -160,6 +173,10 @@ export class PaytmentsComponent implements OnInit {
       }
 
     )
+  }
+
+  editPayment(idModal, idPaymen){
+    console.log(idModal, idPaymen)
   }
 
   updatePayment() {
