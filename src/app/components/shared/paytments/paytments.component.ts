@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { DataTableDirective } from 'angular-datatables';
-import { from, ReplaySubject, Subject, pipe } from 'rxjs';
+import { from, ReplaySubject, Subject, pipe, empty } from 'rxjs';
 import * as moment from 'moment';
 import { ToastrService, Toast } from 'ngx-toastr';
 import { PaymenService } from 'src/app/services/payment-services/payment.services';
@@ -34,7 +34,7 @@ export class PaytmentsComponent implements OnInit {
 
   constructor(private _router: ActivatedRoute, private paymentService: PaymenService, private toastr: ToastrService, ) {
     this.paymentNormal = new paymenPaymentModel('0');
-    this.paymentFull = new PaymentModel('','', '0', '0', '', '0', '0', '');
+    this.paymentFull = new PaymentModel('', '', '0', '0', '', '0', '0', '');
     this.statusPayment = ['Pendiente', 'Pagado'];
   }
 
@@ -65,7 +65,7 @@ export class PaytmentsComponent implements OnInit {
     };
     this.paymentService.listPaymentByLoan(id).subscribe(
       (payments: any) => {
-        //console.log(payments)
+        console.log(payments.message)
         this.payments = payments.message;
         this.balances = payments.message;
 
@@ -93,16 +93,16 @@ export class PaytmentsComponent implements OnInit {
       return 'Pendiente'
     }
     else {
-     return moment(date).format("YYYY-MM-DD");
-       // return moment(date).year() + '-' + moment(date).month() +'-' + moment(date).day()
+      return moment(date).format("YYYY-MM-DD");
+      // return moment(date).year() + '-' + moment(date).month() +'-' + moment(date).day()
     }
   }
 
   //Funcionabilidad para pagos...
   openModal(id, idPaymen) {
-    if(idPaymen!= null || idPaymen!= 'undefined' || idPaymen != ''){
+    if (idPaymen != null || idPaymen != 'undefined' || idPaymen != '') {
       localStorage.setItem('idPayment', idPaymen);
-      console.log('idPayment',idPaymen)
+      console.log('idPayment', idPaymen)
     }
     $("#" + id).modal("show");
   }
@@ -145,7 +145,7 @@ export class PaytmentsComponent implements OnInit {
   }
 
   formatPrice(value) {
-    let val = (value/1)
+    let val = (value / 1)
     return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
   }
 
@@ -183,15 +183,15 @@ export class PaytmentsComponent implements OnInit {
     )
   }
 
-  editPayment(idModal, idPaymen){
+  editPayment(idModal, idPaymen) {
     console.log(idModal, idPaymen)
     this.paymentService.listPaymentBId(idPaymen)
       .subscribe(
         (payment: any) => {
-          if(payment) {
+          if (payment) {
             console.log(payment.message);
             this.paymentFull = payment.message;
-            if( this.paymentFull.dateDeposit == 'null' || this.paymentFull.dateDeposit == null){
+            if (this.paymentFull.dateDeposit == 'null' || this.paymentFull.dateDeposit == null) {
               this.paymentFull.dateDeposit = 'Pendiente'
             }
             else {
@@ -203,7 +203,7 @@ export class PaytmentsComponent implements OnInit {
             this.paymentFull.interest = this.formatPrice(this.paymentFull.interest)
             this.paymentFull.amount = this.formatPrice(this.paymentFull.amount)
             console.log(this.paymentFull);
-            this.openModal(idModal,idPaymen)
+            this.openModal(idModal, idPaymen)
           }
         },
         error => {
@@ -218,56 +218,62 @@ export class PaytmentsComponent implements OnInit {
       Pendiente: '1',
       Pagado: '2'
     }
-    this.paymentFull.dateDeposit = ($("#payment-date").val() == 'Pendiente' ?  this.paymentFull.dateDeposit = 'null' :  this.paymentFull.dateDeposit = moment($("#payment-date").val()).format("YYYY-MM-DD"))
+    this.paymentFull.dateDeposit = ($("#payment-date").val() == 'Pendiente' ? this.paymentFull.dateDeposit = 'null' : this.paymentFull.dateDeposit = moment($("#payment-date").val()).format("YYYY-MM-DD"))
     //this.paymentFull.dateDeposit = moment($("#payment-date").val()).format("YYYY-MM-DD");
     this.paymentFull.nextDatePayment = moment($("#payment-next-date").val()).format("YYYY-MM-DD");
-    if(this.paymentFull.statusDeposit){
-      this.paymentFull.statusDeposit = status[ $("#statusPayment").val()];
-     // console.log('entro1',this.paymentFull.statusDeposit)
+    if (this.paymentFull.statusDeposit) {
+      this.paymentFull.statusDeposit = status[$("#statusPayment").val()];
+      // console.log('entro1',this.paymentFull.statusDeposit)
     }
     else {
       this.paymentFull.statusDeposit = this.status;
-      console.log('entro2',this.paymentFull) 
+      console.log('entro2', this.paymentFull)
     }
     this.paymentFull.balanceLoand = this.resetAmount(this.paymentFull.balanceLoand)
     this.paymentFull.interest = this.resetAmount(this.paymentFull.interest)
     this.paymentFull.amount = this.resetAmount(this.paymentFull.amount)
     this.paymentFull._id = localStorage.getItem('idPayment');
-    this.paymentFull.idLoan = localStorage.getItem('idPayment');
+    //this.paymentFull.idLoan = localStorage.getItem('idPayment');
     console.log(this.paymentFull)
-    this.paymentService.updatePayment(this.paymentFull,this.paymentFull._id)
+    this.paymentService.updatePayment(this.paymentFull, this.paymentFull._id)
       .subscribe(
         (paymetUpdate: any) => {
           console.log(paymetUpdate)
-          if(paymetUpdate.status == 'OK') {
+          if (paymetUpdate.status == 'OK') {
+            $("#tablePayment").dataTable().fnDestroy();
+            this.balances = empty;
+            this.balancePago = 0;
+            this.balanceInteres = 0;
+            this.cuotas = 0;
+            this.getPaymentbyLoan(localStorage.getItem('idLoan'));
             this.closeModal('show-md-update-payment');
-            this.paymentFull = new PaymentModel('','', '0', '0', '', '0', '0', '');
+            this.paymentFull = new PaymentModel('', '', '0', '0', '', '0', '0', '');
             this.showToaster('1', 'Actualización pago', 'Actuañización pago reaizada con exitoso');
           }
         }
       )
-    
+
   }
 
   showToaster(status, title, message) {
     switch (status) {
       case '1':
-        this.toastr.success(message+'.', title);
+        this.toastr.success(message + '.', title);
         break;
       case '2':
-        this.toastr.error(message+'.', title);
+        this.toastr.error(message + '.', title);
         break
       default:
-        this.toastr.error(message+'.', title);
+        this.toastr.error(message + '.', title);
         break;
     }
 
   }
 
   resetAmount(value) {
-     value.toString().split(',');
-     let p = value.toString().split(',');
-     return p.join('');
+    value.toString().split(',');
+    let p = value.toString().split(',');
+    return p.join('');
   }
 }
 
