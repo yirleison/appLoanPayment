@@ -12,19 +12,25 @@ export class PaymenService {
         this.urlBase = Endpoints.url;
     }
 
-createPayment(payload, typepayment, id) {
-  console.log(payload)
-  console.log(typepayment)
-  console.log(id)
-   
+createPayment(payload) {
+
     const httpOptions = {
       headers: new HttpHeaders({
-        'Content-Type':  'application/json',
-        'typepayment': typepayment
+        'Content-Type':  'application/json'
       })
     };
-    return this.httpClient.post(this.urlBase +'pago/'+id,payload,httpOptions);
+    return this.httpClient.post(this.urlBase +'registrar-pago',payload,httpOptions);
   }
+
+  updatePaymentNormal(payload, typepayment, id) {   
+      const httpOptions = {
+        headers: new HttpHeaders({
+          'Content-Type':  'application/json',
+          'typepayment': typepayment
+        })
+      };
+      return this.httpClient.put(this.urlBase +'pago/'+id,payload,httpOptions);
+    }
 
   listPaymentByLoan(id) {
     const headers = new HttpHeaders({
@@ -47,9 +53,6 @@ createPayment(payload, typepayment, id) {
   }
 
   updatePayment(payload, id) {
-    console.log(payload)
-    console.log(id)
-     
       const httpOptions = {
         headers: new HttpHeaders({
           'Content-Type':  'application/json',
@@ -57,5 +60,14 @@ createPayment(payload, typepayment, id) {
         })
       };
       return this.httpClient.put(this.urlBase +'pago/'+id,payload,httpOptions);
+    }
+  
+    deletePayment(id) {
+      const httpOptions = {
+        headers: new HttpHeaders({
+          'Content-Type':  'application/json'
+        })
+      }
+      return this.httpClient.delete(this.urlBase +'pago/'+id,httpOptions)
     }
 }

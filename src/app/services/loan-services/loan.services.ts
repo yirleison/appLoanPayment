@@ -23,7 +23,7 @@ export class LoanService {
       "Content-Type": "application/json; charset=utf-8"
     });
 
-    return this.httpClient.get(" http://localhost:3000/prestamos", {
+    return this.httpClient.get("http://localhost:3000/prestamos", {
       headers: headers
     });
   }

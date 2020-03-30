@@ -31,6 +31,7 @@ export class PaytmentsComponent implements OnInit {
   public balancePago: any = 0;
   public balanceInteres: any = 0;
   public cuotas: any = 0;
+  public bandera: boolean;
 
   constructor(private _router: ActivatedRoute, private paymentService: PaymenService, private toastr: ToastrService, ) {
     this.paymentNormal = new paymenPaymentModel('0');
@@ -66,10 +67,18 @@ export class PaytmentsComponent implements OnInit {
     this.paymentService.listPaymentByLoan(id).subscribe(
       (payments: any) => {
         console.log(payments.message)
+        if (payments.message.length > 0) {
+          this.bandera = false;
+        }
+        else {
+          this.bandera = true;
+        }
+        console.log(this.bandera)
         this.payments = payments.message;
         this.balances = payments.message;
-
+        this.cuotas = 0;
         for (let i = 0; i < this.balances.length; i++) {
+
           if (this.balances[i].statusDeposit) {
             this.balancePago += parseFloat(this.balances[i].balanceLoand);
             this.balanceInteres += parseFloat(this.balances[i].interest);
@@ -100,7 +109,7 @@ export class PaytmentsComponent implements OnInit {
 
   //Funcionabilidad para pagos...
   openModal(id, idPaymen) {
-    if (idPaymen != null || idPaymen != 'undefined' || idPaymen != '') {
+    if (idPaymen != null || idPaymen != 'undefined' || idPaymen != '' || idPaymen != 'null') {
       localStorage.setItem('idPayment', idPaymen);
       console.log('idPayment', idPaymen)
     }
@@ -139,8 +148,6 @@ export class PaytmentsComponent implements OnInit {
     else {
       this.paymentFull.amount = amount_parts.join('.');
     }
-
-
     //   console.log(amount_parts.join('.'))
   }
 
@@ -158,23 +165,79 @@ export class PaytmentsComponent implements OnInit {
   }
 
   createPayment() {
+    let status = {
+      Pendiente: '1',
+      Pagado: '2'
+    }
+    this.paymentFull.dateDeposit = null;
+    //this.paymentFull.dateDeposit = moment($("#payment-date").val()).format("YYYY-MM-DD");
+    this.paymentFull.nextDatePayment = moment($("#payment-next-date").val()).format("YYYY-MM-DD");
+    if (this.paymentFull.statusDeposit) {
+      this.paymentFull.statusDeposit = status[$("#statusPayment").val()];
+    }
+    else {
+      this.paymentFull.statusDeposit = this.status;
+    }
+    this.paymentFull.balanceLoand = this.resetAmount(this.paymentFull.balanceLoand)
+    this.paymentFull.interest = this.resetAmount(this.paymentFull.interest)
+    this.paymentFull.amount = this.resetAmount(this.paymentFull.amount)
+    this.paymentFull._id = localStorage.getItem('idPayment');
+    this.paymentFull.idLoan = localStorage.getItem('idLoan');
+    console.log(this.paymentFull)
+    this.paymentService.createPayment(this.paymentFull)
+      .subscribe(
+        (paymetCreate: any) => {
+          console.log(paymetCreate)
+          if (paymetCreate.status == 'OK') {
+            $("#tablePayment").dataTable().fnDestroy();
+            this.balances = empty;
+            this.balancePago = 0;
+            this.balanceInteres = 0;
+            this.cuotas = 0;
+            this.getPaymentbyLoan(localStorage.getItem('idLoan'));
+            this.closeModal('show-md-create-payment');
+            this.paymentFull = new PaymentModel('', '', '0', '0', '', '0', '0', '');
+            this.showToaster('1', 'Crear Pago', 'Pago creado con exito');
+          }
+        }
+      )
+  }
+  updatePaymentNormal() {
     let value = this.paymentNormal.amount;
     let p = value.toString().split(',');
     this.paymentNormal.amount = p.join('');
-    this.paymentService.createPayment(this.paymentNormal, '1', localStorage.getItem('idPayment')).subscribe(
+    this.paymentService.updatePaymentNormal(this.paymentNormal, '1', localStorage.getItem('idPayment')).subscribe(
       (payment: any) => {
-        console.log('reponse payment', payment)
-        if (payment.status == 'OK') {
-          this.showToaster('1', 'Pago Cuota', 'Pago Cuota realizado exitosamente');
+        console.log('reponse payment', payment)       
+        if (payment.message === "El prestamo se ha pagado en su totalidad" && payment.status === 'OK') {
+          console.log('mensaje normal')
+          this.showToaster('1', 'Pago Cuota', 'El prestamo se ha pagado en su totalidad');
           $("#tablePayment").dataTable().fnDestroy();
+          this.balances = empty;
+          this.balancePago = 0;
+          this.balanceInteres = 0;
+          this.cuotas = 0;
           this.getPaymentbyLoan(localStorage.getItem('idLoan'));
           this.paymentNormal = new paymenPaymentModel('0');
-          this.closeModal('show-md-crea-payment');
-        } else {
+          this.closeModal('show-md-update-payment-normal');
+        }else if(payment.status == 'OK' &&  payment.message !== "El prestamo se ha pagado en su totalidad"){
+          console.log('mensaje cuando se paga un prestamo a totalidad')
+          this.showToaster('1', 'Pago Cuota', 'Pago Cuota realizado exitosamente');
+          $("#tablePayment").dataTable().fnDestroy();
+          this.balances = empty;
+          this.balancePago = 0;
+          this.balanceInteres = 0;
+          this.cuotas = 0;
+          this.getPaymentbyLoan(localStorage.getItem('idLoan'));
+          this.paymentNormal = new paymenPaymentModel('0');
+          this.closeModal('show-md-update-payment-normal');
+        } else if(payment.status == 'false') {
           this.showToaster('2', 'Pago Cuota', 'No se ha podido realizar esta transacción');
           this.paymentNormal = new paymenPaymentModel('0');
-          this.closeModal('show-md-crea-payment');
+          this.closeModal('show-md-update-payment-normal');
         }
+      
+
       },
       error => {
         console.log(error);
@@ -184,12 +247,13 @@ export class PaytmentsComponent implements OnInit {
   }
 
   editPayment(idModal, idPaymen) {
+
     console.log(idModal, idPaymen)
     this.paymentService.listPaymentBId(idPaymen)
       .subscribe(
         (payment: any) => {
           if (payment) {
-            console.log(payment.message);
+            //console.log('payment',payment);
             this.paymentFull = payment.message;
             if (this.paymentFull.dateDeposit == 'null' || this.paymentFull.dateDeposit == null) {
               this.paymentFull.dateDeposit = 'Pendiente'
@@ -198,11 +262,11 @@ export class PaytmentsComponent implements OnInit {
               this.paymentFull.dateDeposit = this.formateDate(this.paymentFull.dateDeposit)
             }
             this.paymentFull.nextDatePayment = this.formateDate(this.paymentFull.nextDatePayment);
-            this.paymentFull.statusDeposit = this.statusPaymenDate(this.paymentFull.dateDeposit)
+            this.paymentFull.statusDeposit = (this.paymentFull.statusDeposit ? 'Pagado' : 'Pendiente')
             this.paymentFull.balanceLoand = this.formatPrice(this.paymentFull.balanceLoand)
             this.paymentFull.interest = this.formatPrice(this.paymentFull.interest)
             this.paymentFull.amount = this.formatPrice(this.paymentFull.amount)
-            console.log(this.paymentFull);
+            console.log('Modelo completo payment', this.paymentFull);
             this.openModal(idModal, idPaymen)
           }
         },
@@ -223,7 +287,7 @@ export class PaytmentsComponent implements OnInit {
     this.paymentFull.nextDatePayment = moment($("#payment-next-date").val()).format("YYYY-MM-DD");
     if (this.paymentFull.statusDeposit) {
       this.paymentFull.statusDeposit = status[$("#statusPayment").val()];
-      // console.log('entro1',this.paymentFull.statusDeposit)
+      console.log('entro1', this.paymentFull.statusDeposit)
     }
     else {
       this.paymentFull.statusDeposit = this.status;
@@ -252,7 +316,29 @@ export class PaytmentsComponent implements OnInit {
           }
         }
       )
+  }
 
+  deletePayment() {
+    //console.log(localStorage.getItem('idPayment'))
+    this.paymentService.deletePayment(localStorage.getItem('idPayment')).subscribe(
+      (paymentDelete: any) => {
+        if (paymentDelete.status == 'OK') {
+          this.showToaster('1', 'Eliminación pago', 'Eliminación de pago reaizada con exito');
+          $("#tablePayment").dataTable().fnDestroy();
+          this.getPaymentbyLoan(localStorage.getItem('idLoan'));
+          this.balances = empty;
+          this.balancePago = 0;
+          this.balanceInteres = 0;
+          this.cuotas = 0;
+
+          this.closeModal('confirm-delete');
+        }
+      },
+      error => {
+        console.error(error);
+
+      }
+    )
   }
 
   showToaster(status, title, message) {
