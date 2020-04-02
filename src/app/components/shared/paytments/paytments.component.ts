@@ -5,6 +5,7 @@ import { from, ReplaySubject, Subject, pipe, empty } from 'rxjs';
 import * as moment from 'moment';
 import { ToastrService, Toast } from 'ngx-toastr';
 import { PaymenService } from 'src/app/services/payment-services/payment.services';
+import { InterestService } from '../../../services/interest-service/interest.service';
 import { PaymentModel } from '../../../models/payment/payment.full.model';
 import { paymenPaymentModel } from '../../../models/payment/payment.model'
 declare var $;
@@ -13,9 +14,10 @@ declare var $;
   selector: 'app-paytments',
   templateUrl: './paytments.component.html',
   styleUrls: ['./paytments.component.css'],
-  providers: [PaymenService]
+  providers: [PaymenService, InterestService]
 })
 export class PaytmentsComponent implements OnInit {
+
 
   dtOptions: DataTables.Settings = {};
   dtTrigger: Subject<any> = new Subject();
@@ -32,11 +34,13 @@ export class PaytmentsComponent implements OnInit {
   public balanceInteres: any = 0;
   public cuotas: any = 0;
   public bandera: boolean;
+  public interest: any;
 
-  constructor(private _router: ActivatedRoute, private paymentService: PaymenService, private toastr: ToastrService, ) {
+  constructor(private _router: ActivatedRoute, private paymentService: PaymenService, private interestService: InterestService, private toastr: ToastrService, ) {
     this.paymentNormal = new paymenPaymentModel('0');
     this.paymentFull = new PaymentModel('', '', '0', '0', '', '0', '0', '');
     this.statusPayment = ['Pendiente', 'Pagado'];
+
   }
 
   ngOnInit() {
@@ -208,7 +212,7 @@ export class PaytmentsComponent implements OnInit {
     this.paymentNormal.amount = p.join('');
     this.paymentService.updatePaymentNormal(this.paymentNormal, '1', localStorage.getItem('idPayment')).subscribe(
       (payment: any) => {
-        console.log('reponse payment', payment)       
+        console.log('reponse payment', payment)
         if (payment.message === "El prestamo se ha pagado en su totalidad" && payment.status === 'OK') {
           console.log('mensaje normal')
           this.showToaster('1', 'Pago Cuota', 'El prestamo se ha pagado en su totalidad');
@@ -220,7 +224,7 @@ export class PaytmentsComponent implements OnInit {
           this.getPaymentbyLoan(localStorage.getItem('idLoan'));
           this.paymentNormal = new paymenPaymentModel('0');
           this.closeModal('show-md-update-payment-normal');
-        }else if(payment.status == 'OK' &&  payment.message !== "El prestamo se ha pagado en su totalidad"){
+        } else if (payment.status == 'OK' && payment.message !== "El prestamo se ha pagado en su totalidad") {
           console.log('mensaje cuando se paga un prestamo a totalidad')
           this.showToaster('1', 'Pago Cuota', 'Pago Cuota realizado exitosamente');
           $("#tablePayment").dataTable().fnDestroy();
@@ -231,12 +235,12 @@ export class PaytmentsComponent implements OnInit {
           this.getPaymentbyLoan(localStorage.getItem('idLoan'));
           this.paymentNormal = new paymenPaymentModel('0');
           this.closeModal('show-md-update-payment-normal');
-        } else if(payment.status == 'false') {
+        } else if (payment.status == 'false') {
           this.showToaster('2', 'Pago Cuota', 'No se ha podido realizar esta transacción');
           this.paymentNormal = new paymenPaymentModel('0');
           this.closeModal('show-md-update-payment-normal');
         }
-      
+
 
       },
       error => {
@@ -340,7 +344,38 @@ export class PaytmentsComponent implements OnInit {
       }
     )
   }
+  //Funcionabilidad para pago y consulta de intereses...
+  getInterestByIdPayment(idModal, idPayment) {
+    // $("#tableInterest").dataTable().fnDestroy();
 
+    /*this.dtOptions = {
+      pagingType: "full_numbers",
+      pageLength: 5,
+      autoWidth: true,
+      order: [[0, 'desc']],
+      language: {
+        url: '//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json'
+      }
+    };*/
+    this.interestService.listInterestByIdPayment(idPayment).subscribe(
+      (interest: any) => {
+        if (interest.status == 'OK') {
+          this.interest = interest.message;
+          // this.dtTrigger.next();
+          $(document).ready(function () {
+            $("#tableInterest").dataTable({
+              language: {
+                url: '//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json'
+              }
+            })
+          });
+          
+          this.openModal(idModal, null)
+        }
+      },
+      error => { console.error(error) }
+    )
+  }
   showToaster(status, title, message) {
     switch (status) {
       case '1':

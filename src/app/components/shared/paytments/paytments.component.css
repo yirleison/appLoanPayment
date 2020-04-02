@@ -33,3 +33,7 @@
     text-align: center;
     width: 35px;
 }
+
+.cursor-pinter {
+    cursor: pointer;
+}

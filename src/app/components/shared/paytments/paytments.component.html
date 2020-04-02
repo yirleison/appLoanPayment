@@ -45,62 +45,81 @@
 <div class="row">
     <div *ngIf="bandera == true" class="col-lg-12 col-md-12" style="margin-bottom: 40px;">
         <div class="btn-loan">
-            <button id="lblLoan" (click)="openModal('show-md-create-payment',null)" style="background-color: #0073b7;" class="btn btn-primary">Crear Pago</button>
+            <button id="lblLoan" (click)="openModal('show-md-create-payment',null)" style="background-color: #0073b7;"
+                class="btn btn-primary">Crear Pago</button>
         </div>
     </div>
 </div>
 <div class="row" style="margin-left: 5px; margin-right: 5px;">
-    <table id="tablePayment" #ref datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table table-striped table-bordered">
-        <thead>
-            <tr>
-                <th style="width: 10%">
-                    Fecha Pago
-                </th>
-                <th style="width: 15%">
-                    Valor
-                </th>
-                <th style="width: 12%">
-                    Interes
-                </th>
-                <th style="width: 10%">
-                    Fecha Cuota
-                </th>
-                <th style="width: 15%">
-                    Balance Prestamo
-                </th>
-                <th style="width: 11%">
-                    Estado Pago
-                </th>
-                <th style="text-align: center; width: 50%">
-                    Acciones
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let item of payments">
-                <td *ngIf="item.dateDeposit == 'null' || item.dateDeposit == null; else thenBlock">Pendiente</td>
-                <td>{{item.amount | number:'1.2-2'}}</td>
-                <td>{{item.interest | number:'1.2-2'}}</td>
-                <td>{{item.nextDatePayment | date: 'yyyy'}}-{{item.nextDatePayment | date:'MM'}}-{{item.nextDatePayment | date: 'dd'}}</td>
-                <td>{{item.balanceLoand | number:'1.2-2'}}</td>
-                <td>{{statusPaymenDate(item.statusDeposit)}}</td>
-                <td style="display: inline-flex">
-                    <div style="margin-left: 93px;">
-                        <a type="button" class="btn btn-sm btn-primary edit mr-2" (click)="editPayment('show-md-update-payment',item._id)" data-target="#exampleModal"> <span
-                                class="glyphicon glyphicon-edit button-magin"> </span>
-                        </a>
-                        <a type="button" (click)="openModal('show-md-update-payment-normal',item._id)"  class="btn btn-sm btn-info payment button-magin" data-target="#exampleModal">
-                            <span class="glyphicon glyphicon-usd"></span> </a>
-                        <a type="button" class="btn btn-sm btn-danger delete button-magin" (click)="openModal('confirm-delete',item._id)">
-                            <span class="span glyphicon glyphicon-trash"> </span>
-                        </a>
-                    </div>
-                </td>
-                <ng-template #thenBlock> <td>{{item.dateDeposit | date: 'yyyy'}}-{{item.dateDeposit | date:'MM'}}-{{item.dateDeposit | date: 'dd'}}</td></ng-template>
-            </tr>
-        </tbody>
+    <div class="col-md-12 col-lg-12 col-xs-12">
+        <table id="tablePayment" #ref datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"
+            class="tabla_sin table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th style="width: 10%">
+                        Fecha Pago
+                    </th>
+                    <th style="width: 15%">
+                        Valor
+                    </th>
+                    <th style="width: 12%">
+                        Interes
+                    </th>
+                    <th style="width: 10%">
+                        Fecha Cuota
+                    </th>
+                    <th style="width: 15%">
+                        Balance Prestamo
+                    </th>
+                    <th style="width: 11%">
+                        Estado Pago
+                    </th>
+                    <th style="width: 160px;text-align: center;width: 80%;">
+                        Acciones
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="altura" *ngFor="let item of payments">
+                    <td *ngIf="item.dateDeposit == 'null' || item.dateDeposit == null; else thenBlock">Pendiente</td>
+                    <td>{{item.amount | number:'1.2-2'}}</td>
+                    <td>{{item.interest | number:'1.2-2'}}</td>
+                    <td>{{item.nextDatePayment | date: 'yyyy'}}-{{item.nextDatePayment | date:'MM'}}-{{item.nextDatePayment | date: 'dd'}}
+                    </td>
+                    <td>{{item.balanceLoand | number:'1.2-2'}}</td>
+                    <td>{{statusPaymenDate(item.statusDeposit)}}</td>
+                    <td style="display: inline-flex">
+                        <div style="margin-left: 60px;">
+                            <a type="button" class="btn btn-sm btn-primary edit mr-2 cursor-interes"
+                                (click)="getInterestByIdPayment('show-md-interest-pending',item._id)"
+                                title="Ver intereses pendientes" style="margin-right: 2px" data-target="#exampleModal">
+                                <span class="glyphicon glyphicon-briefcase button-magin">
+                                </span>
+                            </a>
+                            <a type="button" class="btn btn-sm btn-primary edit mr-2 cursor-pinter"
+                                title="Actualizar pago" (click)="editPayment('show-md-update-payment',item._id)"
+                                data-target="#exampleModal">
+                                <span class="glyphicon glyphicon-edit button-magin"> </span>
+                            </a>
+                            <a type="button" (click)="openModal('show-md-update-payment-normal',item._id)"
+                                title="Pago Cuota" class="btn btn-sm btn-info payment button-magin cursor-pinter"
+                                data-target="#exampleModal">
+                                <span class="glyphicon glyphicon-usd"></span> </a>
+                            <a type="button" class="btn btn-sm btn-danger delete button-magin cursor-pinter"
+                                title="Eliminar pago" (click)="openModal('confirm-delete',item._id)">
+                                <span class="span glyphicon glyphicon-trash"> </span>
+                            </a>
+                        </div>
+                    </td>
+                    <ng-template #thenBlock>
+                        <td>{{item.dateDeposit | date: 'yyyy'}}-{{item.dateDeposit | date:'MM'}}-{{item.dateDeposit | date: 'dd'}}
+                        </td>
+                    </ng-template>
+                </tr>
+            </tbody>
 
-    </table>
+        </table>
+    </div>
 </div>
 
 <!--Modal create  pago-->
@@ -118,9 +137,9 @@
                 <form #formLoan="ngForm">
                     <div class="form-group">
                         <label for="formGroupExampleInput2">Valor Interes</label>
-                        <input id="interes" type="text" (keyup)="setFormat($event,'interes')"  class="form-control"name="interest" #name="ngModel"
-                        [(ngModel)]="paymentFull.interest"
-                         placeholder="Ingrese el valor a pagar">
+                        <input id="interes" type="text" (keyup)="setFormat($event,'interes')" class="form-control"
+                            name="interest" #name="ngModel" [(ngModel)]="paymentFull.interest"
+                            placeholder="Ingrese el valor a pagar">
                     </div>
                     <div class="form-group">
                         <label for="formGroupExampleInput">Proxima Fecha Cuota</label>
@@ -134,9 +153,9 @@
                     </div>
                     <div class="form-group">
                         <label for="formGroupExampleInput2">Balance Prestamo</label>
-                        <input id="balanceLoand" type="text" (keyup)="setFormat($event,'balance')"  class="form-control"name="balanceLoand" #name="ngModel"
-                        [(ngModel)]="paymentFull.balanceLoand"
-                         placeholder="Ingrese el valor a pagar">
+                        <input id="balanceLoand" type="text" (keyup)="setFormat($event,'balance')" class="form-control"
+                            name="balanceLoand" #name="ngModel" [(ngModel)]="paymentFull.balanceLoand"
+                            placeholder="Ingrese el valor a pagar">
                     </div>
                     <div class="form-group">
                         <label for="">Estado Pago</label>
@@ -148,9 +167,9 @@
                     </div>
                     <div class="form-group">
                         <label for="formGroupExampleInput2">Valor a Pagar</label>
-                        <input id="amoutn" type="text" (keyup)="setFormat($event,'full')" class="form-control"name="amount" #name="ngModel"
-                        [(ngModel)]="paymentFull.amount"
-                         placeholder="Ingrese el valor a pagar">
+                        <input id="amoutn" type="text" (keyup)="setFormat($event,'full')" class="form-control"
+                            name="amount" #name="ngModel" [(ngModel)]="paymentFull.amount"
+                            placeholder="Ingrese el valor a pagar">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
@@ -177,13 +196,14 @@
                 <form #formLoan="ngForm">
                     <div class="form-group">
                         <label for="formGroupExampleInput2">Valor a Pagar</label>
-                        <input id="amoutn" type="text" (keyup)="setFormat($event,'normal')"  class="form-control"name="amount" #name="ngModel"
-                        [(ngModel)]="paymentNormal.amount"
-                         placeholder="Ingrese el valor a pagar">
+                        <input id="amoutn" type="text" (keyup)="setFormat($event,'normal')" class="form-control"
+                            name="amount" #name="ngModel" [(ngModel)]="paymentNormal.amount"
+                            placeholder="Ingrese el valor a pagar">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                        <button type="button" (click)="updatePaymentNormal()" class="btn btn-primary">Registrar Pago</button>
+                        <button type="button" (click)="updatePaymentNormal()" class="btn btn-primary">Registrar
+                            Pago</button>
                     </div>
                 </form>
             </div>
@@ -215,9 +235,9 @@
                     </div>
                     <div class="form-group">
                         <label for="formGroupExampleInput2">Valor Interes</label>
-                        <input id="interes" type="text" (keyup)="setFormat($event,'interes')"  class="form-control"name="interest" #name="ngModel"
-                        [(ngModel)]="paymentFull.interest"
-                         placeholder="Ingrese el valor a pagar">
+                        <input id="interes" type="text" (keyup)="setFormat($event,'interes')" class="form-control"
+                            name="interest" #name="ngModel" [(ngModel)]="paymentFull.interest"
+                            placeholder="Ingrese el valor a pagar">
                     </div>
                     <div class="form-group">
                         <label for="formGroupExampleInput">Proxima Fecha Cuota</label>
@@ -231,9 +251,9 @@
                     </div>
                     <div class="form-group">
                         <label for="formGroupExampleInput2">Balance Prestamo</label>
-                        <input id="balanceLoand" type="text" (keyup)="setFormat($event,'balance')"  class="form-control"name="balanceLoand" #name="ngModel"
-                        [(ngModel)]="paymentFull.balanceLoand"
-                         placeholder="Ingrese el valor a pagar">
+                        <input id="balanceLoand" type="text" (keyup)="setFormat($event,'balance')" class="form-control"
+                            name="balanceLoand" #name="ngModel" [(ngModel)]="paymentFull.balanceLoand"
+                            placeholder="Ingrese el valor a pagar">
                     </div>
                     <div class="form-group">
                         <label for="">Estado Pago</label>
@@ -245,9 +265,9 @@
                     </div>
                     <div class="form-group">
                         <label for="formGroupExampleInput2">Valor a Pagar</label>
-                        <input id="amoutn" type="text" (keyup)="setFormat($event,'full')" class="form-control"name="amount" #name="ngModel"
-                        [(ngModel)]="paymentFull.amount"
-                         placeholder="Ingrese el valor a pagar">
+                        <input id="amoutn" type="text" (keyup)="setFormat($event,'full')" class="form-control"
+                            name="amount" #name="ngModel" [(ngModel)]="paymentFull.amount"
+                            placeholder="Ingrese el valor a pagar">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
@@ -259,18 +279,82 @@
     </div>
 </div>
 <!--Modal delete-->
-<div class="modal" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="margin-top: 10em;">
+<div class="modal" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+    style="margin-top: 10em;">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <P>Eliminar pago</P>
             </div>
             <div class="modal-body">
-                <p><button class="btn btn-danger btn-ok"><span class="span glyphicon glyphicon-trash"></span></button> Esta seguro que desea eliminar este registro!!</p>
+                <p><button class="btn btn-danger btn-ok"><span class="span glyphicon glyphicon-trash"></span></button>
+                    Esta seguro que desea eliminar este registro!!</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-danger btn-ok" (click)="deletePayment()"><span class="span glyphicon glyphicon-trash" > </span> Eliminar</a>
+                <a class="btn btn-danger btn-ok" (click)="deletePayment()"><span class="span glyphicon glyphicon-trash">
+                    </span> Eliminar</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Modal data interest-pending-->
+<div class="modal" style="width: 100%;" id="show-md-interest-pending" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document"  style="width: 60%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Intereses Pendientes</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table id="tableInterest" 
+                   class="table-striped table-bordered" style="width: 100%;
+                    padding: 12px">
+                    <thead>
+                        <tr>
+                            <th style="width: 10%">
+                                Fecha Interes
+                            </th>
+                            <th style="width: 10%">
+                                Valor
+                            </th>
+                            <th style="width: 15%">
+                                Estado
+                            </th>
+                            <th style="width: 160px;text-align: center;width: 15%;">
+                                Acciones
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="altura" *ngFor="let item of interest">
+                            <td>{{item.dayPayment | date: 'yyyy'}}-{{item.dayPayment | date:'MM'}}-{{item.dayPayment | date: 'dd'}}
+                            </td>
+                            <td>{{item.interestPending | number:'1.2-2'}}</td>
+                            <td>{{statusPaymenDate(item.state)}}</td>
+                            <td style="display: inline-flex">
+                                <div style="margin-left: 60px;">
+                                    <a type="button" class="btn btn-sm btn-primary edit mr-2 cursor-pinter"
+                                        title="Actualizar pago" (click)="editPayment('show-md-update-payment',item._id)"
+                                        data-target="#exampleModal">
+                                        <span class="glyphicon glyphicon-edit button-magin"> </span>
+                                    </a>
+                                    <a type="button" (click)="openModal('show-md-update-payment-normal',item._id)"
+                                        title="Pago Cuota" class="btn btn-sm btn-info payment button-magin cursor-pinter"
+                                        data-target="#exampleModal">
+                                        <span class="glyphicon glyphicon-usd"></span> </a>
+                                    <a type="button" class="btn btn-sm btn-danger delete button-magin cursor-pinter"
+                                        title="Eliminar pago" (click)="openModal('confirm-delete',item._id)">
+                                        <span class="span glyphicon glyphicon-trash"> </span>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
