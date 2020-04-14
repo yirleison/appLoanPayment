@@ -8,6 +8,7 @@ import { PaymenService } from 'src/app/services/payment-services/payment.service
 import { InterestService } from '../../../services/interest-service/interest.service';
 import { PaymentModel } from '../../../models/payment/payment.full.model';
 import { paymenPaymentModel } from '../../../models/payment/payment.model'
+import { ContentComponent } from '../content/content.component'
 declare var $;
 
 @Component({
@@ -18,7 +19,7 @@ declare var $;
 })
 export class PaytmentsComponent implements OnInit {
 
-
+  //@ViewChild(ContentComponent) hijo: ContentComponent;
   dtOptions: DataTables.Settings = {};
   dtTrigger: Subject<any> = new Subject();
   @ViewChild(DataTableDirective, { static: true }) dtElement: DataTableDirective;
@@ -36,7 +37,10 @@ export class PaytmentsComponent implements OnInit {
   public bandera: boolean;
   public interest: any;
 
-  constructor(private _router: ActivatedRoute, private paymentService: PaymenService, private interestService: InterestService, private toastr: ToastrService, ) {
+
+
+  constructor(private _router: ActivatedRoute, private _route: Router, private paymentService: PaymenService, private interestService: InterestService, private toastr: ToastrService,
+    private contentComponent: ContentComponent) {
     this.paymentNormal = new paymenPaymentModel('0');
     this.paymentFull = new PaymentModel('', '', '0', '0', '', '0', '0', '');
     this.statusPayment = ['Pendiente', 'Pagado'];
@@ -79,6 +83,7 @@ export class PaytmentsComponent implements OnInit {
         }
         console.log(this.bandera)
         this.payments = payments.message;
+        console.log(this.payments)
         this.balances = payments.message;
         this.cuotas = 0;
         for (let i = 0; i < this.balances.length; i++) {
@@ -142,15 +147,11 @@ export class PaytmentsComponent implements OnInit {
       console.log(model)
       this.paymentFull.interest = amount_parts.join('.');
     }
-    else if (model == 'normal') {
-      console.log(model)
+    else if(model == 'normal'){
       this.paymentNormal.amount = amount_parts.join('.');
     }
-    else if (model == 'balance') {
+    else if(model == 'balance'){
       this.paymentFull.balanceLoand = amount_parts.join('.');
-    }
-    else {
-      this.paymentFull.amount = amount_parts.join('.');
     }
     //   console.log(amount_parts.join('.'))
   }
@@ -344,39 +345,7 @@ export class PaytmentsComponent implements OnInit {
       }
     )
   }
-  //Funcionabilidad para pago y consulta de intereses...
-  getInterestByIdPayment(idModal, idPayment) {
-    // $("#tableInterest").dataTable().fnDestroy();
-
-    /*this.dtOptions = {
-      pagingType: "full_numbers",
-      pageLength: 5,
-      autoWidth: true,
-      order: [[0, 'desc']],
-      language: {
-        url: '//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json'
-      }
-    };*/
-    this.interestService.listInterestByIdPayment(idPayment).subscribe(
-      (interest: any) => {
-        if (interest.status == 'OK') {
-          this.interest = interest.message;
-          // this.dtTrigger.next();
-          $(document).ready(function () {
-            $("#tableInterest").dataTable({
-              language: {
-                url: '//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json'
-              }
-            })
-          });
-          
-          this.openModal(idModal, null)
-        }
-      },
-      error => { console.error(error) }
-    )
-  }
-  showToaster(status, title, message) {
+ showToaster(status, title, message) {
     switch (status) {
       case '1':
         this.toastr.success(message + '.', title);
@@ -391,6 +360,31 @@ export class PaytmentsComponent implements OnInit {
 
   }
 
+  getInterestByIdPayment(id) {
+    this.interestService.listInterest().subscribe(
+      (interest: any) => {
+        if (interest.status == 'OK' && interest.message.length > 0) {
+          console.log(id)
+          let p = interest.message;
+          let t = p.filter(x => x.idPayment == id);
+          if(t.length > 0) {
+            console.log('entro', t)
+            this._route.navigate(['intereses/', id]);
+          }
+          else {
+            console.log('no lo encontro')
+            this.contentComponent.changeStatusAlert(true, 'info','Esta cuota de pago no presenta intereses en mora.')
+          }
+         // this._route.navigate(['intereses/', id]);
+        }
+        else {
+          //this.contentComponent.changeStatusAlert(true, 'info','Esta cuota de pago no presenta intereses en mora.')
+        }
+      },
+      error => { console.error(error) }
+    )
+
+  }
   resetAmount(value) {
     value.toString().split(',');
     let p = value.toString().split(',');

@@ -19,4 +19,43 @@ export class InterestService {
           headers: headers
         });
       }
+
+      listInterestById(id) {
+        const headers = new HttpHeaders({
+          "Content-Type": "application/json; charset=utf-8"
+        });
+
+        return this.httpClient.get( this.urlBase + 'interest/' + id, {
+          headers: headers
+        });
+      }
+
+      listInterest() {
+        const headers = new HttpHeaders({
+          "Content-Type": "application/json; charset=utf-8"
+        });
+
+        return this.httpClient.get( this.urlBase + 'interest', {
+          headers: headers
+        });
+      }
+
+      
+      updateInterest(id, payload) {   
+        const httpOptions = {
+          headers: new HttpHeaders({
+            'Content-Type':  'application/json',
+          })
+        };
+        return this.httpClient.put(this.urlBase +'interest/'+id,payload,httpOptions);
+      }
+
+      deleteInterest(id) {
+        const httpOptions = {
+          headers: new HttpHeaders({
+            'Content-Type':  'application/json'
+          })
+        }
+        return this.httpClient.delete(this.urlBase +'interest/'+id,httpOptions)
+      }
 }

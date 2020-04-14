@@ -1,0 +1,115 @@
+<div class="row">
+  <div class="col-md-2">
+    <button style="font-family: Verdana; font-size: 10 pt; border-radius: 18px; padding: 8px;" (click)="backClicked()"
+      class="button"><span class="glyphicon glyphicon-arrow-left"></span>Volver atrás</button>
+  </div>
+</div>
+<br>
+<br>
+<div class="row">
+  <div class="col-md-11">
+    <table id="tableInterest" class="table-striped table-bordered" style="width: 100%;
+     padding: 12px">
+      <thead>
+        <tr>
+          <th style="width: 30%">
+            Fecha Interes
+          </th>
+          <th style="width: 30%">
+            Valor
+          </th>
+          <th style="width: 20%">
+            Estado
+          </th>
+          <th style="width: 160px;text-align: center;width: 20%;">
+            Acciones
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="altura" *ngFor="let item of interest">
+          <td>{{item.dayPayment | date: 'yyyy'}}-{{item.dayPayment | date:'MM'}}-{{item.dayPayment | date: 'dd'}}
+          </td>
+          <td>{{item.interestPending | number:'1.2-2'}}</td>
+          <td>{{statusPaymenDate(item.state)}}</td>
+          <td style="display: inline-flex">
+            <div style="margin-left: 50px;">
+              <a type="button" class="btn btn-sm btn-primary edit mr-2 cursor-pinter"
+                (click)="editInterest('show-md-update-interest',item._id)" title="Actualizar pago"
+                data-target="#exampleModal">
+                <span class="glyphicon glyphicon-edit button-magin"> </span>
+              </a>
+              <a type="button" class="btn btn-sm btn-danger delete button-magin cursor-pinter" title="Eliminar pago"
+                (click)="openModal('confirm-delete',item._id)">
+                <span class="span glyphicon glyphicon-trash"> </span>
+              </a>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!--Modal data interest-pending-->
+<div class="modal" style="width: 100%;" id="show-md-update-interest" tabindex="-1" role="dialog"
+  aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document" style="width: 60%;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Intereses Pendientes</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="formGroupExampleInput">Fecha Pago</label>
+          <div class='input-group date' id='interest-datepicker'>
+            <input type='text'  #name="ngModel" [(ngModel)]="interestModel.dayPayment" id="date-interest" name="dayPayment" class="form-control" />
+            <span class="input-group-addon">
+              <span class="glyphicon glyphicon-calendar"></span>
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="formGroupExampleInput2">Valor Interes</label>
+          <input id="interes" (keyup)="setFormat($event,'interes')" [(ngModel)]="interestModel.interestPending" id="interest-pending" name="interestPending" type="text" (keyup)="setFormat($event,'interes')" class="form-control" #name="ngModel"
+            placeholder="Ingrese el valor a pagar">
+        </div>
+        <div class="form-group">
+          <label for="">Estado Pago</label>
+          <select id="statusPayment" class="form-control" [(ngModel)]="interestModel.state" id="interest-pending" name="state" (change)="changeinterest($event)" #name="ngModel">
+            <option value="0">Seleccione el Estado</option>
+            <option value="{{item}}" *ngFor="let item of statusInterest let index">{{item}}</option>
+          </select>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+          <button type="button" (click) ="updateInterest()"  class="btn btn-primary">Actualizar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Modal delete-->
+<div class="modal" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+    style="margin-top: 10em;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <P>Eliminar pago</P>
+            </div>
+            <div class="modal-body">
+                <p><button class="btn btn-danger btn-ok"><span class="span glyphicon glyphicon-trash"></span></button>
+                    Esta seguro que desea eliminar este registro!!</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-danger btn-ok" (click)="deleteInterest()"><span class="span glyphicon glyphicon-trash">
+                    </span> Eliminar</a>
+            </div>
+        </div>
+    </div>
+</div>

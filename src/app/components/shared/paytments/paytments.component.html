@@ -56,6 +56,9 @@
             class="tabla_sin table table-striped table-bordered">
             <thead>
                 <tr>
+                    <th style="width: 3%%">
+                        ID
+                    </th>
                     <th style="width: 10%">
                         Fecha Pago
                     </th>
@@ -80,7 +83,8 @@
                 </tr>
             </thead>
             <tbody>
-                <tr class="altura" *ngFor="let item of payments">
+                <tr class="altura" *ngFor="let item of payments;let i = index">
+                    <td>{{i+1}}</td>
                     <td *ngIf="item.dateDeposit == 'null' || item.dateDeposit == null; else thenBlock">Pendiente</td>
                     <td>{{item.amount | number:'1.2-2'}}</td>
                     <td>{{item.interest | number:'1.2-2'}}</td>
@@ -91,7 +95,7 @@
                     <td style="display: inline-flex">
                         <div style="margin-left: 60px;">
                             <a type="button" class="btn btn-sm btn-primary edit mr-2 cursor-interes"
-                                (click)="getInterestByIdPayment('show-md-interest-pending',item._id)"
+                                (click)="getInterestByIdPayment(item._id)"
                                 title="Ver intereses pendientes" style="margin-right: 2px" data-target="#exampleModal">
                                 <span class="glyphicon glyphicon-briefcase button-magin">
                                 </span>
@@ -310,51 +314,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <table id="tableInterest" 
-                   class="table-striped table-bordered" style="width: 100%;
-                    padding: 12px">
-                    <thead>
-                        <tr>
-                            <th style="width: 10%">
-                                Fecha Interes
-                            </th>
-                            <th style="width: 10%">
-                                Valor
-                            </th>
-                            <th style="width: 15%">
-                                Estado
-                            </th>
-                            <th style="width: 160px;text-align: center;width: 15%;">
-                                Acciones
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="altura" *ngFor="let item of interest">
-                            <td>{{item.dayPayment | date: 'yyyy'}}-{{item.dayPayment | date:'MM'}}-{{item.dayPayment | date: 'dd'}}
-                            </td>
-                            <td>{{item.interestPending | number:'1.2-2'}}</td>
-                            <td>{{statusPaymenDate(item.state)}}</td>
-                            <td style="display: inline-flex">
-                                <div style="margin-left: 60px;">
-                                    <a type="button" class="btn btn-sm btn-primary edit mr-2 cursor-pinter"
-                                        title="Actualizar pago" (click)="editPayment('show-md-update-payment',item._id)"
-                                        data-target="#exampleModal">
-                                        <span class="glyphicon glyphicon-edit button-magin"> </span>
-                                    </a>
-                                    <a type="button" (click)="openModal('show-md-update-payment-normal',item._id)"
-                                        title="Pago Cuota" class="btn btn-sm btn-info payment button-magin cursor-pinter"
-                                        data-target="#exampleModal">
-                                        <span class="glyphicon glyphicon-usd"></span> </a>
-                                    <a type="button" class="btn btn-sm btn-danger delete button-magin cursor-pinter"
-                                        title="Eliminar pago" (click)="openModal('confirm-delete',item._id)">
-                                        <span class="span glyphicon glyphicon-trash"> </span>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+
             </div>
         </div>
     </div>
