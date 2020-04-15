@@ -19,6 +19,8 @@ import { routing, appRoutingProviders } from './app.routing';
 import { HomeComponent } from './components/home/home.component'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PaytmentsComponent } from './components/shared/paytments/paytments.component';
+import { UserComponent } from './components/shared/user/user.component';
+import { ReactiveFormsModule } from '@angular/forms';
 import { DataTablesModule } from 'angular-datatables';
 import { IonicModule } from '@ionic/angular';
 //import { AlertsModule } from 'angular-alert-module';
@@ -37,7 +39,8 @@ import { IonicModule } from '@ionic/angular';
     LayoutComponent,
     HomeComponent,
     PaytmentsComponent,
-    InterestComponent
+    InterestComponent,
+    UserComponent
   ],
   imports: [
     BrowserModule,
@@ -45,6 +48,7 @@ import { IonicModule } from '@ionic/angular';
     routing,
     HttpClientModule,
     BrowserAnimationsModule,
+    ReactiveFormsModule,
     DataTablesModule,
     NgbModule,
     ToastrModule.forRoot(),

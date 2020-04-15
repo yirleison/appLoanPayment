@@ -91,7 +91,7 @@
                     <td>{{item.nextDatePayment | date: 'yyyy'}}-{{item.nextDatePayment | date:'MM'}}-{{item.nextDatePayment | date: 'dd'}}
                     </td>
                     <td>{{item.balanceLoand | number:'1.2-2'}}</td>
-                    <td>{{statusPaymenDate(item.statusDeposit)}}</td>
+                    <td *ngIf ="statusPaymenDate(item.statusDeposit)=='Pagado'; else thenBlock2"><div class="style-interest" style=""> Pagado</div> </td>
                     <td style="display: inline-flex">
                         <div style="margin-left: 60px;">
                             <a type="button" class="btn btn-sm btn-primary edit mr-2 cursor-interes"
@@ -119,6 +119,10 @@
                         <td>{{item.dateDeposit | date: 'yyyy'}}-{{item.dateDeposit | date:'MM'}}-{{item.dateDeposit | date: 'dd'}}
                         </td>
                     </ng-template>
+                    <ng-template #thenBlock2>
+                        <td><div class="style-interest-pendiente" style=""> Pendiente</div>
+                        </td>
+                      </ng-template>
                 </tr>
             </tbody>
 

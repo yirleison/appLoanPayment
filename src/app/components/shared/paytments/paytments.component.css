@@ -37,3 +37,17 @@
 .cursor-pinter {
     cursor: pointer;
 }
+
+.style-interest {
+    background: green;
+    padding-left: 4px;
+    border-radius: 5px;
+    color: white;
+  }
+  
+  .style-interest-pendiente {
+    background: red;
+    padding-left: 4px;
+    border-radius: 5px;
+    color: white;
+  }

@@ -24,18 +24,19 @@ export class InterestComponent implements OnInit {
   public statusInterest: String[];
   public status: String = '';
   public interestModel: InterestModel;
+  public prueba: any;
 
 
   constructor(private _location: Location, private _router: ActivatedRoute, private interestService: InterestService, private toastr: ToastrService) {
     this.statusInterest = ['Pendiente', 'Pagado'];
-    this.interestModel = new InterestModel('', '', '', '0', '')
+    this.interestModel = new InterestModel('', '', '', false, '')
   }
 
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
     this.paramsByRoute()
-        $(function () {
+    $(function () {
       $("#interest-datepicker")
         .datepicker({
           autoclose: true,
@@ -45,7 +46,7 @@ export class InterestComponent implements OnInit {
     });
 
   }
-  backClicked(){
+  backClicked() {
     this._location.back();
   }
   statusPaymenDate(status) {
@@ -93,7 +94,7 @@ export class InterestComponent implements OnInit {
     this._router.params.subscribe(
       (params: Params) => {
         let idPayment = params.idPayment;
-        this.getInterestByIdPayment(null,  params.idPayment)
+        this.getInterestByIdPayment(null, params.idPayment)
         localStorage.setItem('idPaymentUpdate', idPayment);
       }
     );
@@ -132,8 +133,10 @@ export class InterestComponent implements OnInit {
   }
 
   updateInterest() {
-    this.interestModel.state = (this.interestModel.state == 'Pendiente') ? false : true
+    let state = this.interestModel.state;
+    this.interestModel.state = (state == 'Pendiente') ? false : true
     this.interestModel.interestPending = this.resetAmount(this.interestModel.interestPending)
+    console.log(this.interestModel)
     this.interestService.updateInterest(this.interestModel._id, this.interestModel).subscribe(
       (interestUpdate: any) => {
         if (interestUpdate.status == 'OK') {
@@ -142,7 +145,7 @@ export class InterestComponent implements OnInit {
             this.showToaster('1', 'Actualización intereses', 'Actualización reaizada con exito');
             $("#tableInterest").dataTable().fnDestroy();
             this.getInterestByIdPayment(null, localStorage.getItem('idPaymentUpdate'))
-            this.interestModel = new InterestModel('', '', '', '0', '')
+            this.interestModel = new InterestModel('', '', '', false, '')
             this.closeModal('show-md-update-interest')
           }
           //this.openModal(idModal, null)
@@ -160,7 +163,7 @@ export class InterestComponent implements OnInit {
   //Funcionabilidad para pago y consulta de intereses...
   getInterestByIdPayment(idModal, idPayment) {
 
-    this.interestService.listInterestByIdPayment(idPayment).subscribe(
+    this.interestService.listInterest().subscribe(
       (interest: any) => {
         if (interest.status == 'OK') {
           if (interest.status == 'OK') {
@@ -170,10 +173,40 @@ export class InterestComponent implements OnInit {
                 $("#tableInterest").dataTable({
                   language: {
                     url: '//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json'
+                  },
+                  "paging": false,
+                  "autoWidth": true,
+                  "footerCallback": function (row, data, start, end, display) {
+                    var api = this.api();
+                    var nb_cols = api.columns().nodes().length;
+                    console.log(nb_cols)
+                    var j = 2;
+                    while (j <= 2) {
+                      var pageTotal = api
+                        .column(j, { page: 'current' })
+                        .data()
+                        .reduce(function (a, b) {
+                          console.log('hola a---------->', a)
+                          console.log('hola b---------->', b)
+                          let y = a.toString().split(',');
+                          let p = b.toString().split(',');
+
+                          let u = p.join('');
+                          let r = y.join('')
+
+                          let o = parseFloat(u) + parseFloat(r)
+                          console.log('Result', o)
+                          let total = parseFloat(u) + parseFloat(r);
+                          return total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                        }, 0);
+                      console.log(pageTotal)
+                      // Update footer
+                      $(api.column(j).footer()).html(pageTotal);
+                      j++;
+                    }
                   }
                 })
               });
-
             } else {
               //this.contentComponent.changeStatusAlert(true, 'info','Esta cuota de pago no presenta intereses en mora.')
               //this.contentComponent.changeStatusAlert(true, '','')
@@ -185,6 +218,7 @@ export class InterestComponent implements OnInit {
       error => { console.error(error) }
     )
   }
+
 
   deleteInterest() {
 

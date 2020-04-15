@@ -44,7 +44,6 @@ export class PaytmentsComponent implements OnInit {
     this.paymentNormal = new paymenPaymentModel('0');
     this.paymentFull = new PaymentModel('', '', '0', '0', '', '0', '0', '');
     this.statusPayment = ['Pendiente', 'Pagado'];
-
   }
 
   ngOnInit() {

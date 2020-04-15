@@ -1,0 +1,70 @@
+<div class="row">
+    <div class="col-md-12">
+        <button id="lblLoan" (click)="openModal('show-md-create-user',null)" style="background-color: #0073b7;"
+            class="btn btn-primary">Crear Usuario</button>
+    </div>
+</div>
+
+
+
+<div class="modal" id="show-md-create-user" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Registrat Usuario</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+                    <div class="form-group">
+                        <label for="formGroupExampleInput2">Nombre Completo</label>
+                        <input type="text" class="form-control" formControlName="fullName" placeholder="Ingrese el nombre completo">
+                        <label for="" class="text-danger">{{hasError('fullName')}}</label>
+                    </div>
+                    <div class="form-group">
+                        <label for="formGroupExampleInput2">Número de documento</label>
+                        <input type="text" class="form-control" formControlName="documentNumber"
+                            placeholder="Ingrese el valor a pagar">
+                    </div>
+                    <div class="form-group">
+                        <label for="">Tipo documento</label>
+                        <select class="form-control" formControlName="documentType"  name="">
+                            <option value="0">Seleccione el tipo documento</option>
+                            <option value="1">CC</option>
+                            <option value="2">TI</option>
+                            <option value="3">CE</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="">Tipo cuenta</label>
+                        <select class="form-control" formControlName="accountType">
+                            <option value="0">Seleccione el tipo de cuenta</option>
+                            <option value="1">AHORROS</option>
+                            <option value="2">CORRIENTE</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="formGroupExampleInput2">Número de cuenta</label>
+                        <input type="text" class="form-control" formControlName="accountNumber" placeholder="Ingrese el núemro de cuenta">
+                        <label for="" class="text-danger">{{hasError('accountNumber')}}</label>
+                    </div>
+                    <div class="form-group">
+                        <label for="formGroupExampleInput2">E-mail</label>
+                        <input type="text" class="form-control" formControlName="email" placeholder="Ingrese el e-mail">
+                    </div>
+                    <div class="form-group">
+                        <label for="formGroupExampleInput2">Password</label>
+                        <input type="text" class="form-control" formControlName="password" placeholder="Ingrese el password">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <button type="button" (click)="createUser()" [disabled]="!userForm.valid" class="btn btn-primary">Registrar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
