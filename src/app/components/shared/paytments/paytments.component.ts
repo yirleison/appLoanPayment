@@ -344,6 +344,7 @@ export class PaytmentsComponent implements OnInit {
       }
     )
   }
+  
  showToaster(status, title, message) {
     switch (status) {
       case '1':
@@ -356,7 +357,6 @@ export class PaytmentsComponent implements OnInit {
         this.toastr.error(message + '.', title);
         break;
     }
-
   }
 
   getInterestByIdPayment(id) {

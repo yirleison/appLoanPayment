@@ -6,13 +6,13 @@ import { HttpClientModule, HttpClient, HttpHeaders } from '@angular/common/http'
 export class UserService {
   constructor(private httpClient: HttpClient) {}
 
-  createLoan(payload) {
+  createUser(payload) {
     const headers = new HttpHeaders({
       "Content-Type": "application/json; charset=utf-8"
     });
 
     return this.httpClient.post(
-      "http://localhost:3000/registrar-prestamo",
+      "http://localhost:3000/registrar-usuario",
       payload,
       { headers: headers }
     );

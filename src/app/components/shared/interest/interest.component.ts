@@ -29,7 +29,7 @@ export class InterestComponent implements OnInit {
 
   constructor(private _location: Location, private _router: ActivatedRoute, private interestService: InterestService, private toastr: ToastrService) {
     this.statusInterest = ['Pendiente', 'Pagado'];
-    this.interestModel = new InterestModel('', '', '', false, '')
+    this.interestModel = new InterestModel('', '', '', '0', '')
   }
 
   ngOnInit(): void {
@@ -134,7 +134,7 @@ export class InterestComponent implements OnInit {
 
   updateInterest() {
     let state = this.interestModel.state;
-    this.interestModel.state = (state == 'Pendiente') ? false : true
+  //  this.interestModel.state = (state == 'Pendiente') ? 0 : 1
     this.interestModel.interestPending = this.resetAmount(this.interestModel.interestPending)
     console.log(this.interestModel)
     this.interestService.updateInterest(this.interestModel._id, this.interestModel).subscribe(
@@ -145,7 +145,7 @@ export class InterestComponent implements OnInit {
             this.showToaster('1', 'Actualización intereses', 'Actualización reaizada con exito');
             $("#tableInterest").dataTable().fnDestroy();
             this.getInterestByIdPayment(null, localStorage.getItem('idPaymentUpdate'))
-            this.interestModel = new InterestModel('', '', '', false, '')
+            this.interestModel = new InterestModel('', '', '', '0', '')
             this.closeModal('show-md-update-interest')
           }
           //this.openModal(idModal, null)

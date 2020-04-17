@@ -4,6 +4,68 @@
             class="btn btn-primary">Crear Usuario</button>
     </div>
 </div>
+<br>
+<br>
+<div class="row" style="margin-left: 5px; margin-right: 5px;">
+    <div class="col-md-12 col-lg-12 col-xs-12">
+        <table id="tableUser"
+            class="tabla_sin table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th style="width: 3%">
+                        ID
+                    </th>
+                    <th style="width: 19%">
+                        Nombre
+                    </th>
+                    <th style="width: 15%">
+                        Identificación
+                    </th>
+                    <th style="width: 12%">
+                       Tipo Cuenta
+                    </th>
+                    <th style="width: 10%">
+                        Numero Cuenta
+                    </th>
+                    <th style="width: 15%">
+                        Teléfono
+                    </th>
+                    <th style="width: 40px;text-align: center;">
+                        Acciones
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let user of users; let i = index" >
+                    <td>{{i + 1}}</td>
+                    <td>{{user.fullName}}</td>
+                    <td>{{user.documentNumber}}</td>
+                    <td>{{user.accountType}}</td>
+                    <td>{{user.accountNumber}}</td>
+                    <td>{{user.phone}}</td>
+                    <td style="display: inline-flex">
+                        <div style="margin-left: 82px;">
+                            <a type="button" style="margin-right: 4px" class="btn btn-sm btn-primary edit mr-2 cursor-pinter"
+                                title="Actualizar pago"
+                                data-target="#exampleModal">
+                                <span class="glyphicon glyphicon-edit button-magin"> </span>
+                            </a>
+                            <a type="button"
+                                title="Pago Cuota" style="margin-right: 4px" class="btn btn-sm btn-info payment button-magin cursor-pinter"
+                                data-target="#exampleModal">
+                                <span class="glyphicon glyphicon-usd"></span> </a>
+                            <a type="button" style="margin-right: 4px" class="btn btn-sm btn-danger delete button-magin cursor-pinter"
+                                title="Eliminar pago">
+                                <span class="span glyphicon glyphicon-trash"> </span>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+
+        </table>
+    </div>
+</div>
 
 
 
@@ -22,21 +84,23 @@
                     <div class="form-group">
                         <label for="formGroupExampleInput2">Nombre Completo</label>
                         <input type="text" class="form-control" formControlName="fullName" placeholder="Ingrese el nombre completo">
-                        <label for="" class="text-danger">{{hasError('fullName')}}</label>
+                        <label style="font-size: small;" for="" class="text-danger">{{hasError('fullName')}}</label>
                     </div>
                     <div class="form-group">
                         <label for="formGroupExampleInput2">Número de documento</label>
                         <input type="text" class="form-control" formControlName="documentNumber"
-                            placeholder="Ingrese el valor a pagar">
+                            placeholder="Ingrese número de documento">
+                            <label style="font-size: small;" for="" class="text-danger">{{hasError('documentNumber')}}</label>
                     </div>
                     <div class="form-group">
                         <label for="">Tipo documento</label>
-                        <select class="form-control" formControlName="documentType"  name="">
+                        <select class="form-control" placeholder="Seleccione el tipo documento" formControlName="documentType"  name="">
                             <option value="0">Seleccione el tipo documento</option>
                             <option value="1">CC</option>
                             <option value="2">TI</option>
                             <option value="3">CE</option>
                         </select>
+                        <label style="font-size: small;" for="" class="text-danger">{{hasError('documentType')}}</label>
                     </div>
                     <div class="form-group">
                         <label for="">Tipo cuenta</label>
@@ -45,6 +109,7 @@
                             <option value="1">AHORROS</option>
                             <option value="2">CORRIENTE</option>
                         </select>
+                        <label for="" class="text-danger">{{hasError('accountType')}}</label>
                     </div>
                     <div class="form-group">
                         <label for="formGroupExampleInput2">Número de cuenta</label>
@@ -54,10 +119,17 @@
                     <div class="form-group">
                         <label for="formGroupExampleInput2">E-mail</label>
                         <input type="text" class="form-control" formControlName="email" placeholder="Ingrese el e-mail">
+                        <label for="" class="text-danger">{{hasError('email')}}</label>
+                    </div>
+                    <div class="form-group">
+                        <label for="formGroupExampleInput2">Telefono</label>
+                        <input type="text" class="form-control" formControlName="phone" placeholder="Ingrese el número de teléfono">
+                        <label for="" class="text-danger">{{hasError('phone')}}</label>
                     </div>
                     <div class="form-group">
                         <label for="formGroupExampleInput2">Password</label>
                         <input type="text" class="form-control" formControlName="password" placeholder="Ingrese el password">
+                        <label for="" class="text-danger">{{hasError('password')}}</label>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
