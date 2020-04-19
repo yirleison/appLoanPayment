@@ -18,12 +18,12 @@ export class LoanService {
     );
   }
 
-  listLoan() {
+  listLoanByIdUser(id) {
     const headers = new HttpHeaders({
       "Content-Type": "application/json; charset=utf-8"
     });
 
-    return this.httpClient.get("http://localhost:3000/prestamos", {
+    return this.httpClient.get("http://localhost:3000/prestamo-usuario/"+id, {
       headers: headers
     });
   }

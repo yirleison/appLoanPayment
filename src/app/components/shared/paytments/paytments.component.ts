@@ -39,8 +39,14 @@ export class PaytmentsComponent implements OnInit {
 
 
 
-  constructor(private _router: ActivatedRoute, private _route: Router, private paymentService: PaymenService, private interestService: InterestService, private toastr: ToastrService,
-    private contentComponent: ContentComponent) {
+  constructor(
+    private _router: ActivatedRoute,
+    private _route: Router,
+    private paymentService: PaymenService,
+    private interestService: InterestService,
+    private toastr: ToastrService,
+    private contentComponent: ContentComponent
+  ) {
     this.paymentNormal = new paymenPaymentModel('0');
     this.paymentFull = new PaymentModel('', '', '0', '0', '', '0', '0', '');
     this.statusPayment = ['Pendiente', 'Pagado'];
@@ -146,10 +152,10 @@ export class PaytmentsComponent implements OnInit {
       console.log(model)
       this.paymentFull.interest = amount_parts.join('.');
     }
-    else if(model == 'normal'){
+    else if (model == 'normal') {
       this.paymentNormal.amount = amount_parts.join('.');
     }
-    else if(model == 'balance'){
+    else if (model == 'balance') {
       this.paymentFull.balanceLoand = amount_parts.join('.');
     }
     //   console.log(amount_parts.join('.'))
@@ -344,8 +350,8 @@ export class PaytmentsComponent implements OnInit {
       }
     )
   }
-  
- showToaster(status, title, message) {
+
+  showToaster(status, title, message) {
     switch (status) {
       case '1':
         this.toastr.success(message + '.', title);
@@ -360,24 +366,26 @@ export class PaytmentsComponent implements OnInit {
   }
 
   getInterestByIdPayment(id) {
+   
     this.interestService.listInterest().subscribe(
       (interest: any) => {
+        console.log(interest)
         if (interest.status == 'OK' && interest.message.length > 0) {
           console.log(id)
           let p = interest.message;
           let t = p.filter(x => x.idPayment == id);
-          if(t.length > 0) {
+          if (t.length > 0) {
             console.log('entro', t)
             this._route.navigate(['intereses/', id]);
           }
           else {
             console.log('no lo encontro')
-            this.contentComponent.changeStatusAlert(true, 'info','Esta cuota de pago no presenta intereses en mora.')
+            this.contentComponent.changeStatusAlert(true, 'info', 'Esta cuota de pago no presenta intereses en mora.')
           }
-         // this._route.navigate(['intereses/', id]);
+          // this._route.navigate(['intereses/', id]);
         }
         else {
-          //this.contentComponent.changeStatusAlert(true, 'info','Esta cuota de pago no presenta intereses en mora.')
+          this.contentComponent.changeStatusAlert(true, 'info', 'Esta cuota de pago no presenta intereses en mora.')
         }
       },
       error => { console.error(error) }

@@ -9,6 +9,7 @@ import { UserComponent } from './components/shared/user/user.component';
 
 const appRutes: Routes = [
     { path: '', component: HomeComponent },
+    {path: 'prestamos/:id', component: LoansComponent},
     {path: 'prestamos', component: LoansComponent},
     {path: 'pagos/:idLoan', component: PaytmentsComponent},
     {path: 'intereses/:idPayment', component: InterestComponent},

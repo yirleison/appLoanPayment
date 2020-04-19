@@ -36,6 +36,7 @@ export class LoansComponent implements OnInit {
     private userService: UserService,
     private toastr: ToastrService,
     private _route: Router,
+    private _router: ActivatedRoute,
     private http: HttpClient,
   ) {
     this.loan = new loansModel('12/02/2020', '', 0, false, '', "");
@@ -43,7 +44,7 @@ export class LoansComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
+    this.getIdUserByRoute()
     this.getUsers();
 
     $(document).ready(function () {
@@ -69,29 +70,23 @@ export class LoansComponent implements OnInit {
     });
 
     this.showModalDelete();
-    this.getLoans();
   }
 
-  showToaster(status, title, message) {
-    switch (status) {
-      case '1':
-        this.toastr.success(title, message);
-        break;
-      case '2':
-        this.toastr.error(title, message);
-        break
-      default:
-        this.toastr.error(title, message);
-        break;
-    }
-
+  getIdUserByRoute() {
+    this._router.params.subscribe(
+      (param: Params) => {
+        let id = param.id;
+        localStorage.setItem('idUser', id)
+        this.getLoans(id)
+      }
+    )
   }
 
   showModal(id) {
     $('#' + id).modal()
   }
 
-  getLoans() {
+  getLoans(id) {
     this.dtOptions = {
       pagingType: "full_numbers",
       pageLength: 5,
@@ -101,11 +96,11 @@ export class LoansComponent implements OnInit {
         url: '//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json'
       }
     };
-    this.loanService.listLoan().subscribe(
+    this.loanService.listLoanByIdUser(id).subscribe(
       (loans: any) => {
         if (loans) {
           this.loans = loans.data;
-          console.log(this.loans);
+          //console.log(loans);
           this.dtTrigger.next();
         }
       },
@@ -178,7 +173,7 @@ export class LoansComponent implements OnInit {
           $("#show-md-crea-loan").modal('hide');
           this.showToaster('1', 'Prestamo', 'Prestamo creado con éxito')
           $("#example").dataTable().fnDestroy();
-          this.getLoans();
+          this.getLoans(localStorage.getItem('idUser'));
 
           // let dateLoan = moment($("#loan-date").val()).format("YYYY-MM-DD");
           // $("#valor-prestamo").val("");
@@ -255,6 +250,21 @@ export class LoansComponent implements OnInit {
         console.log("Delete", datos);
       });
     });
+  }
+
+  showToaster(status, title, message) {
+    switch (status) {
+      case '1':
+        this.toastr.success(title, message);
+        break;
+      case '2':
+        this.toastr.error(title, message);
+        break
+      default:
+        this.toastr.error(title, message);
+        break;
+    }
+
   }
 }
 

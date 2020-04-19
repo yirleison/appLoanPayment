@@ -1,44 +1,80 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 import { ToastrService, Toast } from 'ngx-toastr';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { User } from '../../../models/user/user.model'
+import { Endpoints } from '../../config/endpoints'
 import { UserService } from '../../../services/user-services/user.service';
+import { UploadService } from '../../../services/uploads-service/upload.service';
 //import { MustMatch } from './_helpers/must-match.validator';
 declare var $;
 @Component({
     selector: 'app-user',
     templateUrl: './user.component.html',
     styleUrls: ['./user.component.css'],
-    providers: [UserService]
+    providers: [UserService, UploadService]
 })
 export class UserComponent implements OnInit {
     registerForm: FormGroup;
     submitted = false;
     public user: User;
     public users: any;
-    constructor(private formBuilder: FormBuilder, private toastr: ToastrService, private userService: UserService) {
-        this.userForm = this.formBuilder.group({
+    public nameImagen;
+    public fileToUpload: Array<File>;
+    public urlBase: String;
+    public avatar: String = 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQzr9MZuVHIBRWTXhdzLQAx_-Y0e5Wg6-MmJv4uLE1AyHnhdA5V&usqp=CAU'
+    public statusUser: String = "0";
+    public bandera: Boolean = false
+    //public sizeFile = this.fileToUpload.length;
+
+    constructor(
+        private formBuilder: FormBuilder,
+        private toastr: ToastrService,
+        private userService: UserService,
+        private uploadService: UploadService,
+        private _route: Router
+    ) {
+        this.urlBase = Endpoints.url;
+
+        this.userFormUpdate = this.formBuilder.group({
             fullName: '',
             documentType: '0',
             documentNumber: '',
             accountType: '0',
             accountNumber: '',
+            bank: '0',
             phone: '',
             email: '',
-            password: ''
+            password: '',
+            status: ''
         })
-        this.user = new User('', '', '', '', '', '', '', '');
+        this.user = new User('', '', '', '', '', '', '', '', '', '', '');
     }
 
     userForm = this.formBuilder.group({
+        fullName: ['', [Validators.required, Validators.maxLength(30)]],
+        documentType: ['0', [Validators.required, Validators.pattern("[a-zA-Z0-9]")]],
+        documentNumber: [''],
+        accountType: ['0'],
+        accountNumber: [''],
+        bank: ['0'],
+        phone: ['', [Validators.required]],
+        email: ['',],
+        password: [''],
+        status: ['']
+    })
+
+    userFormUpdate = this.formBuilder.group({
         fullName: ['', [Validators.required, Validators.maxLength(15)]],
         documentType: ['', [Validators.required, Validators.pattern("[a-zA-Z0-9]")]],
         documentNumber: [''],
         accountType: [''],
         accountNumber: [''],
+        bank: [''],
         phone: ['', [Validators.required]],
         email: ['',],
-        password: ['']
+        password: [''],
+        status: ['']
     })
 
     ngOnInit(): void {
@@ -72,7 +108,7 @@ export class UserComponent implements OnInit {
     }
 
     createUser() {
-        console.log(this.userForm.value)
+        //console.log(this.userForm.value)
         var str = this.userForm.value.fullName;
         str = str.toLowerCase().replace(/\b[a-z]/g, function (letter) {
             return letter.toUpperCase();
@@ -80,19 +116,25 @@ export class UserComponent implements OnInit {
 
         this.user.fullName = str
         this.user.documentNumber = this.userForm.value.documentNumber
-        this.user.documentType = this.getDocumentType(this.userForm.value.documentType)
+        this.user.documentType = this.userForm.value.documentType
         this.user.accountNumber = this.userForm.value.accountNumber
-        this.user.accountType = this.getaccountType(this.userForm.value.accountType)
+        this.user.accountType = this.userForm.value.accountType
+        this.user.bank = this.userForm.value.bank
         this.user.phone = this.userForm.value.phone
         this.user.email = this.userForm.value.email
         this.user.password = this.userForm.value.password
-
+        this.user.photo = (localStorage.getItem('image') == '' || localStorage.getItem('image') == null ? '' : localStorage.getItem('image'))
+        this.user.status = '1';
+        //console.log(this.user)
         /**Save user in DB */
         this.userService.createUser(this.user)
             .subscribe(
                 (user: any) => {
                     if (user.status == 'OK') {
                         this.showToaster('1', 'Registrar usuario', 'El usuario se ha registrado exitosamente')
+                        $("#tableUser").dataTable().fnDestroy();
+                        localStorage.removeItem('image')
+                        this.getUsers()
                         this.closeModal('show-md-create-user')
                         this.userForm.reset();
                         this.userForm = this.formBuilder.group({
@@ -101,9 +143,11 @@ export class UserComponent implements OnInit {
                             documentNumber: '',
                             accountType: '0',
                             accountNumber: '',
+                            bank: '0',
                             phone: '',
                             email: '',
-                            password: ''
+                            password: '',
+                            photo: ''
                         })
                     }
                 },
@@ -111,6 +155,63 @@ export class UserComponent implements OnInit {
                     console.log(error)
                 }
             )
+    }
+
+    editUser(idModal, idUser) {
+        /**Save user in DB */
+        this.userService.listUsersById(idUser)
+            .subscribe(
+                (user: any) => {
+                    if (user.status == 'OK') {
+                        //this.showToaster('1', 'Registrar usuario', 'El usuario se ha registrado exitosamente')
+                        // $("#tableUser").dataTable().fnDestroy();
+                        // this.getUsers()
+                        // this.closeModal('show-md-create-user')
+                        // this.userForm.reset();
+                        console.log(user)
+                        this.user = user.message
+                        this.userFormUpdate = this.formBuilder.group({
+                            fullName: this.user.fullName,
+                            documentType: this.user.documentType,
+                            documentNumber: this.user.documentNumber,
+                            accountType: this.user.accountType,
+                            accountNumber: this.user.accountNumber,
+                            bank: this.user.bank,
+                            phone: this.user.phone,
+                            email: this.user.email,
+                            password: this.user.password,
+                            status: this.user.status
+                        })
+
+                        this.user.photo = (this.user.photo == '' || this.user.photo == null ? this.avatar : this.user.photo)
+                        $(".image-user").attr("src", this.user.photo);
+                        //console.log(this.userFormUpdate.value)
+                        this.openModal(idModal, null)
+                    }
+                },
+                error => {
+                    console.log(error)
+                }
+            )
+    }
+
+    // Recojo la información del archivo a subir con el evento change...
+    fileChangeEvent(fileInput: any) {
+        this.fileToUpload = <Array<File>>fileInput.target.files;
+        console.log(this.fileToUpload.length);
+        if (this.fileToUpload.length > 0 || this.fileToUpload != null) {
+            this.uploadService.makeFileRequest([], this.fileToUpload, null, 'archivo', 'usuario').then(
+                (result: any) => {
+                    console.log(result)
+                    localStorage.setItem('image', result.nameImagen)
+                    var image_path = this.urlBase + 'imagen/' + result.nameImagen
+                    $(".image-user").attr("src", image_path);
+                },
+                (error: any) => {
+                    console.log(error)
+                }
+            )
+        }
     }
 
     getUsers() {
@@ -132,6 +233,70 @@ export class UserComponent implements OnInit {
             }
         )
     }
+    updateUser() {
+        var str = this.userFormUpdate.value.fullName;
+        str = str.toLowerCase().replace(/\b[a-z]/g, function (letter) {
+            return letter.toUpperCase();
+        })
+        this.user.fullName = str
+        this.user.documentNumber = this.userFormUpdate.value.documentNumber
+        this.user.documentType = this.userFormUpdate.value.documentType
+        this.user.accountNumber = this.userFormUpdate.value.accountNumber
+        this.user.accountType = this.userFormUpdate.value.accountType
+        this.user.bank = this.userFormUpdate.value.bank
+        this.user.phone = this.userFormUpdate.value.phone
+        this.user.email = this.userFormUpdate.value.email
+        this.user.password = this.userFormUpdate.value.password
+        this.user.photo = (localStorage.getItem('image') == '' || localStorage.getItem('image') == null ? '' : localStorage.getItem('image'))
+        console.log('Update User', this.user)
+    }
+
+    changeStatus(id, status) {
+        let sta = false
+
+        if (id == 'null') {
+            // this.statusUser = (status == '0' || status == '' || typeof(status) == 'undefined' ? 'Inactivo' : 'Activo')
+            this.getStatus(status)
+            sta = (status == '0' || typeof (status) == 'undefined' ? false : true)
+            if (sta) {
+                $(".status1").attr("class", 'btn btn-success btn btn-sm  delete button-magin cursor-pinter');
+            }
+            else {
+                $(".status2").attr("class", 'btn btn-warning btn btn-sm  delete button-magin cursor-pinter');
+            }
+        }
+        else {
+            this.userService.changeStatusUsersById(id, { status: (status == '1' ? '0' : '1') }).subscribe(
+                (statusUser: any) => {
+                    // this.getStatus(statusUser.message.status)
+                    sta = (statusUser.message.status == '0' || typeof (statusUser.message.status) == 'undefined' ? false : true)
+                    // console.log( this.statusUser)
+                    if (sta) {
+                        $(".status1").attr("class", 'btn btn-warning btn btn-sm  delete button-magin cursor-pinter');
+                        $("#tableUser").dataTable().fnDestroy();
+                        this.getUsers()
+                    }
+                    else {
+                        console.log('entro cuando se actualiza el estado a false', sta)
+                        $(".status2").attr("class", 'btn btn-warning btn btn-sm  delete button-magin cursor-pinter');
+                        $("#tableUser").dataTable().fnDestroy();
+                        this.getUsers()
+                    }
+                    // console.log(sta)
+                },
+                error => {
+                    console.log(error)
+                }
+            )
+        }
+        // console.log('New status',sta)
+        return sta
+    }
+
+    getStatus(data) {
+        this.statusUser = (data == '0' || data == '' || typeof (data) == 'undefined' ? 'Inactivo' : 'Activo')
+        return this.statusUser
+    }
 
     getDocumentType(type) {
         let documentType = {
@@ -142,12 +307,30 @@ export class UserComponent implements OnInit {
         return documentType[type]
     }
 
+    getBank(name) {
+        let bank = {
+            '1': 'Bancolombia',
+            '2': 'Davivienda',
+            '3': 'Banco de Bogota',
+            '4': 'Banco Popular',
+        }
+        return bank[name]
+    }
+
     getaccountType(type) {
         let accountType = {
             '1': 'AHORROS',
             '2': 'CORRIENTE',
         }
         return accountType[type]
+    }
+    onSubmit() {
+        console.log('hola mundo');
+        this.submitted = true;
+    }
+
+    goTo(id) {
+        this._route.navigate(['prestamos/', id])
     }
 
     showToaster(status, title, message) {

@@ -8,8 +8,7 @@
 <br>
 <div class="row" style="margin-left: 5px; margin-right: 5px;">
     <div class="col-md-12 col-lg-12 col-xs-12">
-        <table id="tableUser"
-            class="tabla_sin table table-striped table-bordered">
+        <table id="tableUser" class="tabla_sin table table-striped table-bordered">
             <thead>
                 <tr>
                     <th style="width: 3%">
@@ -22,7 +21,10 @@
                         Identificación
                     </th>
                     <th style="width: 12%">
-                       Tipo Cuenta
+                        Tipo Cuenta
+                    </th>
+                    <th style="width: 12%">
+                        Banco
                     </th>
                     <th style="width: 10%">
                         Numero Cuenta
@@ -36,27 +38,28 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let user of users; let i = index" >
+                <tr *ngFor="let user of users; let i = index">
                     <td>{{i + 1}}</td>
                     <td>{{user.fullName}}</td>
                     <td>{{user.documentNumber}}</td>
-                    <td>{{user.accountType}}</td>
+                    <td>{{getaccountType(user.accountType)}}</td>
+                    <td>{{getBank(user.bank)}}</td>
                     <td>{{user.accountNumber}}</td>
                     <td>{{user.phone}}</td>
                     <td style="display: inline-flex">
-                        <div style="margin-left: 82px;">
-                            <a type="button" style="margin-right: 4px" class="btn btn-sm btn-primary edit mr-2 cursor-pinter"
-                                title="Actualizar pago"
-                                data-target="#exampleModal">
+                        <div style="margin-left: -35px;">
+                            <a type="button" (click)="editUser('show-md-update-user', user._id)"
+                                style="margin-right: 4px" class="btn btn-sm btn-primary edit mr-2 cursor-pinter"
+                                title="Actualizar Usuario" data-target="#exampleModal">
                                 <span class="glyphicon glyphicon-edit button-magin"> </span>
                             </a>
-                            <a type="button"
-                                title="Pago Cuota" style="margin-right: 4px" class="btn btn-sm btn-info payment button-magin cursor-pinter"
+                            <a type="button" (click)="goTo(user._id)" title="Consultar Prestamos" style="margin-right: 4px"
+                                class="btn btn-sm btn-info payment button-magin cursor-pinter"
                                 data-target="#exampleModal">
                                 <span class="glyphicon glyphicon-usd"></span> </a>
-                            <a type="button" style="margin-right: 4px" class="btn btn-sm btn-danger delete button-magin cursor-pinter"
-                                title="Eliminar pago">
-                                <span class="span glyphicon glyphicon-trash"> </span>
+                            <a type="button" style="margin-right: 4px"
+                                [ngClass]="((changeStatus('null', user.status)) ? ' status1':  'status2 ')" title="">
+                                <span (click)="changeStatus(user._id, user.status)" class="">{{statusUser}}</span>
                             </a>
                         </div>
                     </td>
@@ -68,7 +71,7 @@
 </div>
 
 
-
+<!-- Modal create user -->
 <div class="modal" id="show-md-create-user" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -80,61 +83,285 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
-                    <div class="form-group">
-                        <label for="formGroupExampleInput2">Nombre Completo</label>
-                        <input type="text" class="form-control" formControlName="fullName" placeholder="Ingrese el nombre completo">
-                        <label style="font-size: small;" for="" class="text-danger">{{hasError('fullName')}}</label>
+                <form style="padding: 5px;" [formGroup]="userForm" (ngSubmit)="onSubmit()">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="formGroupExampleInput2">Nombre Completo</label>
+                                <input type="text" class="form-control" formControlName="fullName"
+                                    placeholder="Ingrese el nombre completo">
+                                <label style="font-size: small;" for=""
+                                    class="text-danger">{{hasError('fullName')}}</label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="formGroupExampleInput2">Número de documento</label>
+                                <input type="text" class="form-control" formControlName="documentNumber"
+                                    placeholder="Ingrese número de documento">
+                                <label style="font-size: small;" for=""
+                                    class="text-danger">{{hasError('documentNumber')}}</label>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="formGroupExampleInput2">Número de documento</label>
-                        <input type="text" class="form-control" formControlName="documentNumber"
-                            placeholder="Ingrese número de documento">
-                            <label style="font-size: small;" for="" class="text-danger">{{hasError('documentNumber')}}</label>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="">Tipo documento</label>
+                                <select class="form-control" formControlName="documentType" name="">
+                                    <option value="0">Seleccione el tipo documento</option>
+                                    <option value="1">CC</option>
+                                    <option value="2">TI</option>
+                                    <option value="3">CE</option>
+                                </select>
+                                <label style="font-size: small;" for=""
+                                    class="text-danger">{{hasError('documentType')}}</label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="">Tipo cuenta</label>
+                                <select class="form-control" formControlName="accountType">
+                                    <option value="0">Seleccione el tipo de cuenta</option>
+                                    <option value="1">AHORROS</option>
+                                    <option value="2">CORRIENTE</option>
+                                </select>
+                                <label for="" class="text-danger">{{hasError('accountType')}}</label>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="">Tipo documento</label>
-                        <select class="form-control" placeholder="Seleccione el tipo documento" formControlName="documentType"  name="">
-                            <option value="0">Seleccione el tipo documento</option>
-                            <option value="1">CC</option>
-                            <option value="2">TI</option>
-                            <option value="3">CE</option>
-                        </select>
-                        <label style="font-size: small;" for="" class="text-danger">{{hasError('documentType')}}</label>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="formGroupExampleInput2">Número de cuenta</label>
+                                <input type="text" class="form-control" formControlName="accountNumber"
+                                    placeholder="Ingrese el núemro de cuenta">
+                                <label for="" class="text-danger">{{hasError('accountNumber')}}</label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="">Selecione el Banco</label>
+                                <select class="form-control" formControlName="bank">
+                                    <option value="0">Seleccione el Banco</option>
+                                    <option value="1">BANCOLOMBIA</option>
+                                    <option value="2">DAVIVIENDA</option>
+                                    <option value="3">BANCO DE BOGOTA</option>
+                                    <option value="4">BANCO AVVILLAS</option>
+                                </select>
+                                <label for="" class="text-danger">{{hasError('bank')}}</label>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="">Tipo cuenta</label>
-                        <select class="form-control" formControlName="accountType">
-                            <option value="0">Seleccione el tipo de cuenta</option>
-                            <option value="1">AHORROS</option>
-                            <option value="2">CORRIENTE</option>
-                        </select>
-                        <label for="" class="text-danger">{{hasError('accountType')}}</label>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="formGroupExampleInput2">E-mail</label>
+                                <input type="text" class="form-control" formControlName="email"
+                                    placeholder="Ingrese el e-mail">
+                                <label for="" class="text-danger">{{hasError('email')}}</label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="formGroupExampleInput2">Telefono</label>
+                                <input type="text" class="form-control" formControlName="phone"
+                                    placeholder="Ingrese el número de teléfono">
+                                <label for="" class="text-danger">{{hasError('phone')}}</label>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="formGroupExampleInput2">Número de cuenta</label>
-                        <input type="text" class="form-control" formControlName="accountNumber" placeholder="Ingrese el núemro de cuenta">
-                        <label for="" class="text-danger">{{hasError('accountNumber')}}</label>
-                    </div>
-                    <div class="form-group">
-                        <label for="formGroupExampleInput2">E-mail</label>
-                        <input type="text" class="form-control" formControlName="email" placeholder="Ingrese el e-mail">
-                        <label for="" class="text-danger">{{hasError('email')}}</label>
-                    </div>
-                    <div class="form-group">
-                        <label for="formGroupExampleInput2">Telefono</label>
-                        <input type="text" class="form-control" formControlName="phone" placeholder="Ingrese el número de teléfono">
-                        <label for="" class="text-danger">{{hasError('phone')}}</label>
-                    </div>
-                    <div class="form-group">
-                        <label for="formGroupExampleInput2">Password</label>
-                        <input type="text" class="form-control" formControlName="password" placeholder="Ingrese el password">
-                        <label for="" class="text-danger">{{hasError('password')}}</label>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="formGroupExampleInput2">Password</label>
+                                <input type="text" class="form-control" formControlName="password"
+                                    placeholder="Ingrese el password">
+                                <label for="" class="text-danger">{{hasError('password')}}</label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <label id="texto" for="formGroupExampleInput2">
+                                <img id="image_user" class="image-user"
+                                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQzr9MZuVHIBRWTXhdzLQAx_-Y0e5Wg6-MmJv4uLE1AyHnhdA5V&usqp=CAU"
+                                    alt="Click aquí para subir tu foto" title="Click aquí para subir tu foto">
+                            </label>
+                            <div id="div-file">
+                                <p id="texto">subir foto</p>
+                                <input id="file-input" (change)="fileChangeEvent($event)" name="foto" type="file" />
+                            </div>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                        <button type="button" (click)="createUser()" [disabled]="!userForm.valid" class="btn btn-primary">Registrar</button>
+                        <button type="button" (click)="createUser()" [disabled]="!userForm.valid"
+                            class="btn btn-primary">Registrar</button>
                     </div>
+                    <ng-template #passwordTemplate>
+                        <div class="form-group">
+                            <label for="formGroupExampleInput2">Password</label>
+                            <input type="text" class="form-control" formControlName="password"
+                                placeholder="Ingrese el password">
+                            <label for="" class="text-danger">{{hasError('password')}}</label>
+                        </div>
+                    </ng-template>
+                    <ng-template #avatar>
+                        <img src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.shutterstock.com%2Fsearch%2Fno%2Bavatar&psig=AOvVaw1kcziZ3O50ZkFC1i57B2MO&ust=1587341215044000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCNjq2_uY8-gCFQAAAAAdAAAAABAD"
+                            alt="">
+                    </ng-template>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal update -->
+<div class="modal" id="show-md-update-user" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Actualizar Usuario</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form style="padding: 5px;" [formGroup]="userFormUpdate" (ngSubmit)="onSubmit()">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="formGroupExampleInput2">Nombre Completo</label>
+                                <input type="text" class="form-control" formControlName="fullName"
+                                    placeholder="Ingrese el nombre completo">
+                                <label style="font-size: small;" for=""
+                                    class="text-danger">{{hasError('fullName')}}</label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="formGroupExampleInput2">Número de documento</label>
+                                <input type="text" class="form-control" formControlName="documentNumber"
+                                    placeholder="Ingrese número de documento">
+                                <label style="font-size: small;" for=""
+                                    class="text-danger">{{hasError('documentNumber')}}</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="">Tipo documento</label>
+                                <select class="form-control" formControlName="documentType" name="">
+                                    <option value="0">Seleccione el tipo documento</option>
+                                    <option value="1">CC</option>
+                                    <option value="2">TI</option>
+                                    <option value="3">CE</option>
+                                </select>
+                                <label style="font-size: small;" for=""
+                                    class="text-danger">{{hasError('documentType')}}</label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="">Tipo cuenta</label>
+                                <select class="form-control" formControlName="accountType">
+                                    <option value="0">Seleccione el tipo de cuenta</option>
+                                    <option value="1">AHORROS</option>
+                                    <option value="2">CORRIENTE</option>
+                                </select>
+                                <label for="" class="text-danger">{{hasError('accountType')}}</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="formGroupExampleInput2">Número de cuenta</label>
+                                <input type="text" class="form-control" formControlName="accountNumber"
+                                    placeholder="Ingrese el núemro de cuenta">
+                                <label for="" class="text-danger">{{hasError('accountNumber')}}</label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="">Selecione el Banco</label>
+                                <select class="form-control" formControlName="bank">
+                                    <option value="0">Seleccione el Banco</option>
+                                    <option value="1">BANCOLOMBIA</option>
+                                    <option value="2">DAVIVIENDA</option>
+                                    <option value="3">BANCO DE BOGOTA</option>
+                                    <option value="4">BANCO AVVILLAS</option>
+                                </select>
+                                <label for="" class="text-danger">{{hasError('bank')}}</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="formGroupExampleInput2">E-mail</label>
+                                <input type="text" class="form-control" formControlName="email"
+                                    placeholder="Ingrese el e-mail">
+                                <label for="" class="text-danger">{{hasError('email')}}</label>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="formGroupExampleInput2">Telefono</label>
+                                <input type="text" class="form-control" formControlName="phone"
+                                    placeholder="Ingrese el número de teléfono">
+                                <label for="" class="text-danger">{{hasError('phone')}}</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group" *ngIf="!user.password; else passwordTemplate">
+
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <label id="texto" for="formGroupExampleInput2">
+                                <img id="image_user" class="image-user"
+                                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQzr9MZuVHIBRWTXhdzLQAx_-Y0e5Wg6-MmJv4uLE1AyHnhdA5V&usqp=CAU"
+                                    alt="Click aquí para subir tu foto" title="Click aquí para subir tu foto">
+                            </label>
+                            <div id="div-file">
+                                <p id="texto">Actualizar foto</p>
+                                <input id="file-input" (change)="fileChangeEvent($event)" name="foto" type="file" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label for="">Selecione el estado</label>
+                                <select class="form-control" formControlName="status">
+                                    <option value="">Seleccione el Banco</option>
+                                    <option value="1">Activo</option>
+                                    <option value="0">Inactivo</option>
+                                </select>
+                                <label for="" class="text-danger">{{hasError('status')}}</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <button type="button" (click)="updateUser()" class="btn btn-primary">Actualizar</button>
+                    </div>
+                    <ng-template #passwordTemplate>
+                        <div class="form-group">
+                            <label for="formGroupExampleInput2">Password</label>
+                            <input type="text" class="form-control" formControlName="password"
+                                placeholder="Ingrese el password">
+                            <label for="" class="text-danger">{{hasError('password')}}</label>
+                        </div>
+                    </ng-template>
+                    <ng-template #avatar>
+                        <img src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.shutterstock.com%2Fsearch%2Fno%2Bavatar&psig=AOvVaw1kcziZ3O50ZkFC1i57B2MO&ust=1587341215044000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCNjq2_uY8-gCFQAAAAAdAAAAABAD"
+                            alt="">
+                    </ng-template>
                 </form>
             </div>
         </div>
