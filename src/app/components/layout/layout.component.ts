@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
+import { Router, ActivatedRoute, Params } from '@angular/router';
 @Component({
   selector: 'app-layout',
   templateUrl: './layout.component.html',
@@ -7,9 +7,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LayoutComponent implements OnInit {
 
-  constructor() { }
+  constructor( private _router: ActivatedRoute) { }
 
   ngOnInit() {
+    this.paramsByRoute()
+  }
+
+  paramsByRoute() {
+
+    this._router.params.subscribe(
+      (params: Params) => {
+      console.log(params.login)
+      }
+    );
   }
 
 }

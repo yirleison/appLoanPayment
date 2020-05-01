@@ -1,75 +1,81 @@
 <div class="row">
-    <div class="col-md-12">
-        <button id="lblLoan" (click)="openModal('show-md-create-user',null)" style="background-color: #0073b7;"
-            class="btn btn-primary">Crear Usuario</button>
+    <div class="row container">
+        <div class="col-md-12">
+            <button id="lblLoan" (click)="openModal('show-md-create-user',null)" style="background-color: #0073b7;"
+                class="btn btn-primary">Crear Usuario</button>
+        </div>
+    </div>
+    <br>
+    <br>
+    <div class="row" style="margin-left: 5px; margin-right: 5px;">
+        <div class="col-md-12 col-lg-12 col-xs-12">
+            <table id="tableUser" class="tabla_sin table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th style="width: 3%">
+                            ID
+                        </th>
+                        <th style="width: 19%">
+                            Nombre
+                        </th>
+                        <th style="width: 15%">
+                            Identificación
+                        </th>
+                        <th style="width: 12%">
+                            Tipo Cuenta
+                        </th>
+                        <th style="width: 12%">
+                            Banco
+                        </th>
+                        <th style="width: 10%">
+                            Numero Cuenta
+                        </th>
+                        <th style="width: 15%">
+                            Teléfono
+                        </th>
+                        <th style="width: 40px;text-align: center;">
+                            Acciones
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let user of users; let i = index">
+                        <td>{{i + 1}}</td>
+                        <td>{{user.fullName}}</td>
+                        <td>{{user.documentNumber}}</td>
+                        <td>{{getaccountType(user.accountType)}}</td>
+                        <td>{{getBank(user.bank)}}</td>
+                        <td>{{user.accountNumber}}</td>
+                        <td>{{user.phone}}</td>
+                        <td style="display: inline-flex">
+                            <div style="margin-left: -35px;">
+                                <a type="button" (click)="editUser('show-md-update-user', user._id)"
+                                    style="margin-right: 4px" class="btn btn-sm btn-primary edit mr-2 cursor-pinter"
+                                    title="Actualizar Usuario" data-target="#exampleModal">
+                                    <span class="glyphicon glyphicon-edit button-magin"> </span>
+                                </a>
+                                <a type="button" (click)="goTo(user._id)" title="Consultar Prestamos"
+                                    style="margin-right: 4px"
+                                    class="btn btn-sm btn-info payment button-magin cursor-pinter"
+                                    data-target="#exampleModal">
+                                    <span class="glyphicon glyphicon-usd"></span> </a>
+                                <a type="button" style="margin-right: 4px"
+                                    [ngClass]="((changeStatus('null', user.status)) ? ' status1':  'status2 ')"
+                                    title="">
+                                    <span (click)="changeStatus(user._id, user.status)" class="">{{statusUser}}</span>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+
+            </table>
+        </div>
     </div>
 </div>
+
 <br>
 <br>
-<div class="row" style="margin-left: 5px; margin-right: 5px;">
-    <div class="col-md-12 col-lg-12 col-xs-12">
-        <table id="tableUser" class="tabla_sin table table-striped table-bordered">
-            <thead>
-                <tr>
-                    <th style="width: 3%">
-                        ID
-                    </th>
-                    <th style="width: 19%">
-                        Nombre
-                    </th>
-                    <th style="width: 15%">
-                        Identificación
-                    </th>
-                    <th style="width: 12%">
-                        Tipo Cuenta
-                    </th>
-                    <th style="width: 12%">
-                        Banco
-                    </th>
-                    <th style="width: 10%">
-                        Numero Cuenta
-                    </th>
-                    <th style="width: 15%">
-                        Teléfono
-                    </th>
-                    <th style="width: 40px;text-align: center;">
-                        Acciones
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let user of users; let i = index">
-                    <td>{{i + 1}}</td>
-                    <td>{{user.fullName}}</td>
-                    <td>{{user.documentNumber}}</td>
-                    <td>{{getaccountType(user.accountType)}}</td>
-                    <td>{{getBank(user.bank)}}</td>
-                    <td>{{user.accountNumber}}</td>
-                    <td>{{user.phone}}</td>
-                    <td style="display: inline-flex">
-                        <div style="margin-left: -35px;">
-                            <a type="button" (click)="editUser('show-md-update-user', user._id)"
-                                style="margin-right: 4px" class="btn btn-sm btn-primary edit mr-2 cursor-pinter"
-                                title="Actualizar Usuario" data-target="#exampleModal">
-                                <span class="glyphicon glyphicon-edit button-magin"> </span>
-                            </a>
-                            <a type="button" (click)="goTo(user._id)" title="Consultar Prestamos" style="margin-right: 4px"
-                                class="btn btn-sm btn-info payment button-magin cursor-pinter"
-                                data-target="#exampleModal">
-                                <span class="glyphicon glyphicon-usd"></span> </a>
-                            <a type="button" style="margin-right: 4px"
-                                [ngClass]="((changeStatus('null', user.status)) ? ' status1':  'status2 ')" title="">
-                                <span (click)="changeStatus(user._id, user.status)" class="">{{statusUser}}</span>
-                            </a>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-
-        </table>
-    </div>
-</div>
-
 
 <!-- Modal create user -->
 <div class="modal" id="show-md-create-user" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"

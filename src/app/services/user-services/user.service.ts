@@ -7,7 +7,7 @@ export class UserService {
   constructor(private httpClient: HttpClient) { }
 
   createUser(payload) {
-    const headers = new HttpHeaders({
+    let headers = new HttpHeaders({
       "Content-Type": "application/json; charset=utf-8"
     });
 
@@ -19,7 +19,7 @@ export class UserService {
   }
 
   listUsers() {
-    const headers = new HttpHeaders({
+    let headers = new HttpHeaders({
       "Content-Type": "application/json"
     });
 
@@ -27,7 +27,7 @@ export class UserService {
   }
 
   listUsersById(id) {
-    const headers = new HttpHeaders({
+    let headers = new HttpHeaders({
       "Content-Type": "application/json; charset=utf-8"
     });
 
@@ -35,7 +35,7 @@ export class UserService {
   }
 
   updateUsersById(id, payload) {
-    const headers = new HttpHeaders({
+    let headers = new HttpHeaders({
       "Content-Type": "application/json; charset=utf-8"
     });
 
@@ -43,7 +43,7 @@ export class UserService {
   }
 
   changeStatusUsersById(id, payload) {
-    const headers = new HttpHeaders({
+    let headers = new HttpHeaders({
       "Content-Type": "application/json; charset=utf-8"
     });
 

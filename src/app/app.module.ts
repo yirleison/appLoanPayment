@@ -7,6 +7,7 @@ import { ToastrModule } from 'ngx-toastr';
 
 
 import { AppComponent } from './app.component';
+import { NoFoundComponent } from './components/shared/no-found/nofound.component';
 import { HeaderComponent } from './components/shared/header/header.component';
 import { MenuComponent } from './components/shared/menu/menu.component';
 import { ContentComponent } from './components/shared/content/content.component';
@@ -20,9 +21,12 @@ import { HomeComponent } from './components/home/home.component'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PaytmentsComponent } from './components/shared/paytments/paytments.component';
 import { UserComponent } from './components/shared/user/user.component';
+import { LoginComponent } from './components/shared/login/login.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { DataTablesModule } from 'angular-datatables';
 import { IonicModule } from '@ionic/angular';
+import { MainComponent } from './components/main.component';
+import { OauthService } from './services/oauth-services/oauth.user.service';
 //import { AlertsModule } from 'angular-alert-module';
 
 
@@ -40,7 +44,10 @@ import { IonicModule } from '@ionic/angular';
     HomeComponent,
     PaytmentsComponent,
     InterestComponent,
-    UserComponent
+    UserComponent,
+    LoginComponent,
+    NoFoundComponent,
+    MainComponent
   ],
   imports: [
     BrowserModule,
@@ -54,7 +61,7 @@ import { IonicModule } from '@ionic/angular';
     ToastrModule.forRoot(),
     IonicModule.forRoot(),
   ],
-  providers: [appRoutingProviders],
+  providers: [appRoutingProviders, OauthService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

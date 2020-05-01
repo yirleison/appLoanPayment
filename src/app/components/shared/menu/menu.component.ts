@@ -14,7 +14,7 @@ export class MenuComponent implements OnInit {
   }
 
   redirect(path) {
-    this._route.navigate([path]);
+    this._route.navigate(['home/'+path]);
   }
 
 }

@@ -1,5 +1,3 @@
-<!--New DataTable-->
-
 <div class="row ">
     <div class="col-md-12">
         <div class="btn-loan">
@@ -40,8 +38,8 @@
                         <a type="button" class="btn btn-sm btn-primary edit mr-2" data-target="#exampleModal"> <span
                                 class="glyphicon glyphicon-edit button-magin"></span>
                         </a>
-                        <a type="button" class="btn btn-sm btn-info payment button-magin"
-                            data-target="#exampleModal" (click)="goToPage(item._id)">
+                        <a type="button" class="btn btn-sm btn-info payment button-magin" data-target="#exampleModal"
+                            (click)="goToPage(item._id)">
                             <span class="glyphicon glyphicon-usd"></span></a>
                         <a type="button" class="btn btn-sm btn-danger delete button-magin">
                             <span class="span glyphicon glyphicon-trash"></span>
@@ -54,55 +52,56 @@
     </div>
 </div>
 
-<div class="modal" id="show-md-crea-loan" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Crear Prestamo</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form #formLoan="ngForm">
-                    <div class="form-group">
-                        <label for="formGroupExampleInput">Fecha Prestamo</label>
-                        <div class='input-group date' id='datetimepicker1'>
-                            <input type='text' id="loan-date" name="dateLoan" #name="ngModel"
-                                [(ngModel)]="loan.dateLoan" class="form-control" />
-                            <span class="input-group-addon">
-                                <span class="glyphicon glyphicon-calendar"></span>
-                            </span>
+    <div class="modal" id="show-md-crea-loan" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Crear Prestamo</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form #formLoan="ngForm">
+                        <div class="form-group">
+                            <label for="formGroupExampleInput">Fecha Prestamo</label>
+                            <div class='input-group date' id='datetimepicker1'>
+                                <input type='text' id="loan-date" name="dateLoan" #name="ngModel"
+                                    [(ngModel)]="loan.dateLoan" class="form-control" />
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="formGroupExampleInput2">Valor Prestamo</label>
-                        <input id="amoutn" type="text" (keyup)="setFormat($event)" class="form-control" name="amount" #name="ngModel"
-                            [(ngModel)]="loan.amount"
-                         id="valor-prestamo" placeholder="Valor Prestamo">
-                    </div>
-                    <div class="form-group">
-                        <label for="">Tasa de interes</label>
-                        <select class="form-control" (change)="changeinterest($event)"
-                            name="rateInterest" #name="ngModel" [(ngModel)]="loan.rateInterest">
-                            <option value="0">Seleccione el Interes</option>
-                            <option value="{{item}}" *ngFor="let item of rateInterest let index">{{index}} %</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <select id="select2" class="" name="" style="width: 100%;">
-                            <option>Seleccione el Usuario</option>
-                            <option value="{{user._id}}" *ngFor="let user of users">{{user.fullName}}</option>
-                        </select>
-                    </div>
+                        <div class="form-group">
+                            <label for="formGroupExampleInput2">Valor Prestamo</label>
+                            <input id="amoutn" type="text" (keyup)="setFormat($event)" class="form-control"
+                                name="amount" #name="ngModel" [(ngModel)]="loan.amount" id="valor-prestamo"
+                                placeholder="Valor Prestamo">
+                        </div>
+                        <div class="form-group">
+                            <label for="">Tasa de interes</label>
+                            <select class="form-control" (change)="changeinterest($event)" name="rateInterest"
+                                #name="ngModel" [(ngModel)]="loan.rateInterest">
+                                <option value="0">Seleccione el Interes</option>
+                                <option value="{{item}}" *ngFor="let item of rateInterest let index">{{index}} %
+                                </option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <select id="select2" class="" name="" style="width: 100%;">
+                                <option>Seleccione el Usuario</option>
+                                <option value="{{user._id}}" *ngFor="let user of users">{{user.fullName}}</option>
+                            </select>
+                        </div>
 
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                <button type="button" (click)="createLoan()" class="btn btn-primary">Crear Prestamo</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="button" (click)="createLoan()" class="btn btn-primary">Crear Prestamo</button>
+                </div>
             </div>
         </div>
     </div>
-</div>

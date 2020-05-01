@@ -12,7 +12,7 @@
       <div class="pull-left info">
         <p>Alexander Pierce</p>
         <!-- Status -->
-        <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+        <a type="button"><i class="fa fa-circle text-success"></i> Online</a>
       </div>
     </div>
 
@@ -35,25 +35,25 @@
       <li class="active"><a style="cursor: pointer;" (click)="redirect('usuarios')"><i class="fa fa-link"></i> <span>Usuarios</span></a></li>
      <!-- <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>-->
       <li class="treeview">
-        <a href="#"><i class="fa fa-link"></i> <span>Prestamos</span>
+        <a thref="#"><i class="fa fa-link"></i> <span>Prestamos</span>
           <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
         </a>
         <ul class="treeview-menu">
-          <li><a href="#" [routerLink]="['prestamos']">Registrar Prestamo</a></li>
-          <li><a href="#">Administrar Prestamos</a></li>
+          <li><a type="button" (click)="redirect('prestamos')">Administrar Prestamos</a></li>
+          
         </ul>
       </li>
       <li class="treeview">
-        <a href="#"><i class="fa fa-link"></i> <span>Pagos</span>
+        <a type="button"><i class="fa fa-link"></i> <span>Pagos</span>
           <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
         </a>
         <ul class="treeview-menu">
-          <li><a href="#">Registrar Pago</a></li>
-          <li><a href="#">Administrar Pago</a></li>
+          <li><a type="button">Registrar Pago</a></li>
+          <li><a type="button">Administrar Pago</a></li>
         </ul>
       </li>
     </ul>
