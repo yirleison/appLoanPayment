@@ -11,10 +11,17 @@ export class MenuComponent implements OnInit {
   constructor(private _route: Router) { }
 
   ngOnInit() {
+    
   }
 
   redirect(path) {
     this._route.navigate(['home/'+path]);
+  }
+
+  prueba() {
+    $(document).ready(function(){
+      $(".prueba").addClass("treeview");
+    })
   }
 
 }

@@ -16,6 +16,7 @@ export class SessionLoginGuard implements CanActivate {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
       if(this._authServices.isLoggin()){
+        console.log('deberia de entrar al home')
         this._route.navigate(['home'])
         return true
       }else{

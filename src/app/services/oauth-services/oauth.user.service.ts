@@ -25,6 +25,7 @@ export class OauthService {
                 this.token = response.token
                 this.user = response.user
                 this.setSession(this.token, this.user)
+                this.router.navigate(['home'])
                 return true
             }),
             catchError((err => {
@@ -34,8 +35,13 @@ export class OauthService {
     }
 
     getCurrenUser() {
-        let user = localStorage.getItem('currenUser');
+        let user = localStorage.getItem('user');
         return (user == null || typeof (user) == 'undefined' ? null : user)
+    }
+
+    getCurrenToken() {
+        let token = localStorage.getItem('token');
+        return (token == null || typeof (token) == 'undefined' ? null : token)
     }
 
     logoutUser() {
@@ -49,8 +55,16 @@ export class OauthService {
     }
 
     isLoggin() {
-        if (this.token && this.user) return true
-        else return false
+        //console.log('isLoggin',this.getCurrenUser(),this.getCurrenToken())
+        if (this.getCurrenUser() && this.getCurrenToken()) {
+            console.log('isLoggin',this.getCurrenUser(),this.getCurrenToken())
+            return true
+        }       
+        else{
+            return false
+        }
+        
+            
     }
 }
 

@@ -18,6 +18,7 @@ export class LoginComponent implements OnInit {
     public user: User;
     submitted = false;
     islogin = false
+    emailPattern: any = /^(([^<>()\[\]\\.,;:\s@”]+(\.[^<>()\[\]\\.,;:\s@”]+)*)|(“.+”))@((\[[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}])|(([a-zA-Z\-0–9]+\.)+[a-zA-Z]{2,}))$/;
 
 
     constructor(
@@ -30,9 +31,8 @@ export class LoginComponent implements OnInit {
     }
 
     loginUser = this.formBuilder.group({
-        email: '',
-        password: '',
-        gethash: ''
+        email: ['', [Validators.required, Validators.pattern(this.emailPattern)]],
+        password: ['', [Validators.required]]
     })
 
 
@@ -42,14 +42,7 @@ export class LoginComponent implements OnInit {
     }
 
     login() {
-        this.loginUser.value.gethash = true
-        console.log(this.loginUser.value)
-        this.authService.oautLogin(this.loginUser.value).subscribe(resp => {
-           console.log(resp)
-        }, err => {
-            console.log(err);
-        })
-
+        
 
     }
 
@@ -59,8 +52,19 @@ export class LoginComponent implements OnInit {
     }
 
     onSubmit() {
-        console.log('hola mundo');
-        this.submitted = true;
+        if (this.loginUser.valid) {
+            //this.loginUser.value.gethash = true
+            this.authService.oautLogin(this.loginUser.value).subscribe(resp => {
+                console.log(resp)
+            }, err => {
+                console.log(err);
+            })
+            this.loginUser.reset()
+        }
+        else {
+            console.log('No valid')
+        }
+
     }
 
 }

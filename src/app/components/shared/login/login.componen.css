@@ -139,3 +139,14 @@
 .forgot-password:focus{
     color: rgb(12, 97, 33);
 }
+
+.alert-danger {
+    color: #721c24 !important;
+    background: #f8d7da !important;
+    border-color: #f5c6cb !important;
+    margin-bottom: 5px;
+}
+
+.conatiner-error-message {
+    padding: 3px;
+}

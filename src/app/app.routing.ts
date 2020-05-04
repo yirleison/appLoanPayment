@@ -17,7 +17,7 @@ const appRutes: Routes = [
     { path: 'login', component: LoginComponent, canActivate: [SessionLoginGuard] },
     { path: '', component: LoginComponent },
     {
-        path: 'home', component: MainComponent,
+        path: 'home', component: LayoutComponent,
         canActivate: [SessionGuard],
         children: [
             { path: '', component: HomeComponent },

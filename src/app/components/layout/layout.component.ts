@@ -10,16 +10,10 @@ export class LayoutComponent implements OnInit {
   constructor( private _router: ActivatedRoute) { }
 
   ngOnInit() {
-    this.paramsByRoute()
-  }
-
-  paramsByRoute() {
-
-    this._router.params.subscribe(
-      (params: Params) => {
-      console.log(params.login)
-      }
-    );
+    $(document).ready(() => {
+      const trees: any = $('[data-widget="tree"]');
+      trees.tree();
+    });
   }
 
 }
