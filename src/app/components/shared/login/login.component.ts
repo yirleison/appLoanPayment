@@ -17,7 +17,8 @@ export class LoginComponent implements OnInit {
     private currentSession: Session = null;
     public user: User;
     submitted = false;
-    islogin = false
+    public islogin = false
+    public message: string = ''
     emailPattern: any = /^(([^<>()\[\]\\.,;:\s@”]+(\.[^<>()\[\]\\.,;:\s@”]+)*)|(“.+”))@((\[[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}])|(([a-zA-Z\-0–9]+\.)+[a-zA-Z]{2,}))$/;
 
 
@@ -42,7 +43,7 @@ export class LoginComponent implements OnInit {
     }
 
     login() {
-        
+
 
     }
 
@@ -54,11 +55,15 @@ export class LoginComponent implements OnInit {
     onSubmit() {
         if (this.loginUser.valid) {
             //this.loginUser.value.gethash = true
-            this.authService.oautLogin(this.loginUser.value).subscribe(resp => {
-                console.log(resp)
-            }, err => {
-                console.log(err);
-            })
+            this.authService.oautLogin(this.loginUser.value).subscribe(
+                (resp:any) => {
+                    console.log(resp)
+                },
+                (err: any) => {
+                    console.log('Error-response-------->', err);
+                    this.message = err.error.message
+                    this.islogin = true
+                })
             this.loginUser.reset()
         }
         else {
@@ -66,5 +71,8 @@ export class LoginComponent implements OnInit {
         }
 
     }
+
+    get email() { return this.loginUser.get('email') }
+    get password() { return this.loginUser.get('password') }
 
 }

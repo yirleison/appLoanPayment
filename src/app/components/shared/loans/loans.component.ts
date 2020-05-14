@@ -31,6 +31,7 @@ export class LoansComponent implements OnInit {
   public users: any;
   public loan: loansModel;
   intr: Number = 0;
+  public nameUser = '';
   constructor(
     private loanService: LoanService,
     private userService: UserService,
@@ -45,7 +46,6 @@ export class LoansComponent implements OnInit {
 
   ngOnInit(): void {
     this.getIdUserByRoute()
-    this.getUsers();
 
     $(document).ready(function () {
       $('#select2').select2();
@@ -84,6 +84,7 @@ export class LoansComponent implements OnInit {
 
   showModal(id) {
     $('#' + id).modal()
+    this.getUsers()
   }
 
   getLoans(id) {
@@ -96,12 +97,23 @@ export class LoansComponent implements OnInit {
         url: '//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json'
       }
     };
-    this.loanService.listLoanByIdUser(id).subscribe(
+    this.loanService.listLoansByIdUser(id).subscribe(
       (loans: any) => {
-        if (loans) {
-          this.loans = loans.data;
-          //console.log(loans);
-          this.dtTrigger.next();
+        if (loans.data.length != 0) {
+          if (loans.data.user) {
+            this.nameUser = loans.data.user.fullName
+          }
+          if (loans.data) {
+            let [{ idUser }] = loans.data
+            this.nameUser = idUser.fullName
+            localStorage.setItem('nameUser',  idUser.fullName)
+            this.loans = loans.data;
+            this.dtTrigger.next();
+            //console.log('Loans------------>', idUser);
+          }
+        }
+        else {
+          console.log('Loans------------> no trajo data');
         }
       },
       error => {
@@ -212,7 +224,7 @@ export class LoansComponent implements OnInit {
   }
 
   goToPage(id) {
-    this._route.navigate(['pagos/', id]);
+    this._route.navigate(['home/pagos/', id]);
   }
 
   changeinterest(e) {

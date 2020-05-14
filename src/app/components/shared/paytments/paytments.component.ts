@@ -36,7 +36,8 @@ export class PaytmentsComponent implements OnInit {
   public cuotas: any = 0;
   public bandera: boolean;
   public interest: any;
-
+  public nameUser: any
+  public prueba: any
 
 
   constructor(
@@ -53,7 +54,17 @@ export class PaytmentsComponent implements OnInit {
   }
 
   ngOnInit() {
+
     this.paramsByRoute()
+    this.nameUser = localStorage.getItem('nameUser')
+    //console.log('nameUser------------->',this.nameUser);
+
+  }
+
+  activatedCheck() {
+    let p
+    p = $('input:checkbox[name=prueba]:checked').val()
+    this.prueba = $('input:checkbox[name=prueba]:checked').val()
 
   }
 
@@ -366,7 +377,7 @@ export class PaytmentsComponent implements OnInit {
   }
 
   getInterestByIdPayment(id) {
-   
+
     this.interestService.listInterest().subscribe(
       (interest: any) => {
         console.log(interest)

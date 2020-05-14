@@ -7,15 +7,21 @@
         <form class="form-signin" [formGroup]="loginUser" (ngSubmit)="onSubmit()">
             <span id="reauth-email" class="reauth-email"></span>
             <input type="email" id="inputEmail" class="form-control" formControlName="email" placeholder="Email address" required autofocus>
-            <div class="alert-danger">
-                <div class="conatiner-error-message">
+            <!-- Validations -->
+            <div class="alert-danger" *ngIf="email.invalid && (email.dirty || email.touched)">
+                <div class="conatiner-error-message" *ngIf="email.errors.required">
                     El email es requerido
                 </div>
-                <div class="conatiner-error-message">
+                <div class="conatiner-error-message" *ngIf="email.errors.pattern">
                     El email es invalido
                 </div>
             </div>
             <input type="password" id="inputPassword" class="form-control" formControlName="password" placeholder="Password" required>
+            <div class="alert-danger" *ngIf="password.invalid && (password.dirty || password.touched)">
+                <div class="conatiner-error-message" *ngIf="password.errors.required">
+                    La contraseña es requerida
+                </div>
+            </div>
             <div id="remember" class="checkbox">
                 <label>
                     <input type="checkbox" value="remember-me"> Recordarme
@@ -26,5 +32,10 @@
         <a href="#" class="forgot-password">
             Forgot the password?
         </a>
+        <div class="alert-danger" *ngIf="islogin">
+            <div class="conatiner-error-message">
+                {{message}}
+            </div>
+        </div>
     </div><!-- /card-container -->
 </div><!-- /container -->

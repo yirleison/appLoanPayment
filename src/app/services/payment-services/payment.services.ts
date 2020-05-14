@@ -6,38 +6,38 @@ import { Endpoints } from '../../../app/components/config/endpoints'
 
 export class PaymenService {
 
-   public urlBase: String;
+  public urlBase: String;
 
-    constructor(private httpClient: HttpClient) {
-        this.urlBase = Endpoints.url;
-    }
+  constructor(private httpClient: HttpClient) {
+    this.urlBase = Endpoints.url;
+  }
 
-createPayment(payload) {
+  createPayment(payload) {
 
     const httpOptions = {
       headers: new HttpHeaders({
-        'Content-Type':  'application/json'
+        'Content-Type': 'application/json'
       })
     };
-    return this.httpClient.post(this.urlBase +'registrar-pago',payload,httpOptions);
+    return this.httpClient.post(this.urlBase + 'registrar-pago', payload, httpOptions);
   }
 
-  updatePaymentNormal(payload, typepayment, id) {   
-      const httpOptions = {
-        headers: new HttpHeaders({
-          'Content-Type':  'application/json',
-          'typepayment': typepayment
-        })
-      };
-      return this.httpClient.put(this.urlBase +'pago/'+id,payload,httpOptions);
-    }
+  updatePaymentNormal(payload, typepayment, id) {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'typepayment': typepayment
+      })
+    };
+    return this.httpClient.put(this.urlBase + 'pago/' + id, payload, httpOptions);
+  }
 
   listPaymentByLoan(id) {
     const headers = new HttpHeaders({
       "Content-Type": "application/json; charset=utf-8"
     });
 
-    return this.httpClient.get( this.urlBase+ 'pago-prestamo/' + id, {
+    return this.httpClient.get(this.urlBase + 'pago-prestamo/' + id, {
       headers: headers
     });
   }
@@ -47,27 +47,27 @@ createPayment(payload) {
       "Content-Type": "application/json; charset=utf-8"
     });
 
-    return this.httpClient.get( this.urlBase+ 'pago/' + id, {
+    return this.httpClient.get(this.urlBase + 'pago/' + id, {
       headers: headers
     });
   }
 
   updatePayment(payload, id) {
-      const httpOptions = {
-        headers: new HttpHeaders({
-          'Content-Type':  'application/json',
-          'typepayment': '0'
-        })
-      };
-      return this.httpClient.put(this.urlBase +'pago/'+id,payload,httpOptions);
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'typepayment': '0'
+      })
+    };
+    return this.httpClient.put(this.urlBase + 'pago/' + id, payload, httpOptions);
+  }
+
+  deletePayment(id) {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
     }
-  
-    deletePayment(id) {
-      const httpOptions = {
-        headers: new HttpHeaders({
-          'Content-Type':  'application/json'
-        })
-      }
-      return this.httpClient.delete(this.urlBase +'pago/'+id,httpOptions)
-    }
+    return this.httpClient.delete(this.urlBase + 'pago/' + id, httpOptions)
+  }
 }

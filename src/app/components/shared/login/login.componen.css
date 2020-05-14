@@ -10,6 +10,11 @@
     background-image: linear-gradient(rgb(104, 145, 162), rgb(12, 97, 33));
 }
 
+.container {
+    background-color: #F7F7F7 !important;
+    width: 100%;
+    height: 100%;
+}
 .card-container.card {
     max-width: 350px;
     padding: 40px 40px;
@@ -56,7 +61,7 @@
  * Form styles
  */
 .profile-name-card {
-    font-size: 16px;
+    font-size: 15px;
     font-weight: bold;
     text-align: center;
     margin: 10px 0 0;
@@ -144,9 +149,11 @@
     color: #721c24 !important;
     background: #f8d7da !important;
     border-color: #f5c6cb !important;
+    font-size: 10 px !important;
     margin-bottom: 5px;
 }
 
 .conatiner-error-message {
     padding: 3px;
+    font-size: 10 px !important;
 }

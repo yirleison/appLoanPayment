@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core'; //  Inyectar los servicios
 import { HttpClientModule, HttpClient, HttpHeaders } from '@angular/common/http';
 import { Endpoints } from '../../../app/components/config/endpoints'
 import { Router, ActivatedRoute, Params } from '@angular/router';
-import { map, catchError } from 'rxjs/operators';
+import { map, catchError  } from 'rxjs/operators';
+import { throwError } from 'rxjs';
+
 
 
 @Injectable()
@@ -28,10 +30,10 @@ export class OauthService {
                 this.router.navigate(['home'])
                 return true
             }),
-            catchError((err => {
-                return err
+            catchError(error => {
+                //console.log('Error-oautLogin--------->', error.error);
+                return throwError(error);
             }))
-        );
     }
 
     getCurrenUser() {
@@ -57,14 +59,14 @@ export class OauthService {
     isLoggin() {
         //console.log('isLoggin',this.getCurrenUser(),this.getCurrenToken())
         if (this.getCurrenUser() && this.getCurrenToken()) {
-            console.log('isLoggin',this.getCurrenUser(),this.getCurrenToken())
+            console.log('isLoggin', this.getCurrenUser(), this.getCurrenToken())
             return true
-        }       
-        else{
+        }
+        else {
             return false
         }
-        
-            
+
+
     }
 }
 

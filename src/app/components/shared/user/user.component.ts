@@ -174,12 +174,12 @@ export class UserComponent implements OnInit {
                             fullName: this.user.fullName,
                             documentType: this.user.documentType,
                             documentNumber: this.user.documentNumber,
-                            accountType: this.user.accountType,
-                            accountNumber: this.user.accountNumber,
-                            bank: this.user.bank,
+                            accountType: (this.user.accountType == '0' ? '' : this.user.accountType ),
+                            accountNumber: (this.user.accountNumber == '' || this.user.accountNumber == null || this.user.accountNumber == 'undefined' ? '' : this.user.accountNumber),
+                            bank: (this.user.bank == '0' ? '' : this.user.bank),
                             phone: this.user.phone,
-                            email: this.user.email,
-                            password: this.user.password,
+                            email: (this.user.email == '' || this.user.email == null || this.user.email == 'udefined' ? '' : this.user.email),
+                            password: (this.user.password == '' || this.user.password == null || this.user.password == 'undefined' ? '' : this.user.password),
                             status: this.user.status
                         })
 
@@ -330,7 +330,7 @@ export class UserComponent implements OnInit {
     }
 
     goTo(id) {
-        this._route.navigate(['prestamos/', id])
+        this._route.navigate(['home/prestamos/', id])
     }
 
     showToaster(status, title, message) {

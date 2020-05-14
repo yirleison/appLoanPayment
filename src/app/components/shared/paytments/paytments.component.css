@@ -50,4 +50,13 @@
     padding-left: 4px;
     border-radius: 5px;
     color: white;
+    text-align: center;
   }
+
+.nameUser {
+    padding: 4px;
+}
+
+/* styles checkbox */
+
+  

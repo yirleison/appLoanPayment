@@ -1,10 +1,16 @@
 
 import { Injectable } from '@angular/core'; //  Inyectar los servicios
 import { HttpClientModule, HttpClient, HttpHeaders } from '@angular/common/http';
+import { Endpoints } from '../../../app/components/config/endpoints'
+
 
 @Injectable()
 export class UserService {
-  constructor(private httpClient: HttpClient) { }
+  public urlBase: String;
+
+  constructor(private httpClient: HttpClient) {
+    this.urlBase = Endpoints.url;
+   }
 
   createUser(payload) {
     let headers = new HttpHeaders({
@@ -19,19 +25,23 @@ export class UserService {
   }
 
   listUsers() {
-    let headers = new HttpHeaders({
-      "Content-Type": "application/json"
-    });
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    };
 
-    return this.httpClient.get(" http://localhost:3000/usuarios", { headers: headers });
+    return this.httpClient.get(this.urlBase+"usuarios", httpOptions);
   }
 
   listUsersById(id) {
-    let headers = new HttpHeaders({
-      "Content-Type": "application/json; charset=utf-8"
-    });
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    };
 
-    return this.httpClient.get(" http://localhost:3000/usuario/" + id, { headers: headers });
+    return this.httpClient.get(" http://localhost:3000/usuario/" + id, httpOptions);
   }
 
   updateUsersById(id, payload) {
