@@ -76,6 +76,7 @@ export class LoansComponent implements OnInit {
     this._router.params.subscribe(
       (param: Params) => {
         let id = param.id;
+        //console.log('Entrooooo---getLoans------>',id)
         localStorage.setItem('idUser', id)
         this.getLoans(id)
       }
@@ -106,7 +107,6 @@ export class LoansComponent implements OnInit {
           if (loans.data) {
             let [{ idUser }] = loans.data
             this.nameUser = idUser.fullName
-            localStorage.setItem('nameUser',  idUser.fullName)
             this.loans = loans.data;
             this.dtTrigger.next();
             //console.log('Loans------------>', idUser);

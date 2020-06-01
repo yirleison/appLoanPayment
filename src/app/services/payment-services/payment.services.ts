@@ -52,6 +52,16 @@ export class PaymenService {
     });
   }
 
+  consultPaymentDate(id) {
+    const headers = new HttpHeaders({
+      "Content-Type": "application/json; charset=utf-8"
+    });
+
+    return this.httpClient.get(this.urlBase + 'pago-fecha/' + id, {
+      headers: headers
+    });
+  }
+
   updatePayment(payload, id) {
     const httpOptions = {
       headers: new HttpHeaders({

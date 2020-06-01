@@ -56,7 +56,9 @@
 .nameUser {
     padding: 4px;
 }
-
+.cursor {
+    cursor: pointer;
+}
 /* styles checkbox */
 
   

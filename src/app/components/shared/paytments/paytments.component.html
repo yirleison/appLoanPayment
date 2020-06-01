@@ -209,12 +209,6 @@
             <div class="modal-body">
                 <form #formLoan="ngForm">
                     <div class="form-group">
-                        <label for="formGroupExampleInput2">Valor a Pagar</label>
-                        <input id="amoutn" type="text" (keyup)="setFormat($event,'normal')" class="form-control"
-                            name="amount" #name="ngModel" [(ngModel)]="paymentNormal.amount"
-                            placeholder="Ingrese el valor a pagar">
-                    </div>
-                    <div class="form-group">
                         <div class="checkbox checkbox-primary" (click)="activatedCheck()">
                             <input id="checkbox2" class="styled" type="checkbox" name="prueba">
                             <label for="checkbox2">
@@ -222,16 +216,31 @@
                             </label>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" *ngIf="prueba">
                         <div class="row">
                             <div class="col-md-6">
-                                <button style="padding: 0.9px;" type="button" class="btn btn-primary btn-sm">Consul Pago
-                                    Pago</button> 
+                                <label for="">Consulatar valor pago a la fecha: </label>
+                                <button style="padding: 2px; padding-right: 4.2px;" (click) ="consultPaymentDate()" type="button" class="btn btn-primary btn-sm">Consulatar</button> 
                             </div>
                             <div class="col-md-6">
-                                <span>   $:</span> 
+                                <span id="monto_fecha" style="display: inherit">  </span> 
+                                <span id="monto_total">  </span> 
                             </div>
                         </div>                                                            
+                    </div>
+                    <div class="form-group">
+                        <label for="formGroupExampleInput2">Ingraese el valor a pagar: </label>
+                        <input id="amoutn" type="text" (keyup)="setFormat($event,'normal')" class="form-control"
+                            name="amount" #name="ngModel" [(ngModel)]="paymentNormal.amount"
+                            placeholder="Ingrese el valor a pagar">
+                    </div>
+                    <div class="form-group">
+                        <div class="checkbox checkbox-primary" (click)="activatedCheckNewPayent()">
+                            <input id="checkbox3" class="styled" type="checkbox" name="new-payment">
+                            <label for="checkbox2">
+                               Programar nueva cuota
+                            </label>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
@@ -258,7 +267,7 @@
                 <form #formLoan="ngForm">
                     <div class="form-group">
                         <label for="formGroupExampleInput">Fecha Cuota</label>
-                        <div class='input-group date' id='datetimepicker1'>
+                        <div class='input-group date cursor' id='datetimepicker1'>
                             <input type='text' id="payment-date" name="dateDeposit" #name="ngModel"
                                 [(ngModel)]="paymentFull.dateDeposit" class="form-control" />
                             <span class="input-group-addon">
@@ -274,8 +283,8 @@
                     </div>
                     <div class="form-group">
                         <label for="formGroupExampleInput">Proxima Fecha Cuota</label>
-                        <div class='input-group date' id='datetimepicker1'>
-                            <input type='text' id="payment-next-date" name="nextDatePayment" #name="ngModel"
+                        <div class='input-group date cursor' id='datetimepicker3'>
+                            <input type='text' id="payment-next-date1" name="nextDatePayment" #name="ngModel"
                                 [(ngModel)]="paymentFull.nextDatePayment" class="form-control" />
                             <span class="input-group-addon">
                                 <span class="glyphicon glyphicon-calendar"></span>
