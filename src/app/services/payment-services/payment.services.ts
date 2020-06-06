@@ -69,7 +69,7 @@ export class PaymenService {
         'typepayment': '0'
       })
     };
-    return this.httpClient.put(this.urlBase + 'pago/' + id, payload, httpOptions);
+    return this.httpClient.put(this.urlBase + 'actualizar-pago/' + id, payload, httpOptions);
   }
 
   deletePayment(id) {

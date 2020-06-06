@@ -85,6 +85,10 @@ export class PaytmentsComponent implements OnInit {
     this.prueba = $('input:checkbox[name=prueba]:checked').val()
   }
 
+  disabledCheck (id) {
+    $('#'+id).attr('checked', false);
+  }
+
   activatedCheckNewPayent() {
     if($('input:checkbox[name=new-payment]:checked').val()) {
       this.checkNewPayment = true;
@@ -275,6 +279,7 @@ export class PaytmentsComponent implements OnInit {
             this.getPaymentbyLoan(localStorage.getItem('idLoan'));
             this.paymentNormal = new paymenPaymentModel('0');
             this.closeModal('show-md-update-payment-normal');
+            this.disabledCheck('checkbox2')
           }
         },
         error => {
@@ -366,13 +371,13 @@ export class PaytmentsComponent implements OnInit {
       Pendiente: '1',
       Pagado: '2'
     }
-    console.log('Fecha pago ---------------> ',$("#payment-date").val())
-    this.paymentFull.dateDeposit = ($("#payment-date").val() == 'Pendiente' ? this.paymentFull.dateDeposit = 'null' : this.paymentFull.dateDeposit = moment($("#payment-date").val()).format("YYYY-MM-DD"))
+    //console.log('Fecha pago ---------------> ',$("#payment-date").val())
+    this.paymentFull.dateDeposit = ($("#payment-date").val() == 'Pendiente' || $("#payment-date").val() == 'Invalid date' ? this.paymentFull.dateDeposit = 'null' : this.paymentFull.dateDeposit = moment($("#payment-date").val()).format("YYYY-MM-DD"))
     //this.paymentFull.dateDeposit = moment($("#payment-date").val()).format("YYYY-MM-DD");
     this.paymentFull.nextDatePayment = moment($("#payment-next-date1").val()).format("YYYY-MM-DD");
     if (this.paymentFull.statusDeposit) {
       this.paymentFull.statusDeposit = status[$("#statusPayment").val()];
-      console.log('entro1', this.paymentFull.statusDeposit)
+      //console.log('entro1', this.paymentFull.statusDeposit)
     }
     else {
       this.paymentFull.statusDeposit = this.status;
@@ -397,7 +402,7 @@ export class PaytmentsComponent implements OnInit {
             this.getPaymentbyLoan(localStorage.getItem('idLoan'));
             this.closeModal('show-md-update-payment');
             this.paymentFull = new PaymentModel('', '', '0', '0', '', '0', '0', '');
-            this.showToaster('1', 'Actualización pago', 'Actuañización pago reaizada con exitoso');
+            this.showToaster('1', 'Actualización pago', 'Actualización pago reaizada con exitoso');
           }
         }
       )
