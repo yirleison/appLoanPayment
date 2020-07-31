@@ -216,7 +216,7 @@
                             </label>
                         </div>
                     </div>
-                    <div class="form-group" *ngIf="prueba">
+                    <div class="form-group" *ngIf="validateTotalPayment">
                         <div class="row">
                             <div class="col-md-6">
                                 <label for="">Consulatar valor pago a la fecha: </label>
@@ -234,6 +234,7 @@
                             name="amount" #name="ngModel" [(ngModel)]="paymentNormal.amount"
                             placeholder="Ingrese el valor a pagar">
                     </div>
+                    <!--  
                     <div class="form-group">
                         <div class="checkbox checkbox-primary" (click)="activatedCheckNewPayent()">
                             <input id="checkbox3" class="styled" type="checkbox" name="new-payment">
@@ -242,6 +243,7 @@
                             </label>
                         </div>
                     </div>
+                    -->
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                         <button type="button" (click)="updatePaymentNormal()" class="btn btn-primary">Registrar

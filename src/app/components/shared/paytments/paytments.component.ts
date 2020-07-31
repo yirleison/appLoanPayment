@@ -37,7 +37,7 @@ export class PaytmentsComponent implements OnInit {
   public bandera: boolean;
   public interest: any;
   public nameUser: any
-  public prueba: any
+  public validateTotalPayment: any
   public checkNewPayment : Boolean = false
 
 
@@ -82,7 +82,7 @@ export class PaytmentsComponent implements OnInit {
   activatedCheck() {
     let p
     p = $('input:checkbox[name=prueba]:checked').val()
-    this.prueba = $('input:checkbox[name=prueba]:checked').val()
+    this.validateTotalPayment = $('input:checkbox[name=prueba]:checked').val()
   }
 
   disabledCheck (id) {
@@ -263,7 +263,7 @@ export class PaytmentsComponent implements OnInit {
   updatePaymentNormal() {
 
     //console.log('valid check------------->',this.prueba);
-    if (this.prueba) {
+    if (this.validateTotalPayment) {
       let value = this.paymentNormal.amount;
       let p = value.toString().split(',');
       this.paymentNormal.amount = p.join('');

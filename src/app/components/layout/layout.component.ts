@@ -12,7 +12,7 @@ export class LayoutComponent implements OnInit {
   ngOnInit() {
     $(document).ready(() => {
       const trees: any = $('[data-widget="tree"]');
-      trees.tree();
+     trees.tree();
     });
   }
 

@@ -76,7 +76,7 @@ export class LoansComponent implements OnInit {
     this._router.params.subscribe(
       (param: Params) => {
         let id = param.id;
-        //console.log('Entrooooo---getLoans------>',id)
+        console.log('Entrooooo---getLoans------>',id)
         localStorage.setItem('idUser', id)
         this.getLoans(id)
       }

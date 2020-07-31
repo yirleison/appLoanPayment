@@ -19,10 +19,17 @@ export class MenuComponent implements OnInit {
    
    this.name = this.user.fullName.split(' ')[0]
    // console.log('Usuario------>',name)
+  //  $(document).ready(() => {
+  //   const trees: any = $('[data-widget="tree"]');
+  //   trees.tree();
+  // });
   }
 
+
+
   redirect(path) {
-    this._route.navigate(['home/'+path]);
+    console.log('redirect------>',path)
+    this._route.navigate(['home/'+path])
   }
 
   prueba() {
