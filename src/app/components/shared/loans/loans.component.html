@@ -92,7 +92,7 @@
                                 </option>
                             </select>
                         </div>
-                        <div class="form-group">
+                        <div *ngIf="!idUser" class="form-group">
                             <select id="select2" class="" name="" style="width: 100%;">
                                 <option>Seleccione el Usuario</option>
                                 <option value="{{user._id}}" *ngFor="let user of users">{{user.fullName}}</option>

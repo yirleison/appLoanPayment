@@ -9,6 +9,7 @@ import { from, ReplaySubject, Subject, pipe } from 'rxjs';
 import { LoanService } from '../../../services/loan-services/loan.services';
 import { DataTableDirective } from 'angular-datatables';
 import { UserService } from 'src/app/services/user-services/user.service';
+import { log } from 'console';
 
 declare var $;
 
@@ -32,6 +33,7 @@ export class LoansComponent implements OnInit {
   public loan: loansModel;
   intr: Number = 0;
   public nameUser = '';
+  public idUser = '';
   constructor(
     private loanService: LoanService,
     private userService: UserService,
@@ -76,7 +78,7 @@ export class LoansComponent implements OnInit {
     this._router.params.subscribe(
       (param: Params) => {
         let id = param.id;
-        console.log('Entrooooo---getLoans------>',id)
+        this.idUser = id;
         localStorage.setItem('idUser', id)
         this.getLoans(id)
       }
@@ -171,11 +173,14 @@ export class LoansComponent implements OnInit {
     let idUser = $("#select2 option:selected").val();
 
     this.loan.finishedDatePayment = null
-    this.loan.idUser = $("#select2 option:selected").val()
+   // this.loan.idUser = $("#select2 option:selected").val()
+    this.loan.idUser = localStorage.getItem('idUser')
 
     let inter = this.loan.amount;
     let p = inter.toString().split(',');
     this.loan.amount = p.join('');
+    this.loan.dateLoan = $('#loan-date').val()
+    console.log(this.loan)
     this.loanService.createLoan(this.loan).subscribe(
       response => {
         if (!response) {
