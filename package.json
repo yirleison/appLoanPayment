@@ -1,8 +1,10 @@
 {
   "name": "app-loans",
   "version": "0.0.0",
+  "license": "MIT",
   "engines": {
-    "node": "12.18.3"
+    "node": "6.11.3",
+    "npm": "3.10.10"
   },
   "scripts": {
     "ng": "ng",
@@ -10,7 +12,8 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "heroku-postbuild": "ng build"
   },
   "private": true,
   "dependencies": {
