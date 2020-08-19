@@ -9,7 +9,7 @@ import { from, ReplaySubject, Subject, pipe } from 'rxjs';
 import { LoanService } from '../../../services/loan-services/loan.services';
 import { DataTableDirective } from 'angular-datatables';
 import { UserService } from 'src/app/services/user-services/user.service';
-import { log } from 'console';
+
 
 declare var $;
 
