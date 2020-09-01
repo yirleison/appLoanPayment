@@ -1,0 +1,10 @@
+<div class="row">
+  <div class="col-md-6 col-lg-6">
+    <div>
+      <select id="select-users" class="" name="" style="width: 100%;">
+          <option>Seleccione el Usuario</option>
+          <option  value="{{user._id}}" *ngFor="let user of users" (change)="showForm()" >{{user.fullName}}</option>
+      </select>
+  </div>
+  </div>
+</div>

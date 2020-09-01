@@ -11,7 +11,8 @@ export class UploadService {
     public urlBase: String;
 
     constructor() {
-        this.urlBase = Endpoints.url;
+      // this.urlBase = process.env.URLBACK || Endpoints.url
+      this.urlBase = Endpoints.url
     }
 
     makeFileRequest( params: Array<string>, files: Array<File>, token: string, name: string, tipo) {

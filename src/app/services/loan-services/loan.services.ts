@@ -8,7 +8,8 @@ import { Endpoints } from '../../../app/components/config/endpoints'
 export class LoanService {
   public urlBase: String;
   constructor(private httpClient: HttpClient) {
-    this.urlBase = Endpoints.url;
+    // this.urlBase = process.env.URLBACK || Endpoints.url
+      this.urlBase = Endpoints.url
   }
 
   createLoan(payload) {

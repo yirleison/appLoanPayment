@@ -9,7 +9,8 @@ export class UserService {
   public urlBase: String;
 
   constructor(private httpClient: HttpClient) {
-    this.urlBase = Endpoints.url;
+    // this.urlBase = process.env.URLBACK || Endpoints.url
+    this.urlBase = Endpoints.url
    }
 
   createUser(payload) {
@@ -18,7 +19,7 @@ export class UserService {
     });
 
     return this.httpClient.post(
-      "http://localhost:3000/registrar-usuario",
+      this.urlBase+"registrar-usuario",
       payload,
       { headers: headers }
     );
@@ -41,7 +42,7 @@ export class UserService {
       })
     };
 
-    return this.httpClient.get(" http://localhost:3000/usuario/" + id, httpOptions);
+    return this.httpClient.get(this.urlBase+"usuario/" + id, httpOptions);
   }
 
   updateUsersById(id, payload) {
@@ -49,7 +50,7 @@ export class UserService {
       "Content-Type": "application/json; charset=utf-8"
     });
 
-    return this.httpClient.put("http://localhost:3000/usuario/" + id, payload, { headers: headers });
+    return this.httpClient.put(this.urlBase+"usuario/" + id, payload, { headers: headers });
   }
 
   changeStatusUsersById(id, payload) {
@@ -57,6 +58,6 @@ export class UserService {
       "Content-Type": "application/json; charset=utf-8"
     });
 
-    return this.httpClient.put("http://localhost:3000/actualizar-usuario/" + id, payload, { headers: headers });
+    return this.httpClient.put(this.urlBase+"actualizar-usuario/" + id, payload, { headers: headers });
   }
 }

@@ -92,13 +92,17 @@
                                 </option>
                             </select>
                         </div>
-                        <div *ngIf="!idUser" class="form-group">
-                            <select id="select2" class="" name="" style="width: 100%;">
-                                <option>Seleccione el Usuario</option>
-                                <option value="{{user._id}}" *ngFor="let user of users">{{user.fullName}}</option>
-                            </select>
+                        <div class="form-group">
+                          <label>Selecciona el cliente</label>
+                          <ng-select [items]="cliente"
+                                     bindLabel="name"
+                                     placeholder="Seleccione el cliente"
+                                     [multiple]="false"
+                                     maxSelectedItems="3"
+                                     (add)="onAdd($event)"
+                                     (change)="onChange($event)"                                     >
+                          </ng-select>
                         </div>
-
                     </form>
                 </div>
                 <div class="modal-footer">

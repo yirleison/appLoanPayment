@@ -20,14 +20,14 @@ export class ContentComponent implements OnInit {
     this.changeStatusAlert(false, '', '')
   }
   changeStatusAlert(status, type, message) {
-    if (status != 'undefined') {
+    if (status!= 'undefined') {
       this.interes = {
         status,
         type,
         message
       }
     }
-    console.log(this.interes)
+    //console.log(this.interes)
   }
 
   closeAlet() {

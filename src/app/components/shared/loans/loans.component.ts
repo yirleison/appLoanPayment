@@ -2,13 +2,14 @@ import { Component, OnInit, ViewChild, ElementRef, Input, AfterViewInit, Compone
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
-
+import { NgOption } from '@ng-select/ng-select';
 import * as moment from 'moment';
 import { loansModel } from '../../../models/loan/loans.model'
 import { from, ReplaySubject, Subject, pipe } from 'rxjs';
 import { LoanService } from '../../../services/loan-services/loan.services';
 import { DataTableDirective } from 'angular-datatables';
 import { UserService } from 'src/app/services/user-services/user.service';
+import { NgSelectOption } from '@angular/forms';
 
 
 declare var $;
@@ -24,10 +25,16 @@ export class LoansComponent implements OnInit {
   dataTable: any;
   idLoan: String = "";
   loans: any;
+  _idUser: String
   public rateInterest: Number[];
   dtOptions: DataTables.Settings = {};
   dtTrigger: Subject<any> = new Subject();
   @ViewChild(DataTableDirective, { static: true }) dtElement: DataTableDirective;
+
+  cliente: NgOption[]
+
+  selectedCountries = [];
+  selectedCountryId: number;
 
   public users: any;
   public loan: loansModel;
@@ -107,10 +114,13 @@ export class LoansComponent implements OnInit {
             this.nameUser = loans.data.user.fullName
           }
           if (loans.data) {
-            let [{ idUser }] = loans.data
-            this.nameUser = idUser.fullName
-            this.loans = loans.data;
-            this.dtTrigger.next();
+            try {
+              let [{ idUser }] = loans.data
+              this.nameUser = idUser.fullName
+              this.loans = loans.data;
+              this.dtTrigger.next();
+            } catch (error) {
+            }
             //console.log('Loans------------>', idUser);
           }
         }
@@ -173,8 +183,8 @@ export class LoansComponent implements OnInit {
     let idUser = $("#select2 option:selected").val();
 
     this.loan.finishedDatePayment = null
-   // this.loan.idUser = $("#select2 option:selected").val()
-    this.loan.idUser = localStorage.getItem('idUser')
+    // this.loan.idUser = $("#select2 option:selected").val()
+    this.loan.idUser = this._idUser.toString();
 
     let inter = this.loan.amount;
     let p = inter.toString().split(',');
@@ -190,13 +200,7 @@ export class LoansComponent implements OnInit {
           $("#show-md-crea-loan").modal('hide');
           this.showToaster('1', 'Prestamo', 'Prestamo creado con éxito')
           $("#example").dataTable().fnDestroy();
-          this.getLoans(localStorage.getItem('idUser'));
-
-          // let dateLoan = moment($("#loan-date").val()).format("YYYY-MM-DD");
-          // $("#valor-prestamo").val("");
-          $("#select2").val("");
-          //$("#select-estado").val("");
-          // $("#select-user-create option:selected").val("");
+          this.getLoans(this._idUser);
           this.loan = new loansModel('', '', 0, false, null, "");
         }
       },
@@ -252,6 +256,10 @@ export class LoansComponent implements OnInit {
       (user: any) => {
         this.users = user.message;
         console.log(this.users)
+        let us = user.message.map(x => {
+          return { id: x._id, name: x.fullName }
+        })
+        this.cliente = us
       },
       error => {
         console.log(error)
@@ -281,7 +289,26 @@ export class LoansComponent implements OnInit {
         this.toastr.error(title, message);
         break;
     }
+  }
 
+  onChange = ($event: any): void => {
+    // console.log('SELECTION CHANGED INTO',$event);
+    //console.log(`SELECTION CHANGED INTO ${$event.id || ''}`);
+    this._idUser = $event.id
+  }
+
+  onAdd = ($event: any): void => {
+    this.selectedCountries.push($event);
+    console.log('AFTER ADD OPERATION:');
+    console.log(this.selectedCountries.length);
+    console.log(this.selectedCountries[0].id);
+  }
+
+  onRemove = ($event: any): void => {
+    console.log($event);
+    this.selectedCountries = this.selectedCountries.filter(country => country.id !== $event.value.id);
+    console.log('AFTER DELETE OPERATION:');
+    console.log(this.selectedCountries);
   }
 }
 

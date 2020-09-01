@@ -1,20 +1,24 @@
 import { Injectable } from '@angular/core'; //  Inyectar los servicios
 import { HttpClientModule, HttpClient, HttpHeaders } from '@angular/common/http';
 import { Endpoints } from '../../../app/components/config/endpoints'
+import  { environment } from '../../../environments/environment.prod'
+import { environment_prod } from 'src/environments/environment';
+
 
 @Injectable()
 
 export class InterestService {
     public urlBase: String;
     constructor(private httpClient: HttpClient) {
-        this.urlBase = Endpoints.url;
+        // this.urlBase = process.env.URLBACK || Endpoints.url;
+        this.urlBase = Endpoints.url
     }
 
     listInterestByIdPayment(id) {
         const headers = new HttpHeaders({
           "Content-Type": "application/json; charset=utf-8"
         });
-    
+
         return this.httpClient.get( this.urlBase + 'interest-por-pago/' + id, {
           headers: headers
         });
@@ -40,8 +44,8 @@ export class InterestService {
         });
       }
 
-      
-      updateInterest(id, payload) {   
+
+      updateInterest(id, payload) {
         const httpOptions = {
           headers: new HttpHeaders({
             'Content-Type':  'application/json',

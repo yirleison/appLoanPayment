@@ -12,4 +12,4 @@ export class User {
         public photo: String,
         public status: String
     ){}
-} 
+}

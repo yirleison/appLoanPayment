@@ -42,22 +42,22 @@
         </a>
         <ul class="treeview-menu">
           <li><a type="button" (click)="redirect('prestamos')">Administrar Prestamos</a></li>
-          
+
         </ul>
       </li>
       <li class="treeview">
-        <a type="button"><i class="fa fa-link"></i> <span>Pagos</span>
+        <a style="cursor: pointer;" type="button"><i class="fa fa-link"></i> <span>Pagos</span>
           <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
         </a>
         <ul class="treeview-menu">
-          <li><a type="button">Registrar Pago</a></li>
-          <li><a type="button">Administrar Pago</a></li>
+          <li ><a style="cursor: pointer;" type="button" (click)="redirect('programar-pagos')">Programar Pago</a></li>
+          <li><a style="cursor: pointer;" type="button">Administrar Pago</a></li>
         </ul>
       </li>
     </ul>
-    
+
     <!-- /.sidebar-menu -->
   </section>
   <!-- /.sidebar -->

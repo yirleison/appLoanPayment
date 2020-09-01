@@ -160,6 +160,7 @@ export class UserComponent implements OnInit {
 
   editUser(idModal, idUser) {
     /**Save user in DB */
+    localStorage.setItem('userId',idUser)
     this.userService.listUsersById(idUser)
       .subscribe(
         (user: any) => {
@@ -249,9 +250,9 @@ export class UserComponent implements OnInit {
     this.user.email = this.userFormUpdate.value.email
     this.user.password = this.userFormUpdate.value.password
     this.user.photo = (localStorage.getItem('image') == '' || localStorage.getItem('image') == null ? '' : localStorage.getItem('image'))
-    //console.log('Update User', this.user._id)
+    console.log('Este es el usuario a actualizar ---------------------> ', localStorage.getItem('userId'))
 
-    this.userService.updateUsersById(this.user._id, this.user).subscribe(
+    this.userService.updateUsersById(localStorage.getItem('userId'), this.user).subscribe(
 
       (updateUser: any) => {
           if (updateUser.status == 'OK') {

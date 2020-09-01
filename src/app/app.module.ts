@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { ToastrModule } from 'ngx-toastr';
-
+import { NgSelectModule } from '@ng-select/ng-select';
 
 import { AppComponent } from './app.component';
 import { NoFoundComponent } from './components/shared/no-found/nofound.component';
@@ -27,6 +27,7 @@ import { DataTablesModule } from 'angular-datatables';
 import { IonicModule } from '@ionic/angular';
 import { MainComponent } from './components/main.component';
 import { OauthService } from './services/oauth-services/oauth.user.service';
+import { SchedulePaymentComponent } from './components/shared/schedule-payment/schedule-payment/schedule-payment.component';
 //import { AlertsModule } from 'angular-alert-module';
 
 
@@ -47,7 +48,8 @@ import { OauthService } from './services/oauth-services/oauth.user.service';
     UserComponent,
     LoginComponent,
     NoFoundComponent,
-    MainComponent
+    MainComponent,
+    SchedulePaymentComponent
   ],
   imports: [
     BrowserModule,
@@ -58,8 +60,10 @@ import { OauthService } from './services/oauth-services/oauth.user.service';
     ReactiveFormsModule,
     DataTablesModule,
     NgbModule,
+    NgSelectModule,
     ToastrModule.forRoot(),
     IonicModule.forRoot(),
+
   ],
   providers: [appRoutingProviders, OauthService],
   bootstrap: [AppComponent]
