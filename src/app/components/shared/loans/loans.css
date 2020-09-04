@@ -1,3 +1,4 @@
+
 .btn-loan {
     margin-bottom: 15px;
 }
@@ -12,4 +13,9 @@
 
 .nameUser {
     padding: 4px;
+}
+
+.name-user {
+  font-family: monospace;
+  font-weight : bold;
 }

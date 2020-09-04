@@ -25,7 +25,8 @@ export class UserComponent implements OnInit {
   public avatar: String = 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQzr9MZuVHIBRWTXhdzLQAx_-Y0e5Wg6-MmJv4uLE1AyHnhdA5V&usqp=CAU'
   public statusUser: String = "0";
   public bandera: Boolean = false
-  //public sizeFile = this.fileToUpload.length;
+  public flagUserUpdate: boolean = false;
+  public flagUserCreate: boolean = false
 
   constructor(
     private formBuilder: FormBuilder,
@@ -132,11 +133,14 @@ export class UserComponent implements OnInit {
       .subscribe(
         (user: any) => {
           if (user.status == 'OK') {
+            setInterval(() => {
+              this.flagUserCreate = true;
+              this.closeModal('show-md-create-user')
+            }, 1000)
             this.showToaster('1', 'Registrar usuario', 'El usuario se ha registrado exitosamente')
             $("#tableUser").dataTable().fnDestroy();
             localStorage.removeItem('image')
             this.getUsers()
-            this.closeModal('show-md-create-user')
             this.userForm.reset();
             this.userForm = this.formBuilder.group({
               fullName: '',
@@ -256,11 +260,15 @@ export class UserComponent implements OnInit {
 
       (updateUser: any) => {
           if (updateUser.status == 'OK') {
+            setInterval(() => {
+              this.flagUserUpdate = true;
+              this.closeModal('show-md-update-user')
+            }, 1000)
+            this.flagUserUpdate = true
             this.showToaster('1', 'Actualizar usuario', 'Datos actualizados exitosamente')
             $("#tableUser").dataTable().fnDestroy();
             localStorage.removeItem('image')
             this.getUsers()
-            this.closeModal('show-md-update-user')
             this.userForm.reset();
             this.userForm = this.formBuilder.group({
               fullName: '',
@@ -290,10 +298,10 @@ export class UserComponent implements OnInit {
       this.getStatus(status)
       sta = (status == '0' || typeof (status) == 'undefined' ? false : true)
       if (sta) {
-        $(".status1").attr("class", 'btn btn-success btn btn-sm  delete button-magin cursor-pinter');
+        $(".status1").attr("class", 'btn btn-success btn btn-xs  delete button-magin cursor-pinter');
       }
       else {
-        $(".status2").attr("class", 'btn btn-warning btn btn-sm  delete button-magin cursor-pinter');
+        $(".status2").attr("class", 'btn btn-warning btn btn-xs  delete button-magin cursor-pinter');
       }
     }
     else {

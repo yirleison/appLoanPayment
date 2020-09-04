@@ -1,10 +1,21 @@
 <div class="row">
   <div class="col-md-6 col-lg-6">
-    <div>
-      <select id="select-users" class="" name="" style="width: 100%;">
-          <option>Seleccione el Usuario</option>
-          <option  value="{{user._id}}" *ngFor="let user of users" (change)="showForm()" >{{user.fullName}}</option>
-      </select>
+    <ng-select
+      [items]="clients"
+      bindLabel="name"
+      placeholder="Seleccione el cliente"
+      [multiple]="false"
+      maxSelectedItems="3"
+      (add)="onAdd($event)"
+      (add)="onRemove($event)"
+      (change)="onChange($event)"
+    >
+    </ng-select>
   </div>
+</div>
+
+<div class="row">
+  <div *ngIf="showFormFront" class="col-md-12" id="form-payments-user">
+    <h1>holaaaaa</h1>
   </div>
 </div>

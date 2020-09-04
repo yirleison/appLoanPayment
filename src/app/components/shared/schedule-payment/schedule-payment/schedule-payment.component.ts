@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from 'src/app/services/user-services/user.service'
 import { Observable } from 'rxjs/Observable';
+import { NgOption } from '@ng-select/ng-select';
 declare var $;
 
 @Component({
@@ -14,7 +15,9 @@ export class SchedulePaymentComponent implements OnInit {
   public idUser = '';
   public users: any;
   public showFormFront: boolean = false
-
+  clients: NgOption[]
+  selectedCountries = [];
+  selectedCountryId: number;
 
   constructor(
     private userService: UserService,
@@ -37,8 +40,10 @@ export class SchedulePaymentComponent implements OnInit {
   getUsers() {
     this.userService.listUsers().subscribe(
       (user: any) => {
-        this.users = user.message;
-        //console.log('Gestion Usuarios --------->',this.users)
+        let us = user.message.map(x => {
+          return { id: x._id, name: x.fullName }
+        })
+        this.clients = us
       },
       error => {
         console.log(error)
@@ -46,9 +51,33 @@ export class SchedulePaymentComponent implements OnInit {
     )
   }
 
-  showForm() {
-    this.showFormFront = true
-    console.log(this.showFormFront)
+  onChange = ($event: any): void => {
+
+    try {
+      if ($event != undefined) {
+        this.showFormFront = true
+      }
+      else{
+        this.showFormFront = false
+      }
+    } catch (error) {
+      console.log('Error ---------> ',error)
+    }
+  }
+
+  onAdd = ($event: any): void => {
+    this.selectedCountries.push($event);
+    console.log('AFTER ADD OPERATION:');
+    console.log(this.selectedCountries.length);
+    console.log(this.selectedCountries[0].id);
+  }
+
+  onRemove = ($event: any): void => {
+    console.log($event);
+    this.selectedCountries = this.selectedCountries.filter(country => country.id !== $event.value.id);
+    console.log('AFTER DELETE OPERATION:');
+    console.log(this.selectedCountries);
+    this.showFormFront = false
   }
 
 

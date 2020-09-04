@@ -35,12 +35,12 @@ export class LoansComponent implements OnInit {
 
   selectedCountries = [];
   selectedCountryId: number;
-
   public users: any;
   public loan: loansModel;
   intr: Number = 0;
   public nameUser = '';
   public idUser = '';
+  public flagPreloadSave: boolean = false;
   constructor(
     private loanService: LoanService,
     private userService: UserService,
@@ -55,7 +55,6 @@ export class LoansComponent implements OnInit {
 
   ngOnInit(): void {
     this.getIdUserByRoute()
-
     $(document).ready(function () {
       $('#select2').select2();
     });
@@ -173,35 +172,34 @@ export class LoansComponent implements OnInit {
   }
 
   createLoan() {
-    // console.log($('#loan-date').val());
-    //var valor = $("#select-user-create option:selecte").val();
-    // let dateLoan = moment($("#loan-date").val()).format("YYYY-MM-DD");
     let amount = $("#valor-prestamo").val();
     let rateInterest = $("#interes").val();
     let statusLoan = $("#select-estado option:selected").val();
     let finishedDatePayment = null;
-    let idUser = $("#select2 option:selected").val();
-
     this.loan.finishedDatePayment = null
-    // this.loan.idUser = $("#select2 option:selected").val()
-    this.loan.idUser = this._idUser.toString();
+    this.loan.idUser = localStorage.getItem('idUser')
 
     let inter = this.loan.amount;
     let p = inter.toString().split(',');
     this.loan.amount = p.join('');
     this.loan.dateLoan = $('#loan-date').val()
     console.log(this.loan)
+
     this.loanService.createLoan(this.loan).subscribe(
       response => {
         if (!response) {
           //Muestro el error
         } else {
           //Muestro alert de confirmacion
-          $("#show-md-crea-loan").modal('hide');
+          setInterval(() => {
+            this.flagPreloadSave = true;
+            $("#show-md-crea-loan").modal('hide');
+          }, 1000)
           this.showToaster('1', 'Prestamo', 'Prestamo creado con éxito')
           $("#example").dataTable().fnDestroy();
-          this.getLoans(this._idUser);
+          this.getLoans(localStorage.getItem('idUser'));
           this.loan = new loansModel('', '', 0, false, null, "");
+          this.flagPreloadSave = false;
         }
       },
       error => {

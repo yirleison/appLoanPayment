@@ -1,8 +1,8 @@
 <div class="row">
     <div class="row container">
         <div class="col-md-12">
-            <button id="lblLoan" (click)="openModal('show-md-create-user',null)" style="background-color: #0073b7;"
-                class="btn btn-primary">Crear Usuario</button>
+            <button id="lblLoan" (click)="openModal('show-md-create-user',null)" style="background-color: #0073b7; font-weight : bold;"
+                class="btn btn-primary btn-xs">Registrar Usuario</button>
         </div>
     </div>
     <br>
@@ -50,18 +50,18 @@
                         <td style="display: inline-flex">
                             <div style="margin-left: -35px;">
                                 <a type="button" (click)="editUser('show-md-update-user', user._id)"
-                                    style="margin-right: 4px" class="btn btn-sm btn-primary edit mr-2 cursor-pinter"
+                                    style="margin-right: 4px" class="btn btn-sm btn-primary edit mr-2 cursor-pinter btn-xs"
                                     title="Actualizar Usuario" data-target="#exampleModal">
                                     <span class="glyphicon glyphicon-edit button-magin"> </span>
                                 </a>
                                 <a type="button" (click)="goTo(user._id)" title="Consultar Prestamos"
                                     style="margin-right: 4px"
-                                    class="btn btn-sm btn-info payment button-magin cursor-pinter"
+                                    class="btn btn-sm btn-info payment button-magin cursor-pinter btn-xs"
                                     data-target="#exampleModal">
                                     <span class="glyphicon glyphicon-usd"></span> </a>
                                 <a type="button" style="margin-right: 4px"
                                     [ngClass]="((changeStatus('null', user.status)) ? ' status1':  'status2 ')"
-                                    title="">
+                                   title="">
                                     <span (click)="changeStatus(user._id, user.status)" class="">{{statusUser}}</span>
                                 </a>
                             </div>
@@ -334,8 +334,8 @@
                                     alt="Click aquí para subir tu foto" title="Click aquí para subir tu foto">
                             </label>
                             <div id="div-file">
-                                <p id="texto">Actualizar foto</p>
-                                <input id="file-input" (change)="fileChangeEvent($event)" name="foto" type="file" />
+                                <p style="font-weight : bold;" id="texto">Actualizar foto</p>
+                                <input id="file-input" (change)="fileChangeEvent($event)" class="btn btn-xs" name="foto" type="file" />
                             </div>
                         </div>
                     </div>
@@ -353,8 +353,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                        <button type="button" (click)="updateUser()" class="btn btn-primary">Actualizar</button>
+                        <button type="button" style="font-weight : bold;" class="btn btn-secondary btn-xs" data-dismiss="modal">Cerrar</button>
+                        <button type="button" style="font-weight : bold;" (click)="updateUser()" class="btn btn-primary btn-xs"><i *ngIf="flagUserUpdate" class="fa fa-spinner fa-spin"></i> Actualizar</button>
                     </div>
                     <ng-template #passwordTemplate>
                         <div class="form-group">
