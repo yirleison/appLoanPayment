@@ -98,11 +98,10 @@ export class PaytmentsComponent implements OnInit {
     }
 
     console.log(this.checkNewPayment)
-   
+
   }
 
   paramsByRoute() {
-
     this._router.params.subscribe(
       (params: Params) => {
         this.getPaymentbyLoan(params.idLoan)

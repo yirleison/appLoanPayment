@@ -81,4 +81,15 @@ export class PaymenService {
     }
     return this.httpClient.delete(this.urlBase + 'pago/' + id, httpOptions)
   }
+
+  getPaymentByIdUser(id) {
+    const headers = new HttpHeaders({
+      "Content-Type": "application/json; charset=utf-8"
+    });
+
+    return this.httpClient.get(`${this.urlBase}pagos-cliente/${id}`, {
+      headers: headers
+    });
+  }
+
 }

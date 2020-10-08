@@ -29,6 +29,7 @@ import { MainComponent } from './components/main.component';
 import { OauthService } from './services/oauth-services/oauth.user.service';
 import { SchedulePaymentComponent } from './components/shared/schedule-payment/schedule-payment/schedule-payment.component';
 //import { AlertsModule } from 'angular-alert-module';
+import { NgxSpinnerModule } from "ngx-spinner";
 
 
 
@@ -63,6 +64,7 @@ import { SchedulePaymentComponent } from './components/shared/schedule-payment/s
     NgSelectModule,
     ToastrModule.forRoot(),
     IonicModule.forRoot(),
+    NgxSpinnerModule,
 
   ],
   providers: [appRoutingProviders, OauthService],

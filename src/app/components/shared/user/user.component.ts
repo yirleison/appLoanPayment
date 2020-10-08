@@ -190,7 +190,7 @@ export class UserComponent implements OnInit {
             })
 
             this.user.photo = (this.user.photo == '' || this.user.photo == null ? this.avatar : this.user.photo)
-            $(".image-user").attr("src", this.user.photo);
+            $(".image-user").attr("src", 'http://localhost:3000/imagen/'+ this.user.photo);
             //console.log(this.userFormUpdate.value)
             this.openModal(idModal, null)
           }
@@ -239,6 +239,7 @@ export class UserComponent implements OnInit {
       }
     )
   }
+
   updateUser() {
     var str = this.userFormUpdate.value.fullName;
     str = str.toLowerCase().replace(/\b[a-z]/g, function (letter) {

@@ -1,30 +1,42 @@
 import { Component, OnInit } from '@angular/core';
+import { Subject } from 'rxjs';
 import { UserService } from 'src/app/services/user-services/user.service'
-import { Observable } from 'rxjs/Observable';
+import { PaymenService } from 'src/app/services/payment-services/payment.services';
 import { NgOption } from '@ng-select/ng-select';
+import { PaymentModel } from '../../../../models/payment/payment.full.model'
+import { NgxSpinnerService } from "ngx-spinner";
+
 declare var $;
 
 @Component({
   selector: 'app-schedule-payment',
   templateUrl: './schedule-payment.component.html',
   styleUrls: ['./schedule-payment.component.css'],
-  providers: [UserService]
+  providers: [UserService, PaymenService]
 })
 export class SchedulePaymentComponent implements OnInit {
 
   public idUser = '';
   public users: any;
   public showFormFront: boolean = false
+  public message: String = ''
   clients: NgOption[]
   selectedCountries = [];
   selectedCountryId: number;
+  public payments: PaymentModel[];
+  dtOptions: DataTables.Settings = {};
+  // dtTrigger: Subject<any> = new Subject();
 
   constructor(
     private userService: UserService,
+    private paymentService: PaymenService,
+    private spinnerService: NgxSpinnerService
   ) { }
 
   ngOnInit(): void {
-
+    this.spinner()
+    this.headerTable()
+   // this.getPaymentsByIdUser("5f73a2c2fa17a20a840d21e0", true)
     this.getUsers()
     $(document).ready(function () {
       $('#select-users').select2()
@@ -50,18 +62,18 @@ export class SchedulePaymentComponent implements OnInit {
       }
     )
   }
+  public id = ''
 
   onChange = ($event: any): void => {
-
-    try {
-      if ($event != undefined) {
-        this.showFormFront = true
-      }
-      else{
-        this.showFormFront = false
-      }
-    } catch (error) {
-      console.log('Error ---------> ',error)
+    this.id = ($event == undefined ? '' : $event.id)
+    if (this.id == '') {
+      this.payments = []
+      this.message = ''
+    }
+    else {
+      // $("#tablePayments").dataTable().fnDestroy();
+    this.spinner()
+      this.getPaymentsByIdUser(this.id, true)
     }
   }
 
@@ -80,7 +92,58 @@ export class SchedulePaymentComponent implements OnInit {
     this.showFormFront = false
   }
 
+  getPaymentsByIdUser(id, flag) {
+    let dni = (id != null ? id.toString() : 0);
+    if (dni.length > 0 && flag) {
+      this.paymentService.getPaymentByIdUser(id).subscribe(
+        (payments: any) => {
+          if (payments.status != 'false') {
+            this.payments = payments.message
+            console.log(   this.payments.length )
+          }
+          else {
+            console.log("---------->No trajo data")
+            this.message = 'No se encontraron pagos para esta consulta.'
+            this.payments = []
+          }
+        },
+        (error: any) => {
+          console.log('------------------> entro en el catch del error', error)
+        }
+      )
+    }
+    else {
+      console.log('Llego al else --------------> ', id);
+      this.payments = []
+    }
+    console.log('Message --------------> ', this.message);
+  }
 
+  statusPaymenDate(status) {
+    return status == false || status == null || status == 'null' ? 'Pendiente' : 'Pagado'
+  }
+  headerTable() {
+    this.dtOptions = {
+      pagingType: "full_numbers",
+      pageLength: 5,
+      autoWidth: true,
+      order: [[0, 'desc']],
+      language: {
+        url: '//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json'
+      }
+    }
+  }
 
+  closeAlet() {
+    this.message = ''
+    console.log('Message --------------> ', this.message);
+  }
+
+  spinner():void{
+    this.spinnerService.show()
+    setTimeout(()=>{
+      this.spinnerService.hide()
+    },2000)
+  }
 
 }
