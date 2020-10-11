@@ -28,7 +28,7 @@ export class LoginComponent implements OnInit {
         private authService: OauthService
     ) {
         this.localStorageService = localStorage;
-        this.user = new User('', '', '', '', '', '', '', '', '', '', '');
+        this.user = new User('', '', '', '', '', '', '', '', '', '', '','');
     }
 
     loginUser = this.formBuilder.group({

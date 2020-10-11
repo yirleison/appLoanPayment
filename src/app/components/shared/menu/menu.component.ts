@@ -11,13 +11,16 @@ declare var $;
 export class MenuComponent implements OnInit {
   public user: any
   name: String
+
   constructor(private _route: Router, private oauthService : OauthService) {
     this.user = JSON.parse(this.oauthService.getCurrenUser())
+
   }
 
   ngOnInit() {
 
    this.name = this.user.fullName.split(' ')[0]
+   console.log('show data user -------->',this.user.potho)
    // console.log('Usuario------>',name)
   //  $(document).ready(() => {
   //   const trees: any = $('[data-widget="tree"]');

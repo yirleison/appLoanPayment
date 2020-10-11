@@ -34,6 +34,16 @@ export class LoanService {
     return this.httpClient.get(this.urlBase + "prestamo-usuario/" + id, httpOptions);
   }
 
+  listLoansByI(id) {
+    let httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    };
+
+    return this.httpClient.get(this.urlBase + "prestamo/" + id, httpOptions);
+  }
+
   listLoans() {
     let httpOptions = {
       headers: new HttpHeaders({

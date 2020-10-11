@@ -49,8 +49,9 @@ export class LoansComponent implements OnInit {
     private _router: ActivatedRoute,
     private http: HttpClient,
   ) {
-    this.loan = new loansModel('12/02/2020', '', 0, false, '', "");
+    this.loan = new loansModel('12/02/2020', '', 0, false, '', "","");
     this.rateInterest = [5, 6, 7, 8, 9, 10];
+    this.loans = []
   }
 
   ngOnInit(): void {
@@ -85,8 +86,14 @@ export class LoansComponent implements OnInit {
       (param: Params) => {
         let id = param.id;
         this.idUser = id;
-        localStorage.setItem('idUser', id)
-        this.getLoans(id)
+        if (id == undefined) {
+          console.log('-------> no valla')
+        } else {
+          console.log('-------> id user', id)
+          localStorage.setItem('idUser', id)
+          this.getLoans(id)
+          // console.log("ID undefined---->")
+        }
       }
     )
   }
@@ -94,6 +101,16 @@ export class LoansComponent implements OnInit {
   showModal(id) {
     $('#' + id).modal()
     this.getUsers()
+  }
+
+  viewLoan(id) {
+    console.log(id)
+    this.loanService.listLoansByI(id).subscribe(
+      (loan: any) => {
+        if (loan) {
+          console.log(loan)
+        }
+      });
   }
 
   getLoans(id) {
@@ -128,7 +145,7 @@ export class LoansComponent implements OnInit {
         }
       },
       error => {
-        console.log(error);
+        console.log('Este es el error -> ', error);
       }
     );
   }
@@ -143,6 +160,25 @@ export class LoansComponent implements OnInit {
 
   statusLoan(status) {
     return status == false || status == null || status == 'null' ? 'Pendiente' : 'Pagado'
+  }
+
+  modal() {
+    this.getUsers()
+    //$('#show-md-crea-loan').modal('show');
+    $('#show-md-crea-loan').modal({
+      show: 'tue'
+    });
+  }
+
+
+
+
+  modalview() {
+    this.getUsers()
+    //$('#show-md-crea-loan').modal('show');
+    $('#show-md-view-loan').modal({
+      show: 'tue'
+    });
   }
 
   showModalLoan() {
@@ -172,40 +208,48 @@ export class LoansComponent implements OnInit {
   }
 
   createLoan() {
-    let amount = $("#valor-prestamo").val();
-    let rateInterest = $("#interes").val();
-    let statusLoan = $("#select-estado option:selected").val();
-    let finishedDatePayment = null;
     this.loan.finishedDatePayment = null
-    this.loan.idUser = localStorage.getItem('idUser')
-
+    let dni = ''
+    if (this._idUser == undefined || this._idUser == '') {
+      console.log('id user no route')
+    } else {
+      dni = this._idUser.toString()
+    }
+    if (localStorage.getItem('idUser') == undefined || localStorage.getItem('idUser') == '') {
+      console.log('id user no localstorage')
+    } else {
+      dni = localStorage.getItem('idUser')
+    }
+    this.loan.idUser = dni
     let inter = this.loan.amount;
     let p = inter.toString().split(',');
     this.loan.amount = p.join('');
     this.loan.dateLoan = $('#loan-date').val()
     console.log(this.loan)
-
-    this.loanService.createLoan(this.loan).subscribe(
-      response => {
-        if (!response) {
-          //Muestro el error
-        } else {
-          //Muestro alert de confirmacion
-          setInterval(() => {
-            this.flagPreloadSave = true;
-            $("#show-md-crea-loan").modal('hide');
-          }, 1000)
-          this.showToaster('1', 'Prestamo', 'Prestamo creado con éxito')
-          $("#example").dataTable().fnDestroy();
-          this.getLoans(localStorage.getItem('idUser'));
-          this.loan = new loansModel('', '', 0, false, null, "");
-          this.flagPreloadSave = false;
+    this.flagPreloadSave = true;
+   setTimeout(() => {
+      this.loanService.createLoan(this.loan).subscribe(
+        (response: any) => {
+          if (response.status == 'false') {
+            this.showToaster('2', 'El monto ingresado supera el capital', 'Prestamo')
+            console.log('response en false', response)
+            //Muestro el error
+          } else {
+            //Muestro alert de confirmacion
+            console.log('mostramos respnse create loan', response)
+            this.showToaster('1', 'Prestamo', 'Prestamo creado con éxito')
+            $("#example").dataTable().fnDestroy();
+            this.getLoans(dni);
+            this.loan = new loansModel('12/02/2020', '', 0, false, '', "","");
+            this.flagPreloadSave = false;
+          }
+        },
+        error => {
+          let body = JSON.parse(error._body);
         }
-      },
-      error => {
-        let body = JSON.parse(error._body);
-      }
-    );
+      )
+      $("#show-md-crea-loan").modal('hide');
+    }, 5000);
   }
 
   setFormat(e) {
@@ -293,6 +337,7 @@ export class LoansComponent implements OnInit {
     // console.log('SELECTION CHANGED INTO',$event);
     //console.log(`SELECTION CHANGED INTO ${$event.id || ''}`);
     this._idUser = $event.id
+    console.log('DNI usuario onChange ------->', this._idUser)
   }
 
   onAdd = ($event: any): void => {

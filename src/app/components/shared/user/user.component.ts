@@ -47,9 +47,10 @@ export class UserComponent implements OnInit {
       phone: '',
       email: '',
       password: '',
-      status: ''
+      status: '',
+      role: ''
     })
-    this.user = new User('', '', '', '', '', '', '', '', '', '', '');
+    this.user = new User('', '', '', '', '', '', '', '', '', '', '','');
   }
 
   userForm = this.formBuilder.group({
@@ -62,7 +63,8 @@ export class UserComponent implements OnInit {
     phone: ['', [Validators.required]],
     email: ['',],
     password: [''],
-    status: ['']
+    status: [''],
+    role: []
   })
 
   userFormUpdate = this.formBuilder.group({
@@ -75,7 +77,8 @@ export class UserComponent implements OnInit {
     phone: ['', [Validators.required]],
     email: ['',],
     password: [''],
-    status: ['']
+    status: [''],
+    role: []
   })
 
   ngOnInit(): void {
@@ -125,6 +128,7 @@ export class UserComponent implements OnInit {
     this.user.phone = this.userForm.value.phone
     this.user.email = this.userForm.value.email
     this.user.password = this.userForm.value.password
+    this.user.role = this.userForm.value
     this.user.photo = (localStorage.getItem('image') == '' || localStorage.getItem('image') == null ? '' : localStorage.getItem('image'))
     this.user.status = '1';
     console.log(this.user)
@@ -152,7 +156,8 @@ export class UserComponent implements OnInit {
               phone: '',
               email: '',
               password: '',
-              photo: ''
+              photo: '',
+              role: ''
             })
           }
         },
@@ -186,11 +191,16 @@ export class UserComponent implements OnInit {
               phone: this.user.phone,
               email: (this.user.email == '' || this.user.email == null || this.user.email == 'udefined' ? '' : this.user.email),
               password: (this.user.password == '' || this.user.password == null || this.user.password == 'undefined' ? '' : this.user.password),
-              status: this.user.status
+              status: this.user.status,
+              role: this.user.status
             })
 
-            this.user.photo = (this.user.photo == '' || this.user.photo == null ? this.avatar : this.user.photo)
-            $(".image-user").attr("src", 'http://localhost:3000/imagen/'+ this.user.photo);
+            if(this.user.photo == '' || this.user.photo == null){
+              $(".image-user").attr("src", this.avatar);
+            }
+            else {
+              $(".image-user").attr("src", 'http://localhost:3000/imagen/'+ this.user.photo);
+            }
             //console.log(this.userFormUpdate.value)
             this.openModal(idModal, null)
           }
@@ -254,11 +264,11 @@ export class UserComponent implements OnInit {
     this.user.phone = this.userFormUpdate.value.phone
     this.user.email = this.userFormUpdate.value.email
     this.user.password = this.userFormUpdate.value.password
+    this.user.role = this.userForm.value.role
     this.user.photo = (localStorage.getItem('image') == '' || localStorage.getItem('image') == null ? '' : localStorage.getItem('image'))
     console.log('Este es el usuario a actualizar ---------------------> ', localStorage.getItem('userId'))
 
     this.userService.updateUsersById(localStorage.getItem('userId'), this.user).subscribe(
-
       (updateUser: any) => {
           if (updateUser.status == 'OK') {
             setInterval(() => {
@@ -281,7 +291,8 @@ export class UserComponent implements OnInit {
               phone: '',
               email: '',
               password: '',
-              photo: ''
+              photo: '',
+              role: ''
             })
           }
       },

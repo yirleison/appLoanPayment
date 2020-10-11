@@ -15,9 +15,13 @@
 </div>
 </div>
 
+<div style="margin-top: 80px;"  *ngIf="showFormFront" class="row loader-center">
+  <div class="loader"></div>
+</div>
+
 <div style="margin-top: 50px" class="row" style="margin-left: 5px; margin-right: 5px">
-  <div *ngIf="payments?.length > 0" class="col-md-12 col-lg-12 col-xs-12">
-    <table id="t" datatable [dtOptions]="dtOptions" class="row-border hover">
+  <div *ngIf="payments.length !=0" class="col-md-12 col-lg-12 col-xs-12">
+    <table id="t" datatable [dtOptions]="dtOptions" class="row-border hover table table-striped table-bordered">
       <thead>
         <tr>
           <th style="width: 3%">ID</th>
@@ -29,37 +33,35 @@
           <th style="width: 11%">Estado Pago</th>
         </tr>
       </thead>
-      <tbody *ngIf="payments?.length > 0">
-        <tr class="altura" *ngFor="let item of payments; let i = index">
+      <tbody *ngIf="payments.length > 0">
+        <tr class="altura" *ngFor="let payments of payments; let i = index">
           <td>{{ i + 1 }}</td>
-          <td *ngIf="item.dateDeposit == 'null' || item.dateDeposit == null; else thenBlock">
+          <td *ngIf="payments.dateDeposit == 'null' || payments.dateDeposit == null; else thenBlock">
             Pendiente
           </td>
-          <td>{{ item.amount | number: "1.2-2" }}</td>
-          <td>{{ item.interest | number: "1.2-2" }}</td>
+          <td>{{ payments.amount | number: "1.2-2" }}</td>
+          <td>{{ payments.interest | number: "1.2-2" }}</td>
           <td>
-            {{ item.nextDatePayment | date: "yyyy" }}-{{item.nextDatePayment | date: "MM"}}-{{ item.nextDatePayment | date: "dd" }}
+            {{ payments.nextDatePayment | date: "yyyy" }}-{{payments.nextDatePayment | date: "MM"}}-{{ payments.nextDatePayment | date: "dd" }}
           </td>
-          <td>{{ item.balanceLoand | number: "1.2-2" }}</td>
-          <td *ngIf="statusPaymenDate(item.statusDeposit) == 'Pagado'; else thenBlock2">
+          <td>{{ payments.balanceLoand | number: "1.2-2" }}</td>
+          <td *ngIf="statusPaymenDate(payments.statusDeposit) == 'Pagado'; else thenBlock2">
             <div class="style-interest">Pagado</div>
           </td>
+          <ng-template #thenBlock>
+            <td>
+              {{ payments.dateDeposit | date: "yyyy" }}-{{payments.dateDeposit | date: "MM"}}-{{ payments.dateDeposit | date: "dd" }}
+            </td>
+          </ng-template>
+          <ng-template #thenBlock2>
+            <td>
+              <div class="style-interest-pendiente">Pendiente</div>
+            </td>
+          </ng-template>
         </tr>
-        <ng-template #thenBlock>
-          <td>
-            {{ item.dateDeposit | date: "yyyy" }}-{{item.dateDeposit | date: "MM"}}-{{ item.dateDeposit | date: "dd" }}
-          </td>
-        </ng-template>
-        <ng-template #thenBlock2>
-          <td>
-            <div class="style-interest-pendiente">Pendiente</div>
-          </td>
-        </ng-template>
       </tbody>
     </table>
   </div>
 </div>
 
-<div *ngIf="showFormFront" class="row loader-center">
-  <div class="loader"></div>
-</div>
+

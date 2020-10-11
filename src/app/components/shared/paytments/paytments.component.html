@@ -45,8 +45,8 @@
 <div class="row">
     <div *ngIf="bandera == true" class="col-lg-12 col-md-12" style="margin-bottom: 40px;">
         <div class="btn-loan">
-            <button id="lblLoan" (click)="openModal('show-md-create-payment',null)" style="background-color: #0073b7;"
-                class="btn btn-primary">Crear Pago</button>
+            <button id="lblLoan" (click)="openModal('show-md-create-payment',null)" style="background-color: #0073b7; font-weight : bold;"
+                class="btn btn-primary btn-xs">Crear Pago</button>
         </div>
     </div>
     <div class="container">
@@ -182,7 +182,7 @@
                     </div>
                     <div class="form-group">
                         <label for="formGroupExampleInput2">Valor a Pagar</label>
-                        <input id="amoutn" type="text" (keyup)="setFormat($event,'full')" class="form-control"
+                        <input id="amoutn" type="text" (keyup)="setFormat($event,'amount-loan')" class="form-control"
                             name="amount" #name="ngModel" [(ngModel)]="paymentFull.amount"
                             placeholder="Ingrese el valor a pagar">
                     </div>

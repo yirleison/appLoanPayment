@@ -34,7 +34,7 @@ export class PaytmentsComponent implements OnInit {
   public balancePago: any = 0;
   public balanceInteres: any = 0;
   public cuotas: any = 0;
-  public bandera: boolean;
+  public bandera: boolean = true;
   public interest: any;
   public nameUser: any
   public validateTotalPayment: any
@@ -63,6 +63,13 @@ export class PaytmentsComponent implements OnInit {
 
     $(document).ready(function () {
       $("#payment-date")
+        .datepicker({
+          autoclose: true,
+          todayHighlight: true
+        })
+        .datepicker("update", new Date());
+
+        $("#datetimepicker1")
         .datepicker({
           autoclose: true,
           todayHighlight: true
@@ -101,132 +108,12 @@ export class PaytmentsComponent implements OnInit {
 
   }
 
-  paramsByRoute() {
-    this._router.params.subscribe(
-      (params: Params) => {
-        this.getPaymentbyLoan(params.idLoan)
-        localStorage.setItem('idLoan', params.idLoan);
-      }
-    );
-  }
-
-  getPaymentbyLoan(id) {
-    this.dtOptions = {
-      pagingType: "full_numbers",
-      pageLength: 5,
-      autoWidth: true,
-      order: [[0, 'desc']],
-      language: {
-        url: '//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json'
-      }
-    };
-    this.paymentService.listPaymentByLoan(id).subscribe(
-      (payments: any) => {
-        console.log(payments.message)
-        if (payments.message.length > 0) {
-          this.bandera = false;
-        }
-        else {
-          this.bandera = true;
-        }
-        console.log(this.bandera)
-        this.payments = payments.message;
-        console.log(this.payments)
-        this.balances = payments.message;
-        this.cuotas = 0;
-        for (let i = 0; i < this.balances.length; i++) {
-          if (this.balances[i].statusDeposit) {
-            this.balancePago += parseFloat(this.balances[i].balanceLoand);
-            this.balanceInteres += parseFloat(this.balances[i].interest);
-            this.cuotas++;
-          }
-        }
-        this.dtTrigger.next();
-      },
-      error => {
-        console.log(error)
-      }
-    )
-  }
-
-  consulPaymentDate() {
-    this.paymentService.consultPaymentDate(localStorage.getItem(''))
-  }
-
-  statusPaymenDate(status) {
-    return status == false || status == null || status == 'null' ? 'Pendiente' : 'Pagado'
-  }
-
-  formateDate(date) {
-    if (date == null || date == 'null') {
-      return 'Pendiente'
-    }
-    else {
-      return moment(date).format("YYYY-MM-DD");
-      // return moment(date).year() + '-' + moment(date).month() +'-' + moment(date).day()
-    }
-  }
-
-  //Funcionabilidad para pagos...
-  openModal(id, idPaymen) {
-    if (idPaymen != null || idPaymen != 'undefined' || idPaymen != '' || idPaymen != 'null') {
-      localStorage.setItem('idPayment', idPaymen);
-      console.log('idPayment', idPaymen)
-    }
-    $("#" + id).modal("show");
-  }
-
-  closeModal(id) {
-    $("#" + id).modal("hide");
-  }
-
-  setFormat(e, model) {
-    let amount;
-    amount += '';
-    amount = e.target.value;
-    amount = parseFloat(amount.replace(/[^0-9\.]/g, '')); // elimino cualquier cosa que no sea numero o punto
-    // si es mayor o menor que cero retorno el valor formateado como numero
-    amount = '' + amount.toFixed(0);
-    // si no es un numero o es igual a cero retorno el mismo cero
-    if (isNaN(amount) || amount === 0)
-      return parseFloat("0").toFixed(2);
-    var amount_parts = amount.split('.'),
-      regexp = /(\d+)(\d{3})/;
-    while (regexp.test(amount_parts[0]))
-      amount_parts[0] = amount_parts[0].replace(regexp, '$1' + ',' + '$2');
-    if (model == 'interes') {
-      console.log(model)
-      this.paymentFull.interest = amount_parts.join('.');
-    }
-    else if (model == 'normal') {
-      this.paymentNormal.amount = amount_parts.join('.');
-    }
-    else if (model == 'balance') {
-      this.paymentFull.balanceLoand = amount_parts.join('.');
-    }
-    //   console.log(amount_parts.join('.'))
-  }
-
-  formatPrice(value) {
-    let val = (value / 1)
-    return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-  }
-
-  changeinterest(e) {
-    let status = {
-      Pendiente: '1',
-      Pagado: '2'
-    }
-    this.status = status[e.target.value];
-  }
-
   createPayment() {
     let status = {
       Pendiente: '1',
       Pagado: '2'
     }
     this.paymentFull.dateDeposit = null;
-    //this.paymentFull.dateDeposit = moment($("#payment-date").val()).format("YYYY-MM-DD");
     this.paymentFull.nextDatePayment = moment($("#payment-next-date").val()).format("YYYY-MM-DD");
     if (this.paymentFull.statusDeposit) {
       this.paymentFull.statusDeposit = status[$("#statusPayment").val()];
@@ -428,6 +315,127 @@ export class PaytmentsComponent implements OnInit {
 
       }
     )
+  }
+
+  paramsByRoute() {
+    this._router.params.subscribe(
+      (params: Params) => {
+        this.getPaymentbyLoan(params.idLoan)
+        localStorage.setItem('idLoan', params.idLoan);
+      }
+    );
+  }
+
+  getPaymentbyLoan(id) {
+    this.dtOptions = {
+      pagingType: "full_numbers",
+      pageLength: 5,
+      autoWidth: true,
+      order: [[0, 'desc']],
+      language: {
+        url: '//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json'
+      }
+    };
+    this.paymentService.listPaymentByLoan(id).subscribe(
+      (payments: any) => {
+        console.log(payments.message)
+        if (payments.message.length > 0) {
+          //this.bandera = false;
+        }
+        else {
+          this.bandera = true;
+        }
+        this.payments = payments.message;
+        console.log(this.payments)
+        this.balances = payments.message;
+        this.cuotas = 0;
+        for (let i = 0; i < this.balances.length; i++) {
+          if (this.balances[i].statusDeposit) {
+            this.balancePago += parseFloat(this.balances[i].balanceLoand);
+            this.balanceInteres += parseFloat(this.balances[i].interest);
+            this.cuotas++;
+          }
+        }
+        this.dtTrigger.next();
+      },
+      error => {
+        console.log(error)
+      }
+    )
+  }
+
+  consulPaymentDate() {
+    this.paymentService.consultPaymentDate(localStorage.getItem(''))
+  }
+
+  statusPaymenDate(status) {
+    return status == false || status == null || status == 'null' ? 'Pendiente' : 'Pagado'
+  }
+
+  formateDate(date) {
+    if (date == null || date == 'null') {
+      return 'Pendiente'
+    }
+    else {
+      return moment(date).format("YYYY-MM-DD");
+      // return moment(date).year() + '-' + moment(date).month() +'-' + moment(date).day()
+    }
+  }
+
+  //Funcionabilidad para pagos...
+  openModal(id, idPaymen) {
+    if (idPaymen != null || idPaymen != 'undefined' || idPaymen != '' || idPaymen != 'null') {
+      localStorage.setItem('idPayment', idPaymen);
+      console.log('idPayment', idPaymen)
+    }
+    $("#" + id).modal("show");
+  }
+
+  closeModal(id) {
+    $("#" + id).modal("hide");
+  }
+
+  setFormat(e, model) {
+    let amount;
+    amount += '';
+    amount = e.target.value;
+    amount = parseFloat(amount.replace(/[^0-9\.]/g, '')); // elimino cualquier cosa que no sea numero o punto
+    // si es mayor o menor que cero retorno el valor formateado como numero
+    amount = '' + amount.toFixed(0);
+    // si no es un numero o es igual a cero retorno el mismo cero
+    if (isNaN(amount) || amount === 0)
+      return parseFloat("0").toFixed(2);
+    var amount_parts = amount.split('.'),
+      regexp = /(\d+)(\d{3})/;
+    while (regexp.test(amount_parts[0]))
+      amount_parts[0] = amount_parts[0].replace(regexp, '$1' + ',' + '$2');
+    if (model == 'interes') {
+      console.log(model)
+      this.paymentFull.interest = amount_parts.join('.');
+    }
+    else if (model == 'normal') {
+      this.paymentNormal.amount = amount_parts.join('.');
+    }
+    else if (model == 'balance') {
+      this.paymentFull.balanceLoand = amount_parts.join('.');
+    }
+    else if (model == 'amount-loan') {
+      this.paymentFull.amount = amount_parts.join('.');
+    }
+    //   console.log(amount_parts.join('.'))
+  }
+
+  formatPrice(value) {
+    let val = (value / 1)
+    return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+  }
+
+  changeinterest(e) {
+    let status = {
+      Pendiente: '1',
+      Pagado: '2'
+    }
+    this.status = status[e.target.value];
   }
 
   showToaster(status, title, message) {

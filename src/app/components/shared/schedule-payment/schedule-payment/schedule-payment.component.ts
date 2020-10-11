@@ -23,20 +23,18 @@ export class SchedulePaymentComponent implements OnInit {
   clients: NgOption[]
   selectedCountries = [];
   selectedCountryId: number;
-  public payments: PaymentModel[];
+  public payments: any;
   dtOptions: DataTables.Settings = {};
-  // dtTrigger: Subject<any> = new Subject();
 
   constructor(
     private userService: UserService,
     private paymentService: PaymenService,
     private spinnerService: NgxSpinnerService
-  ) { }
+  ) {this.payments = []}
 
   ngOnInit(): void {
     this.spinner()
     this.headerTable()
-   // this.getPaymentsByIdUser("5f73a2c2fa17a20a840d21e0", true)
     this.getUsers()
     $(document).ready(function () {
       $('#select-users').select2()
@@ -71,9 +69,7 @@ export class SchedulePaymentComponent implements OnInit {
       this.message = ''
     }
     else {
-      // $("#tablePayments").dataTable().fnDestroy();
-    this.spinner()
-      this.getPaymentsByIdUser(this.id, true)
+      this.getPaymentsByIdUser(this.id)
     }
   }
 
@@ -92,18 +88,17 @@ export class SchedulePaymentComponent implements OnInit {
     this.showFormFront = false
   }
 
-  getPaymentsByIdUser(id, flag) {
-    let dni = (id != null ? id.toString() : 0);
-    if (dni.length > 0 && flag) {
+  getPaymentsByIdUser(id) {
       this.paymentService.getPaymentByIdUser(id).subscribe(
         (payments: any) => {
-          if (payments.status != 'false') {
+          console.log('pagos usuario',payments.message)
+          if (payments.status != 'false' && payments.message.length > 0) {
+            this.message = ''
             this.payments = payments.message
-            console.log(   this.payments.length )
           }
           else {
-            console.log("---------->No trajo data")
             this.message = 'No se encontraron pagos para esta consulta.'
+            console.log(this.message)
             this.payments = []
           }
         },
@@ -111,12 +106,6 @@ export class SchedulePaymentComponent implements OnInit {
           console.log('------------------> entro en el catch del error', error)
         }
       )
-    }
-    else {
-      console.log('Llego al else --------------> ', id);
-      this.payments = []
-    }
-    console.log('Message --------------> ', this.message);
   }
 
   statusPaymenDate(status) {
@@ -125,7 +114,7 @@ export class SchedulePaymentComponent implements OnInit {
   headerTable() {
     this.dtOptions = {
       pagingType: "full_numbers",
-      pageLength: 5,
+      pageLength: 8,
       autoWidth: true,
       order: [[0, 'desc']],
       language: {

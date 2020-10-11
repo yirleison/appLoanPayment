@@ -4,7 +4,7 @@
         <p *ngIf="nameUser" class="name-user">Cliente: {{nameUser}}</p>
     </div>
         <div class="btn-loan">
-            <button (click)="showModal('show-md-crea-loan')" class="btn btn-primary test  btn-xs">Crear Prestamo</button>
+            <button (click)="modal()" class="btn btn-primary test  btn-xs">Crear Prestamo</button>
         </div>
         <table id="example" #ref datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"
             class="table table-striped table-bordered">
@@ -38,7 +38,7 @@
                     <td>{{ statusLoan(item.statusLoan)}}</td>
                     <td>{{item.finishedDatePayment}}</td>
                     <td style="display: inline-flex">
-                        <a type="button" class="btn  btn-xs btn-primary edit mr-2" title="Editar Prestamo" data-target="#exampleModal"> <span
+                        <a type="button" class="btn  btn-xs btn-primary edit mr-2" title="Editar Prestamo" (click)="viewLoan(item._id)" data-target="#exampleModal"> <span
                                 class="glyphicon glyphicon-edit button-magin" ></span>
                         </a>
                         <a type="button" class="btn  btn-xs btn-info payment button-magin" title="Ver cuotas de pago" data-target="#exampleModal"
@@ -55,7 +55,7 @@
     </div>
 </div>
 
-    <div class="modal" id="show-md-crea-loan" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    <div class="modal" id="show-md-crea-loan"  data-toggle="modal" tabindex="-1" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -103,6 +103,10 @@
                                      (change)="onChange($event)">
                           </ng-select>
                         </div>
+                        <div class="form-group shadow-textarea">
+                          <label for="exampleFormControlTextarea6">Shadow and placeholder</label>
+                          <textarea class="form-control z-depth-1" name="description" [(ngModel)]="loan.description" id="exampleFormControlTextarea6" rows="3" placeholder="Escribe la descripción del prestamo..."></textarea>
+                        </div>
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -112,9 +116,70 @@
                 </div>
             </div>
         </div>
+      </div>
         <ng-template #preload>
           <div class="spinner-border text-primary" role="status">
             <span class="sr-only">Loading...</span>
           </div>
         </ng-template>
+
+
+
+    <div class="modal" id="show-md-view-loan"  data-toggle="modal" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Crear Prestamo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form #formLoan="ngForm">
+                    <div class="form-group">
+                        <label for="formGroupExampleInput">Fecha Prestamo</label>
+                        <div class='input-group date' id='datetimepicker1'>
+                            <input type='text' id="loan-date" name="dateLoan" #name="ngModel"
+                                [(ngModel)]="loan.dateLoan" class="form-control" />
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="formGroupExampleInput2">Valor Prestamo</label>
+                        <input id="amoutn" type="text" (keyup)="setFormat($event)" class="form-control"
+                            name="amount" #name="ngModel" [(ngModel)]="loan.amount" id="valor-prestamo"
+                            placeholder="Valor Prestamo">
+                    </div>
+                    <div class="form-group">
+                        <label for="">Tasa de interes</label>
+                        <select class="form-control" (change)="changeinterest($event)" name="rateInterest"
+                            #name="ngModel" [(ngModel)]="loan.rateInterest">
+                            <option value="0">Seleccione el Interes</option>
+                            <option value="{{item}}" *ngFor="let item of rateInterest let index">{{index}} %
+                            </option>
+                        </select>
+                    </div>
+                    <div *ngIf="!idUser" class="form-group">
+                      <label>Selecciona el cliente</label>
+                      <ng-select [items]="cliente"
+                                 bindLabel="name"
+                                 placeholder="Seleccione el cliente"
+                                 [multiple]="false"
+                                 maxSelectedItems="3"
+                                 (add)="onAdd($event)"
+                                 (change)="onChange($event)">
+                      </ng-select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+              <!-- <button class="btn btn-primary btn-lg"><i class="fa fa-spinner fa-spin"></i> Loading</button> -->
+                <button type="button" class="btn btn-secondary btn-xs" data-dismiss="modal">Cerrar</button>
+                <button type="button" (click)="createLoan()" class="btn btn-primary  btn-xs"><i *ngIf="flagPreloadSave" class="fa fa-spinner fa-spin"></i> Crear Prestamo</button>
+            </div>
+        </div>
     </div>
+  </div>

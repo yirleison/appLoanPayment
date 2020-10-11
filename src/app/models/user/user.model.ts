@@ -10,6 +10,7 @@ export class User {
         public email: String,
         public password: String,
         public photo: String,
-        public status: String
+        public status: String,
+        public role: String
     ){}
 }
