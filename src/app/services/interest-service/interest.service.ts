@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core'; //  Inyectar los servicios
-import { HttpClientModule, HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Endpoints } from '../../../app/components/config/endpoints'
-import  { environment } from '../../../environments/environment.prod'
-import { environment_prod } from 'src/environments/environment';
-
 
 @Injectable()
 
@@ -45,7 +42,6 @@ export class InterestService {
       }
 
       updateInterest(id, payload) {
-        console.log()
         const httpOptions = {
           headers: new HttpHeaders({
             'Content-Type':  'application/json',
