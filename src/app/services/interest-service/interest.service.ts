@@ -44,8 +44,8 @@ export class InterestService {
         });
       }
 
-
       updateInterest(id, payload) {
+        console.log()
         const httpOptions = {
           headers: new HttpHeaders({
             'Content-Type':  'application/json',
