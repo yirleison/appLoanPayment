@@ -41,7 +41,6 @@ export class InterestService {
         });
       }
 
-
       updateInterest(id, payload) {
         const httpOptions = {
           headers: new HttpHeaders({
