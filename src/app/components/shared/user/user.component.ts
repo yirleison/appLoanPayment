@@ -50,7 +50,7 @@ export class UserComponent implements OnInit {
       status: '',
       role: ''
     })
-    this.user = new User('', '', '', '', '', '', '', '', '', '', '','');
+    this.user = new User('', '', '', '', '', '', '', '', '', '', '', '');
   }
 
   userForm = this.formBuilder.group({
@@ -133,43 +133,47 @@ export class UserComponent implements OnInit {
     this.user.status = '1';
     console.log(this.user)
     /**Save user in DB */
-    setInterval(() => {
-    this.userService.createUser(this.user)
-      .subscribe(
-        (user: any) => {
-          if (user.status == 'OK') {
-              this.flagUserCreate = true;
+    this.flagUserCreate = true;
+    setTimeout(() => {
+      this.userService.createUser(this.user)
+        .subscribe(
+          (user: any) => {
+            if (user.status == 'OK') {
               this.closeModal('show-md-create-user')
-            this.showToaster('1', 'Registrar usuario', 'El usuario se ha registrado exitosamente')
-            $("#tableUser").dataTable().fnDestroy();
-            localStorage.removeItem('image')
-            this.getUsers()
-            this.userForm.reset();
-            this.userForm = this.formBuilder.group({
-              fullName: '',
-              documentType: '0',
-              documentNumber: '',
-              accountType: '0',
-              accountNumber: '',
-              bank: '0',
-              phone: '',
-              email: '',
-              password: '',
-              photo: '',
-              role: ''
-            })
+              this.showToaster('1', 'Registrar usuario', 'El usuario se ha registrado exitosamente')
+              $("#tableUser").dataTable().fnDestroy();
+              localStorage.removeItem('image')
+              this.flagUserCreate = false;
+              this.getUsers()
+              this.userForm.reset();
+              this.userForm = this.formBuilder.group({
+                fullName: '',
+                documentType: '0',
+                documentNumber: '',
+                accountType: '0',
+                accountNumber: '',
+                bank: '0',
+                phone: '',
+                email: '',
+                password: '',
+                photo: '',
+                role: ''
+              })
+            }
+            else {
+              this.showToaster('2', 'Ha ocurrido un error al tratar de crear el usuari', 'Usuario')
+            }
+          },
+          error => {
+            console.log(error)
           }
-        },
-        error => {
-          console.log(error)
-        }
-      )
+        )
     }, 1000)
   }
 
   editUser(idModal, idUser) {
     /**Save user in DB */
-    localStorage.setItem('userId',idUser)
+    localStorage.setItem('userId', idUser)
     this.userService.listUsersById(idUser)
       .subscribe(
         (user: any) => {
@@ -192,14 +196,14 @@ export class UserComponent implements OnInit {
               email: (this.user.email == '' || this.user.email == null || this.user.email == 'udefined' ? '' : this.user.email),
               password: (this.user.password == '' || this.user.password == null || this.user.password == 'undefined' ? '' : this.user.password),
               status: this.user.status,
-               role : this.user.role
+              role: this.user.role
             })
 
-            if(this.user.photo == '' || this.user.photo == null){
+            if (this.user.photo == '' || this.user.photo == null) {
               $(".image-user").attr("src", this.avatar);
             }
             else {
-              $(".image-user").attr("src", this.urlBase + 'imagen/'+ this.user.photo);
+              $(".image-user").attr("src", this.urlBase + 'imagen/' + this.user.photo);
             }
             //console.log(this.userFormUpdate.value)
             this.openModal(idModal, null)
@@ -270,31 +274,31 @@ export class UserComponent implements OnInit {
 
     this.userService.updateUsersById(localStorage.getItem('userId'), this.user).subscribe(
       (updateUser: any) => {
-          if (updateUser.status == 'OK') {
-            setInterval(() => {
-              this.flagUserUpdate = true;
-              this.closeModal('show-md-update-user')
-            }, 1000)
-            this.flagUserUpdate = true
-            this.showToaster('1', 'Actualizar usuario', 'Datos actualizados exitosamente')
-            $("#tableUser").dataTable().fnDestroy();
-            localStorage.removeItem('image')
-            this.getUsers()
-            this.userForm.reset();
-            this.userForm = this.formBuilder.group({
-              fullName: '',
-              documentType: '0',
-              documentNumber: '',
-              accountType: '0',
-              accountNumber: '',
-              bank: '0',
-              phone: '',
-              email: '',
-              password: '',
-              photo: '',
-              role: ''
-            })
-          }
+        if (updateUser.status == 'OK') {
+          setInterval(() => {
+            this.flagUserUpdate = true;
+            this.closeModal('show-md-update-user')
+          }, 1000)
+          this.flagUserUpdate = true
+          this.showToaster('1', 'Actualizar usuario', 'Datos actualizados exitosamente')
+          $("#tableUser").dataTable().fnDestroy();
+          localStorage.removeItem('image')
+          this.getUsers()
+          this.userForm.reset();
+          this.userForm = this.formBuilder.group({
+            fullName: '',
+            documentType: '0',
+            documentNumber: '',
+            accountType: '0',
+            accountNumber: '',
+            bank: '0',
+            phone: '',
+            email: '',
+            password: '',
+            photo: '',
+            role: ''
+          })
+        }
       },
       error => {
         console.log(error)
