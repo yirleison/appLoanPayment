@@ -128,7 +128,7 @@ export class UserComponent implements OnInit {
     this.user.phone = this.userForm.value.phone
     this.user.email = this.userForm.value.email
     this.user.password = this.userForm.value.password
-    this.user.role = this.userForm.value
+    this.user.role = this.userForm.value.role
     this.user.photo = (localStorage.getItem('image') == '' || localStorage.getItem('image') == null ? '' : localStorage.getItem('image'))
     this.user.status = '1';
     console.log(this.user)
@@ -192,14 +192,14 @@ export class UserComponent implements OnInit {
               email: (this.user.email == '' || this.user.email == null || this.user.email == 'udefined' ? '' : this.user.email),
               password: (this.user.password == '' || this.user.password == null || this.user.password == 'undefined' ? '' : this.user.password),
               status: this.user.status,
-              role: this.user.status
+               role : this.user.role
             })
 
             if(this.user.photo == '' || this.user.photo == null){
               $(".image-user").attr("src", this.avatar);
             }
             else {
-              $(".image-user").attr("src", 'http://localhost:3000/imagen/'+ this.user.photo);
+              $(".image-user").attr("src", this.urlBase + 'imagen/'+ this.user.photo);
             }
             //console.log(this.userFormUpdate.value)
             this.openModal(idModal, null)
