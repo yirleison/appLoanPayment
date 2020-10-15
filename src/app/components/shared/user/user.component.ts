@@ -133,14 +133,13 @@ export class UserComponent implements OnInit {
     this.user.status = '1';
     console.log(this.user)
     /**Save user in DB */
+    setInterval(() => {
     this.userService.createUser(this.user)
       .subscribe(
         (user: any) => {
           if (user.status == 'OK') {
-            setInterval(() => {
               this.flagUserCreate = true;
               this.closeModal('show-md-create-user')
-            }, 1000)
             this.showToaster('1', 'Registrar usuario', 'El usuario se ha registrado exitosamente')
             $("#tableUser").dataTable().fnDestroy();
             localStorage.removeItem('image')
@@ -165,6 +164,7 @@ export class UserComponent implements OnInit {
           console.log(error)
         }
       )
+    }, 1000)
   }
 
   editUser(idModal, idUser) {

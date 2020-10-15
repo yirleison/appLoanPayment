@@ -18,7 +18,7 @@ export class LoanService {
     });
 
     return this.httpClient.post(
-      "http://localhost:3000/registrar-prestamo",
+      `${this.urlBase}registrar-prestamo`,
       payload,
       { headers: headers }
     );
