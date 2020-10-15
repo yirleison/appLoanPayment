@@ -31,6 +31,7 @@ export class MenuComponent implements OnInit {
    else {
     this.urlPhoto = this.urlBase +'imagen/'+ this.user.photo
    }
+   console.log('Pthoto user ------------> ', this.urlPhoto)
    // console.log('Usuario------>',name)
   //  $(document).ready(() => {
   //   const trees: any = $('[data-widget="tree"]');
