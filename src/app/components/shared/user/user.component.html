@@ -334,6 +334,18 @@
                         </div>
                     </div>
                     <div class="row">
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                            <label for="">Rol</label>
+                            <select class="form-control" formControlName="role" name="">
+                                <option value="0">Seleccione el rol</option>
+                                <option value="admin">Administrador</option>
+                                <option value="user">Usuario</option>
+                            </select>
+                            <!-- <label style="font-size: small;" for=""
+                                class="text-danger">{{hasError('documentType')}}</label> -->
+                        </div>
+                    </div>
                         <div class="col-lg-6">
                             <div class="form-group" *ngIf="!user.password; else passwordTemplate">
 
