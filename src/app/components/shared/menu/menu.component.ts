@@ -24,9 +24,13 @@ export class MenuComponent implements OnInit {
   ngOnInit() {
 
    this.name = this.user.fullName.split(' ')[0]
-   console.log('show data user -------->',this.user.potho)
-
-   this.urlPhoto = ( this.user.potho == '' || this.user.potho == null ? this.avatar : this.urlBase + this.user.potho)
+   console.log('show data user -------->',this.user.photo)
+   if(!this.user.photo){
+    this.urlPhoto = 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQzr9MZuVHIBRWTXhdzLQAx_-Y0e5Wg6-MmJv4uLE1AyHnhdA5V&usqp=CAU'
+   }
+   else {
+    this.urlPhoto = this.urlBase +'imagen/'+ this.user.photo
+   }
    // console.log('Usuario------>',name)
   //  $(document).ready(() => {
   //   const trees: any = $('[data-widget="tree"]');
