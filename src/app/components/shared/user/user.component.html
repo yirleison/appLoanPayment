@@ -217,7 +217,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Cerrar</button>
                         <button type="button" (click)="createUser()" [disabled]="!userForm.valid"
                             class="btn btn-primary  btn-xs"><i *ngIf="flagPreloadSave" class="fa fa-spinner fa-spin"></i> Registrar</button>
                     </div>
@@ -383,7 +383,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" style="font-weight : bold;" class="btn btn-secondary btn-xs" data-dismiss="modal">Cerrar</button>
+                        <button type="button" style="font-weight : bold;" class="btn btn-sm btn-secondary btn-xs" data-dismiss="modal">Cerrar</button>
                         <button type="button" style="font-weight : bold;" (click)="updateUser()" class="btn btn-primary btn-xs"><i *ngIf="flagUserUpdate" class="fa fa-spinner fa-spin"></i> Actualizar</button>
                     </div>
                     <ng-template #passwordTemplate>
