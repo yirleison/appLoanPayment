@@ -227,7 +227,6 @@ export class LoansComponent implements OnInit {
     this.loan.dateLoan = $('#loan-date').val()
     console.log(this.loan)
     this.flagPreloadSave = true;
-   setTimeout(() => {
       this.loanService.createLoan(this.loan).subscribe(
         (response: any) => {
           if (response.status == 'false') {
@@ -241,6 +240,7 @@ export class LoansComponent implements OnInit {
             $("#example").dataTable().fnDestroy();
             this.getLoans(dni);
             this.loan = new loansModel('12/02/2020', '', 0, false, '', "","");
+            $("#show-md-crea-loan").modal('hide');
             this.flagPreloadSave = false;
           }
         },
@@ -248,8 +248,6 @@ export class LoansComponent implements OnInit {
           let body = JSON.parse(error._body);
         }
       )
-      $("#show-md-crea-loan").modal('hide');
-    }, 5000);
   }
 
   setFormat(e) {

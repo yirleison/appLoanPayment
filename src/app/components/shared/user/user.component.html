@@ -7,7 +7,7 @@
     </div>
     <br>
     <br>
-    <div class="row" style="margin-left: 5px; margin-right: 5px;">
+    <div *ngIf="userSpinner; else spinner_user" class="row" style="margin-left: 5px; margin-right: 5px;">
         <div class="col-md-12 col-lg-12 col-xs-12">
             <table id="tableUser" class="tabla_sin table table-striped table-bordered">
                 <thead>
@@ -72,7 +72,13 @@
             </table>
         </div>
     </div>
+    <ng-template #spinner_user>
+      <div style="margin-left: 50%; margin-top: 13%;" class="loader"></div>
+    </ng-template>
 </div>
+
+
+
 
 <br>
 <br>
@@ -213,7 +219,7 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                         <button type="button" (click)="createUser()" [disabled]="!userForm.valid"
-                            class="btn btn-primary">Registrar</button>
+                            class="btn btn-primary  btn-xs"><i *ngIf="flagPreloadSave" class="fa fa-spinner fa-spin"></i> Registrar</button>
                     </div>
                     <ng-template #passwordTemplate>
                         <div class="form-group">

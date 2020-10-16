@@ -19,6 +19,9 @@
   <div class="loader"></div>
 </div>
 
+  <div *ngIf="spinnerr" style="margin-left: 50%; margin-top: 13%;" class="loader"></div>
+
+
 <div style="margin-top: 50px" class="row" style="margin-left: 5px; margin-right: 5px">
   <div *ngIf="payments.length !=0" class="col-md-12 col-lg-12 col-xs-12">
     <table id="t" datatable [dtOptions]="dtOptions" class="row-border hover table table-striped table-bordered">

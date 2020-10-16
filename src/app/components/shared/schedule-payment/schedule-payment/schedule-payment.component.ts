@@ -25,6 +25,7 @@ export class SchedulePaymentComponent implements OnInit {
   selectedCountryId: number;
   public payments: any;
   dtOptions: DataTables.Settings = {};
+  public spinnerr: boolean =  false
 
   constructor(
     private userService: UserService,
@@ -89,15 +90,20 @@ export class SchedulePaymentComponent implements OnInit {
   }
 
   getPaymentsByIdUser(id) {
+    this.spinnerr = true
       this.paymentService.getPaymentByIdUser(id).subscribe(
         (payments: any) => {
           console.log('pagos usuario',payments.message)
           if (payments.status != 'false' && payments.message.length > 0) {
+            this.spinnerr = false
             this.message = ''
             this.payments = payments.message
           }
           else {
-            this.message = 'No se encontraron pagos para esta consulta.'
+            setTimeout(()=>{
+              this.spinnerr = false
+              this.message = 'No se encontraron pagos para esta consulta.'
+            },1000)
             console.log(this.message)
             this.payments = []
           }

@@ -27,6 +27,8 @@ export class UserComponent implements OnInit {
   public bandera: Boolean = false
   public flagUserUpdate: boolean = false;
   public flagUserCreate: boolean = false
+  public userSpinner : boolean = true
+ public flagPreloadSave : boolean = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -134,6 +136,7 @@ export class UserComponent implements OnInit {
     console.log(this.user)
     /**Save user in DB */
     this.flagUserCreate = true;
+    this.flagPreloadSave = true;
     setTimeout(() => {
       this.userService.createUser(this.user)
         .subscribe(
@@ -144,6 +147,7 @@ export class UserComponent implements OnInit {
               $("#tableUser").dataTable().fnDestroy();
               localStorage.removeItem('image')
               this.flagUserCreate = false;
+              this.flagPreloadSave = false;
               this.getUsers()
               this.userForm.reset();
               this.userForm = this.formBuilder.group({
@@ -235,9 +239,11 @@ export class UserComponent implements OnInit {
   }
 
   getUsers() {
+    this.userSpinner = false;
     this.userService.listUsers().subscribe(
       (users: any) => {
         if (users.status == 'OK') {
+          this.userSpinner = true;
           this.users = users.message
           $(document).ready(function () {
             $('#tableUser').dataTable({
@@ -271,16 +277,15 @@ export class UserComponent implements OnInit {
     this.user.role = this.userForm.value.role
     this.user.photo = (localStorage.getItem('image') == '' || localStorage.getItem('image') == null ? '' : localStorage.getItem('image'))
     console.log('Este es el usuario a actualizar ---------------------> ', localStorage.getItem('userId'))
+    this.flagPreloadSave = true;
 
     this.userService.updateUsersById(localStorage.getItem('userId'), this.user).subscribe(
       (updateUser: any) => {
         if (updateUser.status == 'OK') {
-          setInterval(() => {
-            this.flagUserUpdate = true;
-            this.closeModal('show-md-update-user')
-          }, 1000)
           this.flagUserUpdate = true
+          this.flagPreloadSave = false;
           this.showToaster('1', 'Actualizar usuario', 'Datos actualizados exitosamente')
+          this.closeModal('show-md-update-user')
           $("#tableUser").dataTable().fnDestroy();
           localStorage.removeItem('image')
           this.getUsers()
