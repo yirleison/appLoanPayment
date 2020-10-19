@@ -50,7 +50,7 @@ export class UserComponent implements OnInit {
       email: '',
       password: '',
       status: '',
-      role: ''
+      role: '0'
     })
     this.user = new User('', '', '', '', '', '', '', '', '', '', '', '');
   }

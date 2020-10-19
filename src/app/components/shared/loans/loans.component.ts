@@ -26,7 +26,7 @@ export class LoansComponent implements OnInit {
   idLoan: String = "";
   loans: any;
   _idUser: String
-  public rateInterest: Number[];
+  public rateInterest: String[];
   dtOptions: DataTables.Settings = {};
   dtTrigger: Subject<any> = new Subject();
   @ViewChild(DataTableDirective, { static: true }) dtElement: DataTableDirective;
@@ -41,6 +41,10 @@ export class LoansComponent implements OnInit {
   public nameUser = '';
   public idUser = '';
   public flagPreloadSave: boolean = false;
+  public spinner: boolean = false
+  public show_table: boolean = false
+  public message : String = ''
+
   constructor(
     private loanService: LoanService,
     private userService: UserService,
@@ -49,12 +53,13 @@ export class LoansComponent implements OnInit {
     private _router: ActivatedRoute,
     private http: HttpClient,
   ) {
-    this.loan = new loansModel('12/02/2020', '', 0, false, '', "","");
-    this.rateInterest = [5, 6, 7, 8, 9, 10];
+    this.loan = new loansModel('12/02/2020', '', 0, false, '', "", "");
+    this.rateInterest = ['5',' 6','7', '7.5', '8', '9', '10'];
     this.loans = []
   }
 
   ngOnInit(): void {
+
     this.getIdUserByRoute()
     $(document).ready(function () {
       $('#select2').select2();
@@ -104,16 +109,28 @@ export class LoansComponent implements OnInit {
   }
 
   viewLoan(id) {
-    console.log(id)
     this.loanService.listLoansByI(id).subscribe(
       (loan: any) => {
-        if (loan) {
-          console.log(loan)
+        if (loan && loan.status == 'OK') {
+          this.loan = loan.message
+          this.loan.amount = this.formatPrice(loan.message.amount)
+          this.loan.dateLoan = this.formatDate(loan.message.dateLoan)
+          this.showModal('show-md-view-loan')
+
         }
-      });
+        else {
+          this.showToaster('2','Ha ocurrido un error al tratar de procesar esta solicitus','Préstamos')
+        }
+      },
+      error => {
+        this.showToaster('2','Ha ocurrido un error al tratar de procesar esta solicitus','Préstamos')
+        console.error(error)
+      }
+      );
   }
 
   getLoans(id) {
+    this.spinner = true
     this.dtOptions = {
       pagingType: "full_numbers",
       pageLength: 5,
@@ -128,29 +145,46 @@ export class LoansComponent implements OnInit {
         if (loans.data.length != 0) {
           if (loans.data.user) {
             this.nameUser = loans.data.user.fullName
+            this.message = ''
           }
           if (loans.data) {
-            try {
+            //this.message = 'No se encontraron prestamos asociados a esete usuario.'
+            if(loans.data.user){
+              try {
+                this.spinner = false
+                this.show_table = false
+                this.message = `La consulta no trajo datos para este usua ${loans.data.user.fullName}`
+              } catch (error) {
+              }
+            }
+            else {
               let [{ idUser }] = loans.data
               this.nameUser = idUser.fullName
+              this.spinner = false
+              this.show_table = true
               this.loans = loans.data;
-              this.dtTrigger.next();
-            } catch (error) {
+              console.log(loans.data)
+
             }
             //console.log('Loans------------>', idUser);
           }
         }
         else {
           console.log('Loans------------> no trajo data');
+          this.spinner = false
+          this.show_table = true
         }
       },
       error => {
         console.log('Este es el error -> ', error);
+        this.spinner = false
+        this.show_table = true
       }
     );
+    //this.dtTrigger.next();
   }
 
-  formatterNumber(data: number) {
+  formatterNumber(data) {
     //numero = Number(new Intl.NumberFormat().format(numero));
     //var rounded = data.toFixed(2);
     var str = data.toString();
@@ -163,15 +197,13 @@ export class LoansComponent implements OnInit {
   }
 
   modal() {
+    this.message = ''
     this.getUsers()
     //$('#show-md-crea-loan').modal('show');
     $('#show-md-crea-loan').modal({
       show: 'tue'
     });
   }
-
-
-
 
   modalview() {
     this.getUsers()
@@ -227,27 +259,30 @@ export class LoansComponent implements OnInit {
     this.loan.dateLoan = $('#loan-date').val()
     console.log(this.loan)
     this.flagPreloadSave = true;
-      this.loanService.createLoan(this.loan).subscribe(
-        (response: any) => {
-          if (response.status == 'false') {
-            this.showToaster('2', 'El monto ingresado supera el capital', 'Prestamo')
-            console.log('response en false', response)
-            //Muestro el error
-          } else {
-            //Muestro alert de confirmacion
-            console.log('mostramos respnse create loan', response)
-            this.showToaster('1', 'Prestamo', 'Prestamo creado con éxito')
-            $("#example").dataTable().fnDestroy();
-            this.getLoans(dni);
-            this.loan = new loansModel('12/02/2020', '', 0, false, '', "","");
-            $("#show-md-crea-loan").modal('hide');
-            this.flagPreloadSave = false;
-          }
-        },
-        error => {
-          let body = JSON.parse(error._body);
+    this.loanService.createLoan(this.loan).subscribe(
+      (response: any) => {
+        if (response.status == 'false') {
+          this.showToaster('2', 'El monto ingresado supera el capital', 'Prestamo')
+          this.flagPreloadSave = false;
+          //Muestro el error
+        } else {
+          //Muestro alert de confirmacion
+          console.log('mostramos respnse create loan', response)
+          this.showToaster('1', 'Prestamo', 'Prestamo creado con éxito')
+          $("#example").dataTable().fnDestroy();
+          this.getLoans(dni);
+          this.loan = new loansModel('12/02/2020', '', 0, false, '', "", "");
+          $("#show-md-crea-loan").modal('hide');
+          this.flagPreloadSave = false;
         }
-      )
+      },
+      error => {
+        let body = JSON.parse(error._body);
+        console.error('Error crendo prestamo -------> ',body)
+        this.showToaster('2', 'Ha ocurrido un error no se ha podido procesar la solicitud.', 'Prestamo')
+        this.flagPreloadSave = false;
+      }
+    )
   }
 
   setFormat(e) {
@@ -351,6 +386,21 @@ export class LoansComponent implements OnInit {
     console.log('AFTER DELETE OPERATION:');
     console.log(this.selectedCountries);
   }
+
+  closeAlet() {
+    this.message = ''
+    console.log('Message --------------> ', this.message);
+  }
+
+  formatDate(date) {
+   return moment(date).add('day',1).format('YYYY-MM-DD')
+  }
+
+  formatPrice(value) {
+    let val = (value / 1)
+    return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+  }
+
 }
 
 

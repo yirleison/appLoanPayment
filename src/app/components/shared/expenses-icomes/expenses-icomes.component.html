@@ -1,0 +1,130 @@
+<div class="row">
+  <div class="col-md-4 col-sm-6 col-xs-12">
+    <div class="info-box">
+      <span class="info-box-icon bg-green">
+        <ion-icon name="logo-usd"></ion-icon>
+      </span>
+      <div class="info-box-content">
+        <span class="info-box-text">Total Capital</span>
+        <br />
+        <span class="info-box-number balancePago">0000</span>
+      </div>
+      <!-- /.info-box-content -->
+    </div>
+    <!-- /.info-box -->
+  </div>
+  <div class="col-md-4 col-sm-6 col-xs-12">
+    <div class="info-box">
+      <span class="info-box-icon bg-blue">
+        <ion-icon name="cash"></ion-icon>
+      </span>
+      <div class="info-box-content">
+        <span class="info-box-text">Total Intereses</span>
+        <br />
+        <span class="info-box-number balanceInteres">000</span>
+      </div>
+      <!-- /.info-box-content -->
+    </div>
+    <!-- /.info-box -->
+  </div>
+  <div class="col-md-4 col-sm-6 col-xs-12">
+    <div class="info-box">
+      <span class="info-box-icon bg-yellow">
+        <ion-icon name="logo-usd"></ion-icon>
+      </span>
+      <div class="info-box-content">
+        <span class="info-box-text">Total dinero</span>
+        <br>
+        <span class="info-box-number cuotas">00</span>
+      </div>
+      <!-- /.info-box-content -->
+    </div>
+    <!-- /.info-box -->
+  </div>
+</div>
+<hr>
+<hr>
+<div class="row">
+  <div class="col-lg-12 col-md-12" style="margin-bottom: 40px;">
+    <!-- (click)="openModal('show-md-create-payment',null)" -->
+    <div class="btn-loan">
+      <button id="lblLoan" (click)="openModal('md-create-expenses-icomes')"
+        style="background-color: #0073b7; font-weight : bold;" class="btn btn-primary btn-xs">Crear
+        Registros</button>
+    </div>
+  </div>
+  <div class="container">
+
+  </div>
+</div>
+
+
+
+<div class="modal" id="md-create-expenses-icomes" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Registro de entradas o salidas</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #formLoan="ngForm">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label for="formGroupExampleInput">Fecha registro de dinero</label>
+                <div class='input-group date' id='datetimepicker-expenses-icomes'>
+                  <input type='text' id="payment-next-date" placeholder="2020/10/21" name="nextDatePayment" class="form-control" />
+                  <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label for="formGroupExampleInput">Monto</label>
+                <input id="amoutn" type="text" (keyup)="setFormat($event)" class="form-control" name="valor-momto"
+                  id="valor-momto" placeholder="Ingrese el monto">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label for="formGroupExampleInput">Descripción</label>
+                <textarea class="form-control z-depth-1" name="description" id="exampleFormControlTextarea6" rows="3"
+                  placeholder="Escribe la descripción del para este registro..."></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label for="">Tipo de registro</label>
+                <select class="form-control" formControlName="role" name="">
+                    <option value="0">Seleccione el tipo de entrada</option>
+                    <option value="1">Entrada de dinero</option>
+                    <option value="2">Salida de dinero</option>
+                </select>
+                <!-- <label style="font-size: small;" for=""
+                    class="text-danger">{{hasError('documentType')}}</label> -->
+            </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <!-- (click)="createPayment()" -->
+            <button type="button" class="btn btn-sm btn-secondary btn-xs" data-dismiss="modal">Cerrar</button>
+            <button type="button" class="btn btn-primary btn-xs"><i *ngIf="flagPreload"
+                class="fa fa-spinner fa-spin"></i> Registrar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

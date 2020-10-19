@@ -43,7 +43,7 @@
     </div>
 </div>
 <div class="row">
-    <div *ngIf="bandera == true" class="col-lg-12 col-md-12" style="margin-bottom: 40px;">
+    <div  class="col-lg-12 col-md-12" style="margin-bottom: 40px;">
         <div class="btn-loan">
             <button id="lblLoan" (click)="openModal('show-md-create-payment',null)" style="background-color: #0073b7; font-weight : bold;"
                 class="btn btn-primary btn-xs">Crear Pago</button>
@@ -53,9 +53,9 @@
         <p *ngIf="nameUser"><span class="label label-success nameUser">Cliente: {{nameUser}}</span></p>
     </div>
 </div>
-<div class="row" style="margin-left: 5px; margin-right: 5px;">
+<div *ngIf="!spinner; else spinnerload" class="row" style="margin-left: 5px; margin-right: 5px;">
     <div class="col-md-12 col-lg-12 col-xs-12">
-        <table id="tablePayment" #ref datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"
+        <table id="tablePayment" #ref datatable [dtOptions]="dtOptions"
             class="tabla_sin table table-striped table-bordered">
             <thead>
                 <tr>
@@ -135,7 +135,11 @@
 
         </table>
     </div>
+
 </div>
+<ng-template #spinnerload>
+  <div style="margin-left: 50%; margin-top: 13%;" class="loader"></div>
+</ng-template>
 
 <!--Modal create  pago-->
 <div class="modal" id="show-md-create-payment" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -188,7 +192,8 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-sm btn-secondary btn-xs" data-dismiss="modal">Cerrar</button>
-                        <button type="button" (click)="createPayment()" class="btn btn-primary btn-xs">Registrar</button>
+                        <button  type="button" (click)="createPayment()" class="btn btn-primary btn-xs"><i *ngIf="flagPreload"
+                          class="fa fa-spinner fa-spin"></i> Registrar</button>
                     </div>
                 </form>
             </div>
@@ -247,7 +252,8 @@
                     -->
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary btn-xs" data-dismiss="modal">Cerrar</button>
-                        <button type="button" (click)="updatePaymentNormal()" class="btn btn-primary btn-xs">Registrar
+                        <button type="button" (click)="updatePaymentNormal()" class="btn btn-primary btn-xs"><i *ngIf="flagPreload"
+                          class="fa fa-spinner fa-spin"></i> Registrar
                             Pago</button>
                     </div>
                 </form>
@@ -316,7 +322,8 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-sm btn-secondary btn-xs" data-dismiss="modal">Cerrar</button>
-                        <button type="button" (click)="updatePayment()" class="btn btn-primary btn-xs">Actualizar</button>
+                        <button type="button" (click)="updatePayment()" class="btn btn-primary btn-xs"><i *ngIf="flagPreload"
+                          class="fa fa-spinner fa-spin"></i> Actualizar</button>
                     </div>
                 </form>
             </div>
@@ -336,8 +343,9 @@
                     Esta seguro que desea eliminar este registro!!</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-danger btn-ok" (click)="deletePayment()"><span class="span glyphicon glyphicon-trash">
+                <button type="button" class="btn btn-primary  btn-xs btn-default" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary  btn-xs btn-danger btn-ok" (click)="deletePayment()"><i *ngIf="flagPreload"
+                  class="fa fa-spinner fa-spin"></i> <span class="span glyphicon glyphicon-trash">
                     </span> Eliminar</a>
             </div>
         </div>

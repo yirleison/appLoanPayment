@@ -94,7 +94,7 @@ export class SchedulePaymentComponent implements OnInit {
     this.spinnerr = true
       this.paymentService.getPaymentByIdUser(id).subscribe(
         (payments: any) => {
-          console.log('pagos usuario',payments.message)
+          console.log('pagos usuario',payments.message[0])
           if (payments.status != 'false' && payments.message.length > 0) {
             this.spinnerr = false
             this.message = ''
