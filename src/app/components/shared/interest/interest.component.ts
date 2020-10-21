@@ -25,8 +25,10 @@ export class InterestComponent implements OnInit {
   public status: String = '';
   public interestModel: InterestModel;
   public prueba: any;
-
-
+  public flagPreload: boolean = false
+  public showTable: boolean = false
+  dtOptions: DataTables.Settings = {};
+  @ViewChild(DataTableDirective, { static: true }) dtElement: DataTableDirective;
   constructor(private _location: Location, private _router: ActivatedRoute, private interestService: InterestService, private toastr: ToastrService) {
     this.statusInterest = ['Pendiente', 'Pagado'];
     this.interestModel = new InterestModel('', '', '', '0', '')
@@ -35,6 +37,7 @@ export class InterestComponent implements OnInit {
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
+
     this.paramsByRoute()
     $(function () {
       $("#interest-datepicker")
@@ -94,7 +97,7 @@ export class InterestComponent implements OnInit {
     this._router.params.subscribe(
       (params: Params) => {
         let idPayment = params.idPayment;
-        this.getInterestByIdPayment(null, params.idPayment)
+        this.getInterestById(null, params.idPayment)
         localStorage.setItem('idPaymentUpdate', idPayment);
       }
     );
@@ -109,6 +112,47 @@ export class InterestComponent implements OnInit {
 
   closeModal(id) {
     $("#" + id).modal("hide");
+  }
+
+  createInterest() {
+    this.flagPreload = true
+    let state = this.interestModel.state;
+    let dateTest = $("#date-interest").val()
+    if (dateTest == 'Pendiente') {
+      this.interestModel.dayPayment = 'null'
+    }
+    if (dateTest == 'Invalid date') {
+      this.interestModel.dayPayment = 'null'
+    }
+    if (dateTest == "") {
+      this.interestModel.dayPayment = 'null'
+    }
+    this.interestModel.dayPayment = (dateTest == 'null' || dateTest == null ? 'null' : this.interestModel.dayPayment = moment(new Date(dateTest)).format("YYYY-MM-DD"))
+    this.interestModel.state = (state == 'Pendiente' ? '0' : '1')
+    this.interestModel.interestPending = this.resetAmount(this.interestModel.interestPending)
+    this.interestModel.idPayment = localStorage.getItem('idPaymentUpdate')
+    this.interestService.createInterest(this.interestModel._id, this.interestModel).subscribe(
+      (interestUpdate: any) => {
+        if (interestUpdate.status == 'OK') {
+          this.flagPreload = false
+            //console.log('Funciono')
+            this.showToaster('1', 'Registro intereses', 'Registro creado exitosamente');
+            $("#tableInterest").dataTable().fnDestroy();
+            this.getInterestByIdPayment(null, localStorage.getItem('idPaymentUpdate'))
+            this.interestModel = new InterestModel('', '', '', '0', '')
+            this.closeModal('show-md-create-interest')
+          //this.openModal(idModal, null)
+        } else {
+          this.flagPreload = false
+          this.showToaster('2', 'Registro intereses', 'No se ha podido procesar esta solicitud.');
+        }
+      },
+      error => {
+        this.flagPreload = false
+        console.log(error)
+      }
+    )
+    //console.log(this.interestModel)
   }
 
   editInterest(idModal, id) {
@@ -133,14 +177,16 @@ export class InterestComponent implements OnInit {
   }
 
   updateInterest() {
+    this.flagPreload = true
     let state = this.interestModel.state;
-  //  this.interestModel.state = (state == 'Pendiente') ? 0 : 1
+    this.interestModel.state = (state == 'Pendiente' ? '0' : '1')
     this.interestModel.interestPending = this.resetAmount(this.interestModel.interestPending)
     console.log(this.interestModel)
     this.interestService.updateInterest(this.interestModel._id, this.interestModel).subscribe(
       (interestUpdate: any) => {
         if (interestUpdate.status == 'OK') {
           if (interestUpdate.status == 'OK') {
+            this.flagPreload = false
             //console.log('Funciono')
             this.showToaster('1', 'Actualización intereses', 'Actualización reaizada con exito');
             $("#tableInterest").dataTable().fnDestroy();
@@ -150,10 +196,12 @@ export class InterestComponent implements OnInit {
           }
           //this.openModal(idModal, null)
         } else {
+          this.flagPreload = false
           this.showToaster('2', 'Actualización intereses', 'No se ha podido procesar esta solicitud.');
         }
       },
       error => {
+        this.flagPreload = false
         console.log(error)
       }
     )
@@ -162,7 +210,15 @@ export class InterestComponent implements OnInit {
 
   //Funcionabilidad para pago y consulta de intereses...
   getInterestByIdPayment(idModal, idPayment) {
-
+    let options = {
+      pagingType: "full_numbers",
+      pageLength: 5,
+      autoWidth: true,
+      order: [[0, 'desc']],
+      language: {
+        url: '//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json'
+      }
+    }
     this.interestService.listInterest().subscribe(
       (interest: any) => {
         if (interest.status == 'OK') {
@@ -174,8 +230,10 @@ export class InterestComponent implements OnInit {
                   language: {
                     url: '//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json'
                   },
-                  "paging": false,
-                  "autoWidth": true,
+                  order: [[0, 'desc']],
+                  pagingType: "full_numbers",
+                  pageLength: 5,
+                  autoWidth: true,
                   "footerCallback": function (row, data, start, end, display) {
                     var api = this.api();
                     var nb_cols = api.columns().nodes().length;
@@ -219,9 +277,70 @@ export class InterestComponent implements OnInit {
     )
   }
 
+  getInterestById(idModal, idPayment) {
+    this.interestService.getInterestByIdPayment(idPayment).subscribe(
+      (interest: any) => {
+        if (interest.status == 'OK') {
+          if (interest.status == 'OK') {
+            this.interest = interest.message;
+            this.showTable = true
+            if (this.interest.length > 0) {
+              $(document).ready(function () {
+                $("#tableInterest").dataTable({
+                  language: {
+                    url: '//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json'
+                  },
+                  order: [[0, 'desc']],
+                  pagingType: "full_numbers",
+                  pageLength: 5,
+                  autoWidth: true,
+                  "footerCallback": function (row, data, start, end, display) {
+                    var api = this.api();
+                    var nb_cols = api.columns().nodes().length;
+                    console.log(nb_cols)
+                    var j = 2;
+                    while (j <= 2) {
+                      var pageTotal = api
+                        .column(j, { page: 'current' })
+                        .data()
+                        .reduce(function (a, b) {
+                          console.log('hola a---------->', a)
+                          console.log('hola b---------->', b)
+                          let y = a.toString().split(',');
+                          let p = b.toString().split(',');
+
+                          let u = p.join('');
+                          let r = y.join('')
+
+                          let o = parseFloat(u) + parseFloat(r)
+                          console.log('Result', o)
+                          let total = parseFloat(u) + parseFloat(r);
+                          return total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                        }, 0);
+                      console.log(pageTotal)
+                      // Update footer
+                      $(api.column(j).footer()).html(pageTotal);
+                      j++;
+                    }
+                  }
+                })
+              });
+            } else {
+              this.showTable = false
+              this.showToaster('3','Intereses Pendientes', 'No se econtraron intereses pendientes para este pago.')
+              //this.contentComponent.changeStatusAlert(true, 'info','Esta cuota de pago no presenta intereses en mora.')
+              //this.contentComponent.changeStatusAlert(true, '','')
+            }
+          }
+
+        }
+      },
+      error => { console.error(error.error.message) }
+    )
+  }
+
 
   deleteInterest() {
-
     this.interestService.deleteInterest(localStorage.getItem('idPaymentUpdate')).subscribe(
       (interesDelete: any) => {
         if (interesDelete.status === 'OK') {
@@ -237,12 +356,16 @@ export class InterestComponent implements OnInit {
       }
     )
   }
+
   resetAmount(value) {
     value.toString().split(',');
     let p = value.toString().split(',');
     return p.join('');
   }
 
+  statusInteres(status) {
+    return (status == 'Pendiente' ? '0' : '1')
+  }
   showToaster(status, title, message) {
     switch (status) {
       case '1':
@@ -250,12 +373,19 @@ export class InterestComponent implements OnInit {
         break;
       case '2':
         this.toastr.error(message + '.', title);
-        break
+        break;
+        case '3':
+          this.toastr.info(message + '.', title);
+          break
       default:
         this.toastr.error(message + '.', title);
         break;
     }
 
+  }
+
+  formatDate(date) {
+    return moment(date).add('day', 1).format('YYYY-MM-DD')
   }
 }
 

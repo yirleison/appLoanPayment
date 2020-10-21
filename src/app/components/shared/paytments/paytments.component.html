@@ -66,7 +66,7 @@
                         Fecha Pago
                     </th>
                     <th style="width: 15%">
-                        Valor
+                        Valor Pagado
                     </th>
                     <th style="width: 12%">
                         Interes
@@ -95,13 +95,12 @@
                     </td>
                     <td>{{item.balanceLoand | number:'1.2-2'}}</td>
                     <td *ngIf="statusPaymenDate(item.statusDeposit)=='Pagado'; else thenBlock2">
-                        <div class="style-
-                        st"> Pagado</div>
+                        <div class="style-interest-pagado"> Pagado</div>
                     </td>
                     <td style="display: inline-flex">
                         <div style="margin-left: 60px;">
                             <a type="button" class="btn btn-xs btn-primary edit mr-2 cursor-interes"
-                                (click)="getInterestByIdPayment(item._id)" title="Ver intereses pendientes"
+                                (click)="goTo(item._id)" title="Ver intereses pendientes"
                                 style="margin-right: 2px" data-target="#exampleModal">
                                 <span class="glyphicon glyphicon-briefcase button-magin">
                                 </span>
@@ -239,6 +238,16 @@
                         <input id="amoutn" type="text" (keyup)="setFormat($event,'normal')" class="form-control"
                             name="amount" #name="ngModel" [(ngModel)]="paymentNormal.amount"
                             placeholder="Ingrese el valor a pagar">
+                    </div>
+                    <div class="form-group">
+                      <label for="formGroupExampleInput">Fecha Registro</label>
+                      <div style="cursor: pointer;" class='input-group date' id='dateRegistry'>
+                        <input style="cursor: pointer;" type='text' id="payment-date-registry" name="dateLoan"
+                          class="form-control" />
+                        <span class="input-group-addon">
+                          <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                      </div>
                     </div>
                     <!--
                     <div class="form-group">

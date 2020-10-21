@@ -7,6 +7,8 @@ declare var $
 })
 export class ExpensesIcomesComponent implements OnInit {
 
+  public flagPreload: boolean = false
+
   constructor() { }
 
   ngOnInit(): void {

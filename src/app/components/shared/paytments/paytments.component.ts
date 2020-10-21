@@ -39,7 +39,7 @@ export class PaytmentsComponent implements OnInit {
   public interest: any;
   public nameUser: any
   public validateTotalPayment: any
-  public checkNewPayment : Boolean = false
+  public checkNewPayment: Boolean = false
   public spinner: boolean = false
   public flagPreload: boolean = false
 
@@ -52,7 +52,7 @@ export class PaytmentsComponent implements OnInit {
     private toastr: ToastrService,
     private contentComponent: ContentComponent
   ) {
-    this.paymentNormal = new paymenPaymentModel('0');
+    this.paymentNormal = new paymenPaymentModel('0', '');
     this.paymentFull = new PaymentModel('', '', '0', '0', '', '0', '0', '');
     this.statusPayment = ['Pendiente', 'Pagado'];
   }
@@ -72,20 +72,27 @@ export class PaytmentsComponent implements OnInit {
         })
         .datepicker("update", new Date());
 
-        $("#datetimepicker1")
+      $("#dateRegistry")
         .datepicker({
           autoclose: true,
           todayHighlight: true
         })
         .datepicker("update", new Date());
 
-        $("#payment-next-date1")
+      $("#datetimepicker1")
         .datepicker({
           autoclose: true,
           todayHighlight: true
         })
         .datepicker("update", new Date());
-      })
+
+      $("#payment-next-date1")
+        .datepicker({
+          autoclose: true,
+          todayHighlight: true
+        })
+        .datepicker("update", new Date());
+    })
 
   }
 
@@ -95,12 +102,12 @@ export class PaytmentsComponent implements OnInit {
     this.validateTotalPayment = $('input:checkbox[name=prueba]:checked').val()
   }
 
-  disabledCheck (id) {
-    $('#'+id).attr('checked', false);
+  disabledCheck(id) {
+    $('#' + id).attr('checked', false);
   }
 
   activatedCheckNewPayent() {
-    if($('input:checkbox[name=new-payment]:checked').val()) {
+    if ($('input:checkbox[name=new-payment]:checked').val()) {
       this.checkNewPayment = true;
     }
     else {
@@ -153,7 +160,18 @@ export class PaytmentsComponent implements OnInit {
 
   updatePaymentNormal() {
     this.flagPreload = true
-    //console.log('valid check------------->',this.prueba);
+    let dateTest = $("#payment-date-registry").val()
+    if (dateTest == 'Pendiente') {
+      this.paymentNormal.dateDeposit = 'null'
+    }
+    if (dateTest == 'Invalid date') {
+      this.paymentNormal.dateDeposit = 'null'
+    }
+    if (dateTest == "") {
+      this.paymentNormal.dateDeposit = 'null'
+    }
+    this.paymentNormal.dateDeposit = (dateTest == 'null' || dateTest == null ? 'null' : this.paymentNormal.dateDeposit = moment(new Date(dateTest)).format("YYYY-MM-DD"))
+    console.log( this.paymentNormal.dateDeposit)
     if (this.validateTotalPayment) {
       let value = this.paymentNormal.amount;
       let p = value.toString().split(',');
@@ -169,7 +187,7 @@ export class PaytmentsComponent implements OnInit {
             this.balanceInteres = 0;
             this.cuotas = 0;
             this.getPaymentbyLoan(localStorage.getItem('idLoan'));
-            this.paymentNormal = new paymenPaymentModel('0');
+            this.paymentNormal = new paymenPaymentModel('0', '');
             this.closeModal('show-md-update-payment-normal');
             this.disabledCheck('checkbox2')
           }
@@ -184,7 +202,7 @@ export class PaytmentsComponent implements OnInit {
       let value = this.paymentNormal.amount;
       let p = value.toString().split(',');
       this.paymentNormal.amount = p.join('');
-
+      console.log(this.paymentNormal)
       this.paymentService.updatePaymentNormal(this.paymentNormal, '1', localStorage.getItem('idPayment')).subscribe(
         (payment: any) => {
           console.log('reponse payment', payment)
@@ -198,7 +216,7 @@ export class PaytmentsComponent implements OnInit {
             this.balanceInteres = 0;
             this.cuotas = 0;
             this.getPaymentbyLoan(localStorage.getItem('idLoan'));
-            this.paymentNormal = new paymenPaymentModel('0');
+            this.paymentNormal = new paymenPaymentModel('0', '');
             document.getElementById('monto_fecha').innerHTML = ''
             document.getElementById('monto_total').innerHTML = ''
             this.closeModal('show-md-update-payment-normal');
@@ -212,15 +230,13 @@ export class PaytmentsComponent implements OnInit {
             this.balanceInteres = 0;
             this.cuotas = 0;
             this.getPaymentbyLoan(localStorage.getItem('idLoan'));
-            this.paymentNormal = new paymenPaymentModel('0');
+            this.paymentNormal = new paymenPaymentModel('0', '');
             this.closeModal('show-md-update-payment-normal');
           } else if (payment.status == 'false') {
             this.showToaster('2', 'Pago Cuota', 'No se ha podido realizar esta transacción');
-            this.paymentNormal = new paymenPaymentModel('0');
+            this.paymentNormal = new paymenPaymentModel('0', '');
             this.closeModal('show-md-update-payment-normal');
           }
-
-
         },
         error => {
           console.log(error);
@@ -267,9 +283,20 @@ export class PaytmentsComponent implements OnInit {
       Pagado: '2'
     }
     //console.log('Fecha pago ---------------> ',$("#payment-date").val())
-    this.paymentFull.dateDeposit = ($("#payment-date").val() == 'Pendiente' || $("#payment-date").val() == 'Invalid date' ? this.paymentFull.dateDeposit = 'null' : this.paymentFull.dateDeposit = moment($("#payment-date").val()).format("YYYY-MM-DD"))
-    //this.paymentFull.dateDeposit = moment($("#payment-date").val()).format("YYYY-MM-DD");
-    this.paymentFull.nextDatePayment = moment($("#payment-next-date1").val()).format("YYYY-MM-DD");
+    // this.paymentFull.dateDeposit = ($("#payment-date").val() == 'Pendiente' || $("#payment-date").val() == 'Invalid date' ? this.paymentFull.dateDeposit = 'null' : this.paymentFull.dateDeposit = moment($("#payment-date").val()).format("YYYY-MM-DD"))
+    let dateTest = $("#payment-date").val()
+    if (dateTest == 'Pendiente') {
+      this.paymentFull.dateDeposit = 'null'
+    }
+    if (dateTest == 'Invalid date') {
+      this.paymentFull.dateDeposit = 'null'
+    }
+    if (dateTest == "") {
+      this.paymentFull.dateDeposit = 'null'
+    }
+    this.paymentFull.dateDeposit = (this.paymentFull.dateDeposit = 'null' || this.paymentFull.dateDeposit == null ? 'null' : this.paymentFull.dateDeposit = moment(new Date($("#payment-date").val())).format("YYYY-MM-DD"))
+    // this.paymentFull.dateDeposit = moment(new Date($("#payment-date").val())).format("YYYY-MM-DD")
+    this.paymentFull.nextDatePayment = moment(new Date($("#payment-next-date1").val())).format("YYYY-MM-DD");
     if (this.paymentFull.statusDeposit) {
       this.paymentFull.statusDeposit = status[$("#statusPayment").val()];
       //console.log('entro1', this.paymentFull.statusDeposit)
@@ -283,7 +310,7 @@ export class PaytmentsComponent implements OnInit {
     this.paymentFull.amount = this.resetAmount(this.paymentFull.amount)
     this.paymentFull._id = localStorage.getItem('idPayment');
     //this.paymentFull.idLoan = localStorage.getItem('idPayment');
-    console.log(this.paymentFull)
+    console.log('Actualizar pagos ------------->', this.paymentFull)
     this.paymentService.updatePayment(this.paymentFull, this.paymentFull._id)
       .subscribe(
         (paymetUpdate: any) => {
@@ -333,7 +360,7 @@ export class PaytmentsComponent implements OnInit {
     this._router.params.subscribe(
       (params: Params) => {
         this.getPaymentbyLoan(params.idLoan)
-        console.log( localStorage.getItem('idLoan'))
+        console.log(localStorage.getItem('idLoan'))
         localStorage.setItem('idLoan', params.idLoan);
       }
     );
@@ -353,7 +380,7 @@ export class PaytmentsComponent implements OnInit {
     };
     this.paymentService.listPaymentByLoan(id).subscribe(
       (payments: any) => {
-       // console.log('Arreglo de datos ------> ',payments.message)
+        // console.log('Arreglo de datos ------> ',payments.message)
         if (payments.message.length > 0) {
           //this.bandera = false;
           this.spinner = false
@@ -476,14 +503,19 @@ export class PaytmentsComponent implements OnInit {
           console.log(id)
           let p = interest.message;
           let t = p.filter(x => x.idPayment == id);
-          if (t.length > 0) {
+
+          this._route.navigate(['intereses/', id]);
+
+
+
+         /* if (t.length > 0) {
             console.log('entro', t)
             this._route.navigate(['intereses/', id]);
           }
           else {
             console.log('no lo encontro')
             this.contentComponent.changeStatusAlert(true, 'info', 'Esta cuota de pago no presenta intereses en mora.')
-          }
+          }*/
           // this._route.navigate(['intereses/', id]);
         }
         else {
@@ -493,6 +525,11 @@ export class PaytmentsComponent implements OnInit {
       error => { console.error(error) }
     )
 
+  }
+
+  goTo(idPayment){
+    console.log(idPayment)
+    this._route.navigate(['home/intereses/', idPayment]);
   }
 
   consultPaymentDate() {

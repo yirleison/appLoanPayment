@@ -261,6 +261,7 @@ export class UserComponent implements OnInit {
   }
 
   updateUser() {
+    this.flagUserUpdate = true
     var str = this.userFormUpdate.value.fullName;
     str = str.toLowerCase().replace(/\b[a-z]/g, function (letter) {
       return letter.toUpperCase();
@@ -282,7 +283,7 @@ export class UserComponent implements OnInit {
     this.userService.updateUsersById(localStorage.getItem('userId'), this.user).subscribe(
       (updateUser: any) => {
         if (updateUser.status == 'OK') {
-          this.flagUserUpdate = true
+          this.flagUserUpdate = false
           this.flagPreloadSave = false;
           this.showToaster('1', 'Actualizar usuario', 'Datos actualizados exitosamente')
           this.closeModal('show-md-update-user')
@@ -306,6 +307,7 @@ export class UserComponent implements OnInit {
         }
       },
       error => {
+        this.flagUserUpdate = false
         console.log(error)
       }
     )
