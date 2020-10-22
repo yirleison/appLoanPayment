@@ -393,7 +393,7 @@ export class LoansComponent implements OnInit {
   }
 
   formatDate(date) {
-   return moment(date).format('YYYY-MM-DD')
+   return moment(date).add('day',1).format('YYYY-MM-DD')
   }
 
   formatPrice(value) {

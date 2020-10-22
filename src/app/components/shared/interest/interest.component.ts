@@ -131,7 +131,7 @@ export class InterestComponent implements OnInit {
     this.interestModel.state = (state == 'Pendiente' ? '0' : '1')
     this.interestModel.interestPending = this.resetAmount(this.interestModel.interestPending)
     this.interestModel.idPayment = localStorage.getItem('idPaymentUpdate')
-    this.interestService.createInterest(this.interestModel._id, this.interestModel).subscribe(
+    this.interestService.createInterest(this.interestModel).subscribe(
       (interestUpdate: any) => {
         if (interestUpdate.status == 'OK') {
           this.flagPreload = false
@@ -225,6 +225,7 @@ export class InterestComponent implements OnInit {
           if (interest.status == 'OK') {
             this.interest = interest.message;
             if (this.interest.length > 0) {
+              this.showTable = true
               $(document).ready(function () {
                 $("#tableInterest").dataTable({
                   language: {

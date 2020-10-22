@@ -37,4 +37,11 @@
   display: none;
 }
 
+.style-interest-pagado {
+  background: #28a745;
+  padding-left: 4px;
+  border-radius: 5px;
+  color: white;
+  text-align: center;
+}
 

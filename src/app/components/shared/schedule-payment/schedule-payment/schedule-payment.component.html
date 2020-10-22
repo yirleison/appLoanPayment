@@ -49,7 +49,7 @@
           </td>
           <td>{{ payments.balanceLoand | number: "1.2-2" }}</td>
           <td *ngIf="statusPaymenDate(payments.statusDeposit) == 'Pagado'; else thenBlock2">
-            <div class="style-interest">Pagado</div>
+            <div class="style-interest-pagado">Pagado</div>
           </td>
           <ng-template #thenBlock>
             <td>

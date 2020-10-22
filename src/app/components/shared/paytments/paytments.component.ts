@@ -384,17 +384,26 @@ export class PaytmentsComponent implements OnInit {
         if (payments.message.length > 0) {
           //this.bandera = false;
           this.spinner = false
+          let b
           //this.bandera = true
           this.payments = payments.message;
           this.balances = payments.message;
+          console.log(this.balances)
           this.cuotas = 0;
           for (let i = 0; i < this.balances.length; i++) {
             if (this.balances[i].statusDeposit) {
-              this.balancePago += parseFloat(this.balances[i].balanceLoand);
+               b = this.balances[i].balanceLoand
+              if(b <= this.balances[i].balanceLoand){
+                b = this.balances[i].balanceLoand
+              }
+              //this.balancePago += parseFloat(this.balances[i].balanceLoand);
               this.balanceInteres += parseFloat(this.balances[i].interest);
               this.cuotas++;
             }
           }
+          this.balancePago = b
+          console.log('Balance', b)
+
         }
         else {
           this.spinner = false
@@ -505,9 +514,6 @@ export class PaytmentsComponent implements OnInit {
           let t = p.filter(x => x.idPayment == id);
 
           this._route.navigate(['intereses/', id]);
-
-
-
          /* if (t.length > 0) {
             console.log('entro', t)
             this._route.navigate(['intereses/', id]);

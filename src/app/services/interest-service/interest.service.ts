@@ -60,13 +60,13 @@ export class InterestService {
         return this.httpClient.put(this.urlBase +'interest/'+id,payload,httpOptions);
       }
 
-      createInterest(id, payload) {
+      createInterest(payload) {
         const httpOptions = {
           headers: new HttpHeaders({
             'Content-Type':  'application/json',
           })
         };
-        return this.httpClient.post(this.urlBase +'interest/'+id,payload,httpOptions);
+        return this.httpClient.post(this.urlBase +'registrar-interest',payload,httpOptions);
       }
 
       deleteInterest(id) {
