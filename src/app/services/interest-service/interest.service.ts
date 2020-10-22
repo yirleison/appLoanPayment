@@ -21,6 +21,16 @@ export class InterestService {
         });
       }
 
+      getInterestByIdPayment(id) {
+        const headers = new HttpHeaders({
+          "Content-Type": "application/json; charset=utf-8"
+        });
+
+        return this.httpClient.get( this.urlBase + 'interest-por-pago/' + id, {
+          headers: headers
+        });
+      }
+
       listInterestById(id) {
         const headers = new HttpHeaders({
           "Content-Type": "application/json; charset=utf-8"
@@ -48,6 +58,15 @@ export class InterestService {
           })
         };
         return this.httpClient.put(this.urlBase +'interest/'+id,payload,httpOptions);
+      }
+
+      createInterest(id, payload) {
+        const httpOptions = {
+          headers: new HttpHeaders({
+            'Content-Type':  'application/json',
+          })
+        };
+        return this.httpClient.post(this.urlBase +'interest/'+id,payload,httpOptions);
       }
 
       deleteInterest(id) {

@@ -30,6 +30,7 @@ import { OauthService } from './services/oauth-services/oauth.user.service';
 import { SchedulePaymentComponent } from './components/shared/schedule-payment/schedule-payment/schedule-payment.component';
 //import { AlertsModule } from 'angular-alert-module';
 import { NgxSpinnerModule } from "ngx-spinner";
+import { ExpensesIcomesComponent } from './components/shared/expenses-icomes/expenses-icomes.component';
 
 
 
@@ -50,7 +51,8 @@ import { NgxSpinnerModule } from "ngx-spinner";
     LoginComponent,
     NoFoundComponent,
     MainComponent,
-    SchedulePaymentComponent
+    SchedulePaymentComponent,
+    ExpensesIcomesComponent
   ],
   imports: [
     BrowserModule,
