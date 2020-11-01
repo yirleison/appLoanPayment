@@ -27,6 +27,7 @@ export class InterestComponent implements OnInit {
   public prueba: any;
   public flagPreload: boolean = false
   public showTable: boolean = false
+  public spinner: boolean = false
   dtOptions: DataTables.Settings = {};
   @ViewChild(DataTableDirective, { static: true }) dtElement: DataTableDirective;
   constructor(private _location: Location, private _router: ActivatedRoute, private interestService: InterestService, private toastr: ToastrService) {
@@ -93,7 +94,6 @@ export class InterestComponent implements OnInit {
   }
 
   paramsByRoute() {
-
     this._router.params.subscribe(
       (params: Params) => {
         let idPayment = params.idPayment;
@@ -278,14 +278,16 @@ export class InterestComponent implements OnInit {
     )
   }
 
-  getInterestById(idModal, idPayment) {
+  getInterestById(delet, idPayment) {
+    this.spinner = true
     this.interestService.getInterestByIdPayment(idPayment).subscribe(
       (interest: any) => {
         if (interest.status == 'OK') {
           if (interest.status == 'OK') {
             this.interest = interest.message;
-            this.showTable = true
             if (this.interest.length > 0) {
+              this.showTable = true
+              this.spinner = false
               $(document).ready(function () {
                 $("#tableInterest").dataTable({
                   language: {
@@ -328,7 +330,11 @@ export class InterestComponent implements OnInit {
               });
             } else {
               this.showTable = false
-              this.showToaster('3','Intereses Pendientes', 'No se econtraron intereses pendientes para este pago.')
+              this.spinner = false
+              if(delet == null){
+                this.showToaster('3','Intereses Pendientes', 'No se econtraron intereses pendientes para este pago.')
+              }
+
               //this.contentComponent.changeStatusAlert(true, 'info','Esta cuota de pago no presenta intereses en mora.')
               //this.contentComponent.changeStatusAlert(true, '','')
             }
@@ -342,17 +348,25 @@ export class InterestComponent implements OnInit {
 
 
   deleteInterest() {
+    this.flagPreload = true
     this.interestService.deleteInterest(localStorage.getItem('idPaymentUpdate')).subscribe(
       (interesDelete: any) => {
         if (interesDelete.status === 'OK') {
-          this.showToaster('1', 'Eliminación pago', 'Eliminación de pago reaizada con exito');
+          this.flagPreload = false
+          this.showToaster('1', 'Eliminación pago', 'Eliminación de interes reaizada con exito');
           $("#tableInterest").dataTable().fnDestroy();
-          this.getInterestByIdPayment(null, localStorage.getItem('idPaymentUpdate'))
+          this.getInterestById(0, localStorage.getItem('idPaymentUpdate'))
+          this.closeModal('confirm-delete')
+        }
+        if(interesDelete.status === 'false'){
+          this.flagPreload = false
+          this.showToaster('2', 'Eliminación interest', 'No se ha podido eliminar este interes pendiente.');
           this.closeModal('confirm-delete')
         }
       },
       error => {
         console.log(error)
+        this.flagPreload = false
         this.showToaster('2', 'Eliminación interest', 'No se ha podido procesar esta solicitud.');
       }
     )

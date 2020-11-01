@@ -1,0 +1,29 @@
+.alert-danger {
+  color: #721c24 !important;
+  background: #f8d7da !important;
+  border-color: #f5c6cb !important;
+  font-size: 10 px !important;
+  margin-bottom: 5px;
+}
+
+.conatiner-error-message {
+  padding: 3px;
+  font-size: 10 px !important;
+}
+
+.registro-entrada {
+  background: #28a745;
+  padding-left: 4px;
+  border-radius: 5px;
+  color: white;
+  text-align: center;
+}
+
+.registro-salida {
+  background: #f39c12;
+  padding-left: 4px;
+  border-radius: 5px;
+  color: white;
+  text-align: center;
+}
+

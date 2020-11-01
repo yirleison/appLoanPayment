@@ -373,7 +373,7 @@ export class PaytmentsComponent implements OnInit {
       pagingType: "full_numbers",
       pageLength: 5,
       autoWidth: true,
-      order: [[0, 'desc']],
+      order: [[0, 'asc']],
       language: {
         url: '//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json'
       }

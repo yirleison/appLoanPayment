@@ -18,7 +18,7 @@
   </div>
 </div>
 
-<div class="row container">
+<div *ngIf="!spinner; else spinnerload" class="row container">
   <div style="margin-left: 20px;" class="row">
     <div class="col-md-12">
       <table *ngIf="showTable"  id="tableInterest"  class="table-striped table-bordered" style="width: 100%;
@@ -50,9 +50,9 @@
             </td>
 
             <td>{{item.interestPending | number:'1.2-2'}}</td>
-            <td *ngIf ="statusPaymenDate(item.state)=='Pagado'; else thenBlock"><div class="style-interest" style=""> Pagado</div> </td>
+            <td *ngIf ="statusPaymenDate(item.state)=='Pagado'; else thenBlock"><div class="style-interest"> Pagado</div> </td>
             <td style="display: inline-flex">
-              <div style="margin-left: 50px;">
+              <div style="margin-left: 60px;">
                 <a type="button" class="btn btn-xs btn-primary edit mr-2 cursor-pinter"
                   (click)="editInterest('show-md-update-interest',item._id)" title="Actualizar pago"
                   data-target="#exampleModal">
@@ -81,6 +81,9 @@
     </div>
   </div>
 </div>
+<ng-template #spinnerload>
+  <div style="margin-left: 50%; margin-top: 5%;" class="loader"></div>
+</ng-template>
 
 <!-- Create interest -->
 <div class="modal" style="width: 100%;" id="show-md-create-interest" tabindex="-1" role="dialog"
@@ -189,7 +192,8 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-xs btn-default" data-dismiss="modal">Cancel</button>
         <a class="btn btn-xs btn-danger btn-ok" (click)="deleteInterest()"><span class="span glyphicon glyphicon-trash">
-          </span> Eliminar</a>
+          </span><i *ngIf="flagPreload"
+          class="fa fa-spinner fa-spin"></i> Eliminar</a>
       </div>
     </div>
   </div>

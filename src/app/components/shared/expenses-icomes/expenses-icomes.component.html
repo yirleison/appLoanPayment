@@ -53,10 +53,69 @@
         Registros</button>
     </div>
   </div>
-  <div class="container">
-
-  </div>
 </div>
+<div class="container">
+  <div *ngIf="prueba">
+    <div *ngIf="!spinner; else spinnerload" class="col-md-12 col-lg-12 col-xs-12">
+      <table id="table" datatable [dtOptions]="dtOptions" datatable class="table table-bordered table-hover">
+        <thead>
+          <tr>
+            <th style="width: 3%">
+              ID
+            </th>
+            <th style="width: 10%">
+              Fecha registro
+            </th>
+            <th style="width: 15%">
+              Valor Entrada
+            </th>
+            <th style="width: 15%">
+              Valor Salida
+            </th>
+            <th style="width: 15%">
+              Tipo
+            </th>
+            <th style="width: 15%; text-align: center;">
+              Acciones
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of prueba; let i = index">
+            <td>{{i + 1}}</td>
+            <td>{{ item.date | date: "yyyy" }}-{{item.date | date: "MM"}}-{{ item.date | date: "dd" }}</td>
+            <td>{{item.income | number: "1.2-2"}}</td>
+            <td>{{item.expenses | number: "1.2-2"}}</td>
+            <td *ngIf="item.type == 0; else templatesalida"><div class="registro-entrada"> Entrada</div></td>
+            <td style="display: inline-flex; margin-left: 31%;">
+              <a style="margin-right: 2px;" type="button" class="btn  btn-xs btn-primary edit mr-2" title="Editar Registro"
+                data-target="#exampleModal"> <span
+                  class="glyphicon glyphicon-edit button-magin"></span>
+              </a>
+              <a type="button" class="btn btn-xs btn-danger delete button-magin" title="Eliminar Registro">
+                <span class="span glyphicon glyphicon-trash"></span>
+              </a>
+            </td>
+          </tr>
+          <ng-template #templateentrada>
+            <td>
+              <div class="registro-entrada"> Entrada</div>
+            </td>
+          </ng-template>
+          <ng-template #templatesalida>
+            <td>
+              <div class="registro-salida"> Salida</div>
+            </td>
+          </ng-template>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <ng-template #spinnerload>
+    <div style="margin-left: 50%; margin-top: 13%;" class="loader"></div>
+  </ng-template>
+</div>
+
 
 
 
@@ -71,16 +130,16 @@
         </button>
       </div>
       <div class="modal-body">
-        <form #formLoan="ngForm">
+        <form [formGroup]="formExpIcom" (ngSubmit)="onSubmit()">
           <div class="row">
             <div class="col-md-12">
               <div class="form-group">
                 <label for="formGroupExampleInput">Fecha registro de dinero</label>
-                <div class='input-group date' id='datetimepicker-expenses-icomes'>
-                  <input type='text' id="payment-next-date" placeholder="2020/10/21" name="nextDatePayment" class="form-control" />
-                  <span class="input-group-addon">
-                    <span class="glyphicon glyphicon-calendar"></span>
-                  </span>
+                <input type="date" class="form-control" id="exampleInput" name="input" formControlName="dateIncome"
+                  placeholder="YYYY-MM-DD" required />
+                <!-- error block -->
+                <div class="alert-danger" *ngIf="isSubmitted && dateIncome.errors?.required">
+                  <sup>*</sup>Por favor selecciona una fecha.
                 </div>
               </div>
             </div>
@@ -89,8 +148,15 @@
             <div class="col-md-12">
               <div class="form-group">
                 <label for="formGroupExampleInput">Monto</label>
-                <input id="amoutn" type="text" (keyup)="setFormat($event)" class="form-control" name="valor-momto"
+                <input id="amoutn" type="text" (keyup)="setFormat($event)" class="form-control" formControlName="amount"
                   id="valor-momto" placeholder="Ingrese el monto">
+              </div>
+              <!-- error block -->
+              <div class="alert-danger" *ngIf="isSubmitted && amount.errors?.required">
+                <sup>*</sup>Por favor ingresa un monto.
+              </div>
+              <div class="alert-danger" *ngIf="isSubmitted && amount.errors?.pattern">
+                <sup>*</sup>Solo se admiten números.
               </div>
             </div>
           </div>
@@ -98,8 +164,11 @@
             <div class="col-md-12">
               <div class="form-group">
                 <label for="formGroupExampleInput">Descripción</label>
-                <textarea class="form-control z-depth-1" name="description" id="exampleFormControlTextarea6" rows="3"
-                  placeholder="Escribe la descripción del para este registro..."></textarea>
+                <textarea class="form-control z-depth-1" formControlName="note" id="exampleFormControlTextarea6"
+                  rows="3" placeholder="Escribe la descripción del para este registro..."></textarea>
+              </div>
+              <div class="alert-danger" *ngIf="isSubmitted && note.errors?.required">
+                <sup>*</sup>Por favor ingresa una breve descripción.
               </div>
             </div>
           </div>
@@ -107,20 +176,23 @@
             <div class="col-md-12">
               <div class="form-group">
                 <label for="">Tipo de registro</label>
-                <select class="form-control" formControlName="role" name="">
-                    <option value="0">Seleccione el tipo de entrada</option>
-                    <option value="1">Entrada de dinero</option>
-                    <option value="2">Salida de dinero</option>
+                <select class="form-control" formControlName="type" name="">
+                  <option value="">Seleccione un tipo de entrada</option>
+                  <option *ngFor="let type of typeIcome; let i = index" [ngValue]="i"
+                    (change)="changetypeIcome($event)">{{type}}
+                  </option>
                 </select>
-                <!-- <label style="font-size: small;" for=""
-                    class="text-danger">{{hasError('documentType')}}</label> -->
-            </div>
+              </div>
+              <!-- error block -->
+              <div class="alert-danger" *ngIf="isSubmitted && type.errors?.required">
+                <sup>*</sup>Por favor elige un tipo de entrada.
+              </div>
             </div>
           </div>
           <div class="modal-footer">
             <!-- (click)="createPayment()" -->
             <button type="button" class="btn btn-sm btn-secondary btn-xs" data-dismiss="modal">Cerrar</button>
-            <button type="button" class="btn btn-primary btn-xs"><i *ngIf="flagPreload"
+            <button type="button" type="submit" class="btn btn-primary btn-xs"><i *ngIf="flagPreload"
                 class="fa fa-spinner fa-spin"></i> Registrar</button>
           </div>
         </form>
