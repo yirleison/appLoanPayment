@@ -27,5 +27,32 @@ export class ExpensesIncomesService {
       };
       return this.httpClient.get(this.urlBase +'listar-entradas-salidas',httpOptions);
     }
+
+    listExpensesIncomesById(id) {
+      const httpOptions = {
+        headers: new HttpHeaders({
+          'Content-Type':  'application/json',
+        })
+      };
+      return this.httpClient.get(`${this.urlBase}listar-entradas-salidas/${id}`,httpOptions);
+    }
+
+    updateExpensesIncomesById(payload,id) {
+      const httpOptions = {
+        headers: new HttpHeaders({
+          'Content-Type':  'application/json',
+        })
+      };
+      return this.httpClient.put(`${this.urlBase}listar-entradas-salidas/${id}`,payload,httpOptions);
+    }
+
+    geBalanceCapitalInterest() {
+      const httpOptions = {
+        headers: new HttpHeaders({
+          'Content-Type':  'application/json',
+        })
+      };
+      return this.httpClient.get(`${this.urlBase}reporte-capital-interes`,httpOptions);
+    }
   }
 

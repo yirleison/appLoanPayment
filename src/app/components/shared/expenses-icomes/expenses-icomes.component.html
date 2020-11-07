@@ -7,7 +7,7 @@
       <div class="info-box-content">
         <span class="info-box-text">Total Capital</span>
         <br />
-        <span class="info-box-number balancePago">0000</span>
+        <span class="info-box-number balancePago" *ngIf="balanceCapitalInterest">{{formatPrice(balanceCapitalInterest.totalCpaital)}}</span>
       </div>
       <!-- /.info-box-content -->
     </div>
@@ -21,7 +21,7 @@
       <div class="info-box-content">
         <span class="info-box-text">Total Intereses</span>
         <br />
-        <span class="info-box-number balanceInteres">000</span>
+        <span class="info-box-number balanceInteres" *ngIf="balanceCapitalInterest">{{formatPrice(balanceCapitalInterest.totalInterest)}}</span>
       </div>
       <!-- /.info-box-content -->
     </div>
@@ -35,7 +35,7 @@
       <div class="info-box-content">
         <span class="info-box-text">Total dinero</span>
         <br>
-        <span class="info-box-number cuotas">00</span>
+        <span class="info-box-number cuotas"*ngIf="balanceCapitalInterest">{{formatPrice(balanceCapitalInterest.total)}}</span>
       </div>
       <!-- /.info-box-content -->
     </div>
@@ -48,7 +48,7 @@
   <div class="col-lg-12 col-md-12" style="margin-bottom: 40px;">
     <!-- (click)="openModal('show-md-create-payment',null)" -->
     <div class="btn-loan">
-      <button id="lblLoan" (click)="openModal('md-create-expenses-icomes')"
+      <button id="lblLoan" (click)="openModal('md-create-or-update-expenses-icomes', 'create')"
         style="background-color: #0073b7; font-weight : bold;" class="btn btn-primary btn-xs">Crear
         Registros</button>
     </div>
@@ -88,13 +88,13 @@
             <td>{{item.expenses | number: "1.2-2"}}</td>
             <td *ngIf="item.type == 0; else templatesalida"><div class="registro-entrada"> Entrada</div></td>
             <td style="display: inline-flex; margin-left: 31%;">
-              <a style="margin-right: 2px;" type="button" class="btn  btn-xs btn-primary edit mr-2" title="Editar Registro"
+              <a style="margin-right: 2px; margin-left: 25px;" type="button" (click)="getExpensesIncomesById(item._id)" class="btn  btn-xs btn-primary edit mr-2" title="Editar Registro"
                 data-target="#exampleModal"> <span
                   class="glyphicon glyphicon-edit button-magin"></span>
               </a>
-              <a type="button" class="btn btn-xs btn-danger delete button-magin" title="Eliminar Registro">
+              <!-- <a type="button" class="btn btn-xs btn-danger delete button-magin" title="Eliminar Registro">
                 <span class="span glyphicon glyphicon-trash"></span>
-              </a>
+              </a> -->
             </td>
           </tr>
           <ng-template #templateentrada>
@@ -119,7 +119,7 @@
 
 
 
-<div class="modal" id="md-create-expenses-icomes" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+<div class="modal" id="md-create-or-update-expenses-icomes" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
   aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -130,7 +130,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <form [formGroup]="formExpIcom" (ngSubmit)="onSubmit()">
+        <form [formGroup]="formExpIcom" (ngSubmit)="CreateOrUpdate()">
           <div class="row">
             <div class="col-md-12">
               <div class="form-group">
@@ -138,7 +138,7 @@
                 <input type="date" class="form-control" id="exampleInput" name="input" formControlName="dateIncome"
                   placeholder="YYYY-MM-DD" required />
                 <!-- error block -->
-                <div class="alert-danger" *ngIf="isSubmitted && dateIncome.errors?.required">
+                <div class="alert-danger" *ngIf="isSubmitted && dateIncome.errors?.required && dateIncome.touched ">
                   <sup>*</sup>Por favor selecciona una fecha.
                 </div>
               </div>
@@ -152,10 +152,10 @@
                   id="valor-momto" placeholder="Ingrese el monto">
               </div>
               <!-- error block -->
-              <div class="alert-danger" *ngIf="isSubmitted && amount.errors?.required">
+              <div class="alert-danger" *ngIf="isSubmitted && amount.errors?.required && amount.touched">
                 <sup>*</sup>Por favor ingresa un monto.
               </div>
-              <div class="alert-danger" *ngIf="isSubmitted && amount.errors?.pattern">
+              <div class="alert-danger" *ngIf="isSubmitted && amount.errors?.pattern  && amount.touched">
                 <sup>*</sup>Solo se admiten números.
               </div>
             </div>
@@ -167,7 +167,7 @@
                 <textarea class="form-control z-depth-1" formControlName="note" id="exampleFormControlTextarea6"
                   rows="3" placeholder="Escribe la descripción del para este registro..."></textarea>
               </div>
-              <div class="alert-danger" *ngIf="isSubmitted && note.errors?.required">
+              <div class="alert-danger" *ngIf="isSubmitted && note.errors?.required  && note.touched">
                 <sup>*</sup>Por favor ingresa una breve descripción.
               </div>
             </div>
@@ -184,7 +184,7 @@
                 </select>
               </div>
               <!-- error block -->
-              <div class="alert-danger" *ngIf="isSubmitted && type.errors?.required">
+              <div class="alert-danger" *ngIf="isSubmitted && type.errors?.required && type.touched">
                 <sup>*</sup>Por favor elige un tipo de entrada.
               </div>
             </div>
