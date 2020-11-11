@@ -265,6 +265,10 @@ export class ExpensesIcomesComponent implements OnInit {
     return p.join('');
   }
 
+  formatDate(date) {
+    return moment(date).add('day', 1).format('YYYY-MM-DD')
+  }
+
   showToaster(status, title, message) {
     switch (status) {
       case '1':

@@ -83,7 +83,8 @@
         <tbody>
           <tr *ngFor="let item of prueba; let i = index">
             <td>{{i + 1}}</td>
-            <td>{{ item.date | date: "yyyy" }}-{{item.date | date: "MM"}}-{{ item.date | date: "dd" }}</td>
+            <!-- <td>{{ item.date | date: "yyyy" }}-{{item.date | date: "MM"}}-{{ item.date | date: "dd" }}</td> -->
+            <td>{{formatDate(item.date)}}
             <td>{{item.income | number: "1.2-2"}}</td>
             <td>{{item.expenses | number: "1.2-2"}}</td>
             <td *ngIf="item.type == 0; else templatesalida"><div class="registro-entrada"> Entrada</div></td>

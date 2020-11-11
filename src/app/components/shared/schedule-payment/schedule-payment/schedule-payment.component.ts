@@ -71,6 +71,7 @@ export class SchedulePaymentComponent implements OnInit {
       this.spinnerr = false
     }
     else {
+      this.payments = []
       this.getPaymentsByIdUser(this.id)
     }
   }
