@@ -109,8 +109,8 @@
         </div>
         <div class="form-group">
           <label for="formGroupExampleInput2">Valor Interes</label>
-          <input id="interes" (keyup)="setFormat($event,'interes')" [(ngModel)]="interestModel.interestPending"
-            id="interest-pending" name="interestPending" type="text" (keyup)="setFormat($event,'interes')"
+          <input id="interes" (keyup)="format($event,'interes')" [(ngModel)]="interestModel.interestPending"
+            id="interest-pending" name="interestPending" type="text" (keyup)="format($event,'interes')"
             class="form-control" #name="ngModel" placeholder="Ingrese el valor a pagar">
         </div>
         <div class="form-group">
@@ -155,8 +155,8 @@
         </div>
         <div class="form-group">
           <label for="formGroupExampleInput2">Valor Interes</label>
-          <input id="interes" (keyup)="setFormat($event,'interes')" [(ngModel)]="interestModel.interestPending"
-            id="interest-pending" name="interestPending" type="text" (keyup)="setFormat($event,'interes')"
+          <input id="interes" (keyup)="format($event,'interes')" [(ngModel)]="interestModel.interestPending"
+            id="interest-pending" name="interestPending" type="text" (keyup)="format($event,'interes')"
             class="form-control" #name="ngModel" placeholder="Ingrese el valor a pagar">
         </div>
         <div class="form-group">

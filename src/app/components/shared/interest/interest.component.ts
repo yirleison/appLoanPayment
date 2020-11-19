@@ -78,7 +78,12 @@ export class InterestComponent implements OnInit {
     //   console.log(amount_parts.join('.'))
   }
 
-
+  format(input, model) {
+    let r = input.target.value.replace(/\D/g, "")
+      .replace(/([0-9])([0-9]{2})$/, '$1.$2')
+      .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",");
+      this.interestModel.interestPending = r
+  }
   formatPrice(value) {
     let val = (value / 1)
     return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")

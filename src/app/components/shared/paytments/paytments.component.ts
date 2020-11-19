@@ -171,7 +171,6 @@ export class PaytmentsComponent implements OnInit {
       this.paymentNormal.dateDeposit = 'null'
     }
     this.paymentNormal.dateDeposit = (dateTest == 'null' || dateTest == null ? 'null' : this.paymentNormal.dateDeposit = moment(new Date(dateTest)).format("YYYY-MM-DD"))
-    console.log( this.paymentNormal.dateDeposit)
     if (this.validateTotalPayment) {
       let value = this.paymentNormal.amount;
       let p = value.toString().split(',');
@@ -294,6 +293,8 @@ export class PaytmentsComponent implements OnInit {
     if (dateTest == "") {
       this.paymentFull.dateDeposit = 'null'
     }
+
+    console.log(this.paymentFull.balanceLoand)
     this.paymentFull.dateDeposit = (this.paymentFull.dateDeposit = 'null' || this.paymentFull.dateDeposit == null ? 'null' : this.paymentFull.dateDeposit = moment(new Date($("#payment-date").val())).format("YYYY-MM-DD"))
     // this.paymentFull.dateDeposit = moment(new Date($("#payment-date").val())).format("YYYY-MM-DD")
     this.paymentFull.nextDatePayment = moment(new Date($("#payment-next-date1").val())).format("YYYY-MM-DD");
@@ -392,8 +393,8 @@ export class PaytmentsComponent implements OnInit {
           this.cuotas = 0;
           for (let i = 0; i < this.balances.length; i++) {
             if (this.balances[i].statusDeposit) {
-               b = this.balances[i].balanceLoand
-              if(b <= this.balances[i].balanceLoand){
+              b = this.balances[i].balanceLoand
+              if (b <= this.balances[i].balanceLoand) {
                 b = this.balances[i].balanceLoand
               }
               //this.balancePago += parseFloat(this.balances[i].balanceLoand);
@@ -476,6 +477,26 @@ export class PaytmentsComponent implements OnInit {
     //   console.log(amount_parts.join('.'))
   }
 
+  format(input, model) {
+    let r = input.target.value.replace(/\D/g, "")
+      .replace(/([0-9])([0-9]{2})$/, '$1.$2')
+      .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",");
+
+    if (model == 'interes') {
+      console.log(model)
+      this.paymentFull.interest = r
+    }
+    else if (model == 'normal') {
+      this.paymentNormal.amount = r
+    }
+    else if (model == 'balance') {
+      this.paymentFull.balanceLoand = r
+    }
+    else if (model == 'amount-loan') {
+      this.paymentFull.amount = r
+    }
+  }
+
   formatPrice(value) {
     let val = (value / 1)
     return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
@@ -504,7 +525,6 @@ export class PaytmentsComponent implements OnInit {
   }
 
   getInterestByIdPayment(id) {
-
     this.interestService.listInterest().subscribe(
       (interest: any) => {
         console.log(interest)
@@ -514,14 +534,14 @@ export class PaytmentsComponent implements OnInit {
           let t = p.filter(x => x.idPayment == id);
 
           this._route.navigate(['intereses/', id]);
-         /* if (t.length > 0) {
-            console.log('entro', t)
-            this._route.navigate(['intereses/', id]);
-          }
-          else {
-            console.log('no lo encontro')
-            this.contentComponent.changeStatusAlert(true, 'info', 'Esta cuota de pago no presenta intereses en mora.')
-          }*/
+          /* if (t.length > 0) {
+             console.log('entro', t)
+             this._route.navigate(['intereses/', id]);
+           }
+           else {
+             console.log('no lo encontro')
+             this.contentComponent.changeStatusAlert(true, 'info', 'Esta cuota de pago no presenta intereses en mora.')
+           }*/
           // this._route.navigate(['intereses/', id]);
         }
         else {
@@ -533,7 +553,7 @@ export class PaytmentsComponent implements OnInit {
 
   }
 
-  goTo(idPayment){
+  goTo(idPayment) {
     console.log(idPayment)
     this._route.navigate(['home/intereses/', idPayment]);
   }

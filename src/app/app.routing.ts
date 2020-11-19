@@ -10,6 +10,7 @@ import { LoginComponent } from './components/shared/login/login.component';
 import { NoFoundComponent } from './components/shared/no-found/nofound.component';
 import { SchedulePaymentComponent } from './components/shared/schedule-payment/schedule-payment/schedule-payment.component';
 import { ExpensesIcomesComponent } from './components/shared/expenses-icomes/expenses-icomes.component';
+import { InterestPendingComponent } from './components/shared/interest-pending/interest-pending.component';
 import { MainComponent } from './components/main.component';
 import { SessionGuard } from './session.guard';
 import { SessionLoginGuard } from './session-login.guard';
@@ -31,6 +32,7 @@ const appRutes: Routes = [
             { path: 'intereses/:idPayment', component: InterestComponent },
             { path:'programar-pagos', component: SchedulePaymentComponent },
             { path:'entradas-salidas', component: ExpensesIcomesComponent },
+            { path:'intereses-pendientes', component: InterestPendingComponent },
             { path: 'usuarios', component: UserComponent },
         ]
     },{path: '**', redirectTo:'login', pathMatch : 'full'}

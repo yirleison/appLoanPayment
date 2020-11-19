@@ -1,5 +1,5 @@
- <!-- Left side column. contains the logo and sidebar -->
- <aside class="main-sidebar">
+<!-- Left side column. contains the logo and sidebar -->
+<aside class="main-sidebar">
 
   <!-- sidebar: style can be found in sidebar.less -->
   <section class="sidebar">
@@ -21,9 +21,9 @@
       <div class="input-group">
         <input type="text" name="q" class="form-control" placeholder="Search...">
         <span class="input-group-btn">
-            <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
-            </button>
-          </span>
+          <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
+          </button>
+        </span>
       </div>
     </form>
     <!-- /.search form -->
@@ -32,13 +32,14 @@
     <ul class="sidebar-menu" data-widget="tree">
       <li class="header">HEADER</li>
       <!-- Optionally, you can add icons to the links -->
-      <li class="active"><a style="cursor: pointer;" (click)="redirect('usuarios')"><i class="fa fa-link"></i> <span>Usuarios</span></a></li>
-     <!-- <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>-->
+      <li class="active"><a style="cursor: pointer;" (click)="redirect('usuarios')"><i class="fa fa-link"></i>
+          <span>Usuarios</span></a></li>
+      <!-- <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>-->
       <li class="treeview" style="cursor: pointer;">
         <a type="button"><i class="fa fa-link"></i> <span>Prestamos</span>
           <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
+            <i class="fa fa-angle-left pull-right"></i>
+          </span>
         </a>
         <ul class="treeview-menu">
           <li><a type="button" (click)="redirect('prestamos')">Administrar Prestamos</a></li>
@@ -48,27 +49,40 @@
       <li class="treeview">
         <a style="cursor: pointer;" type="button"><i class="fa fa-link"></i> <span>Pagos</span>
           <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
+            <i class="fa fa-angle-left pull-right"></i>
+          </span>
         </a>
         <ul class="treeview-menu">
-          <li ><a style="cursor: pointer;" type="button" (click)="redirect('programar-pagos')">Consultar Pagos</a></li>
+          <li><a style="cursor: pointer;" type="button" (click)="redirect('programar-pagos')">Consultar Pagos</a></li>
           <li><a style="cursor: pointer;" type="button">Programar Pagos</a></li>
         </ul>
       </li>
       <li class="treeview">
         <a style="cursor: pointer;" type="button"><i class="fa fa-link"></i> <span>Registros</span>
           <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
+            <i class="fa fa-angle-left pull-right"></i>
+          </span>
         </a>
         <!-- (click)="redirect('entradas-salidas')" -->
         <ul class="treeview-menu">
-          <li ><a style="cursor: pointer;" (click)="redirect('entradas-salidas')" type="button" >Entrada-salida</a></li>
+          <li><a style="cursor: pointer;" (click)="redirect('entradas-salidas')" type="button">Entrada-salida</a></li>
           <li><a style="cursor: pointer;" type="button">Consultar Entradas</a></li>
           <li><a style="cursor: pointer;" type="button">Consultar Salidas</a></li>
         </ul>
       </li>
+      <li class="treeview">
+        <a style="cursor: pointer;" type="button"><i class="fa fa-link"></i> <span>Intereses</span>
+          <span class="pull-right-container">
+            <i class="fa fa-angle-left pull-right"></i>
+          </span>
+        </a>
+        <!-- (click)="redirect('entradas-salidas')" -->
+        <ul class="treeview-menu">
+          <li><a style="cursor: pointer;" (click)="redirect('intereses-pendientes')" type="button">Consultar Intereses Pendientes</a></li>
+          <!-- <li><a style="cursor: pointer;" type="button">Consultar Intereses Pendientes</a></li> -->
+        </ul>
+      </li>
+
     </ul>
 
     <!-- /.sidebar-menu -->
