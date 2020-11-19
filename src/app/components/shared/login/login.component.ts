@@ -20,7 +20,7 @@ export class LoginComponent implements OnInit {
     public islogin = false
     public message: string = ''
     emailPattern: any = /^(([^<>()\[\]\\.,;:\s@”]+(\.[^<>()\[\]\\.,;:\s@”]+)*)|(“.+”))@((\[[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}])|(([a-zA-Z\-0–9]+\.)+[a-zA-Z]{2,}))$/;
-
+    public flagPreload: boolean = false
 
     constructor(
         private _route: Router,
@@ -53,10 +53,14 @@ export class LoginComponent implements OnInit {
     }
 
     onSubmit() {
+      this.flagPreload = true
         if (this.loginUser.valid) {
             //this.loginUser.value.gethash = true
             this.authService.oautLogin(this.loginUser.value).subscribe(
                 (resp:any) => {
+                  if(resp){
+                    this.flagPreload = false
+                  }
                     console.log(resp)
                 },
                 (err: any) => {

@@ -117,9 +117,6 @@
   </ng-template>
 </div>
 
-
-
-
 <div class="modal" id="md-create-or-update-expenses-icomes" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
   aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -149,7 +146,7 @@
             <div class="col-md-12">
               <div class="form-group">
                 <label for="formGroupExampleInput">Monto</label>
-                <input id="amoutn" type="text" (keyup)="setFormat($event)" class="form-control" formControlName="amount"
+                <input id="amoutn" type="text" (keyup)="format($event)" class="form-control" formControlName="amount"
                   id="valor-momto" placeholder="Ingrese el monto">
               </div>
               <!-- error block -->

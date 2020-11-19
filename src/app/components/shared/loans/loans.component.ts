@@ -307,6 +307,13 @@ export class LoansComponent implements OnInit {
     //console.log(priceValue)
   }
 
+  format(input) {
+    let r = input.target.value.replace(/\D/g, "")
+      .replace(/([0-9])([0-9]{2})$/, '$1.$2')
+      .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",");
+      this.loan.amount = r
+  }
+
   goToPage(id) {
     this._route.navigate(['home/pagos/', id]);
   }

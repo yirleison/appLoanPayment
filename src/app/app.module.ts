@@ -31,6 +31,7 @@ import { SchedulePaymentComponent } from './components/shared/schedule-payment/s
 //import { AlertsModule } from 'angular-alert-module';
 import { NgxSpinnerModule } from "ngx-spinner";
 import { ExpensesIcomesComponent } from './components/shared/expenses-icomes/expenses-icomes.component';
+import { InterestPendingComponent } from './components/shared/interest-pending/interest-pending.component';
 
 
 
@@ -52,7 +53,8 @@ import { ExpensesIcomesComponent } from './components/shared/expenses-icomes/exp
     NoFoundComponent,
     MainComponent,
     SchedulePaymentComponent,
-    ExpensesIcomesComponent
+    ExpensesIcomesComponent,
+    InterestPendingComponent
   ],
   imports: [
     BrowserModule,

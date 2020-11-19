@@ -97,7 +97,7 @@
           </div>
           <div class="form-group">
             <label for="formGroupExampleInput2">Valor Prestamo</label>
-            <input id="amoutn" type="text" (keyup)="setFormat($event)" class="form-control" name="amount"
+            <input id="amoutn" type="text" (keyup)="format($event)" class="form-control" name="amount"
               #name="ngModel" [(ngModel)]="loan.amount" id="valor-prestamo" placeholder="Valor Prestamo">
           </div>
           <div class="form-group">
@@ -111,7 +111,7 @@
           </div>
           <div *ngIf="!idUser" class="form-group">
             <label>Selecciona el cliente</label>
-            <ng-select [items]="cliente" bindLabel="name" placeholder="Seleccione el cliente" [multiple]="false"
+            <ng-select *ngIf="cliente" [items]="cliente" bindLabel="name" placeholder="Seleccione el cliente" [multiple]="false"
               maxSelectedItems="3" (add)="onAdd($event)" (change)="onChange($event)">
             </ng-select>
           </div>
@@ -163,7 +163,7 @@
           </div>
           <div class="form-group">
             <label for="formGroupExampleInput2">Valor Prestamo</label>
-            <input id="amoutn" type="text" (keyup)="setFormat($event)" class="form-control" name="amount"
+            <input id="amoutn" type="text" (keyup)="format($event)" class="form-control" name="amount"
               #name="ngModel" [(ngModel)]="loan.amount" id="valor-prestamo" placeholder="Valor Prestamo">
           </div>
           <div class="form-group">
