@@ -1,1 +1,7 @@
-<p>interest-pending works!</p>
+<div class="row">
+  <div  class="col-md-6 col-lg-6" style="margin-bottom: 50px">
+    <ng-select *ngIf="clients" [items]="clients" bindLabel="name" placeholder="Seleccione el cliente" [multiple]="false"
+      maxSelectedItems="3" (add)="onAdd($event)" (add)="onRemove($event)" (change)="onChange($event)">
+    </ng-select>
+  </div>
+</div>

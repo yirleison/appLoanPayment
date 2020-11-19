@@ -42,12 +42,12 @@
           <td *ngIf="payments.dateDeposit == 'null' || payments.dateDeposit == null; else thenBlock">
             Pendiente
           </td>
-          <td>{{ payments.amount | number: "1.2-2" }}</td>
-          <td>{{ payments.interest | number: "1.2-2" }}</td>
+          <td>{{ payments.amount | number: "1.2-3" }}</td>
+          <td>{{ payments.interest | number: "1.2-3" }}</td>
           <td>
             {{ payments.nextDatePayment | date: "yyyy" }}-{{payments.nextDatePayment | date: "MM"}}-{{ payments.nextDatePayment | date: "dd" }}
           </td>
-          <td>{{ payments.balanceLoand | number: "1.2-2" }}</td>
+          <td>{{ payments.balanceLoand | number: "1.2-3" }}</td>
           <td *ngIf="statusPaymenDate(payments.statusDeposit) == 'Pagado'; else thenBlock2">
             <div class="style-interest-pagado">Pagado</div>
           </td>

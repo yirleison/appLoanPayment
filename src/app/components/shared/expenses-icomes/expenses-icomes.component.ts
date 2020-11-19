@@ -32,7 +32,7 @@ export class ExpensesIcomesComponent implements OnInit {
   constructor(public fb: FormBuilder, private expensesIncomesService: ExpensesIncomesService, private toastr: ToastrService) {
     this.formExpIcom = this.fb.group({
       dateIncome: ['', [Validators.required]],
-      amount: ['', [Validators.required, Validators.pattern(this.expresRegular)]],
+      amount: ['', [Validators.required]],
       note: ['', [Validators.required]],
       type: ['', [Validators.required]]
     });
@@ -225,22 +225,10 @@ export class ExpensesIcomesComponent implements OnInit {
   }
 
   setFormat(e) {
-    let amount;
-    amount += '';
-    amount = e.target.value;
-    amount = parseFloat(amount.replace(/[^0-9\.]/g, '')); // elimino cualquier cosa que no sea numero o punto
-    // si es mayor o menor que cero retorno el valor formateado como numero
-    amount = '' + amount.toFixed(0);
-    // si no es un numero o es igual a cero retorno el mismo cero
-    if (isNaN(amount) || amount === 0)
-      return parseFloat("0").toFixed(2);
-    var amount_parts = amount.split('.'),
-      regexp = /(\d+)(\d{3})/;
-    while (regexp.test(amount_parts[0]))
-      amount_parts[0] = amount_parts[0].replace(regexp, '$1' + ',' + '$2');
-
-    //this.loan.amount = amount_parts.join('.');
-    this.formExpIcom.controls.amount.setValue(amount_parts.join('.'))
+    let r = e.target.value.replace(/\D/g, "")
+    .replace(/([0-9])([0-9]{2})$/, '$1.$2')
+    .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",");
+    this.formExpIcom.controls.amount.setValue(r)
   }
 
   format(input) {

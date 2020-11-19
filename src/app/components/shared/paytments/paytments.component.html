@@ -89,8 +89,8 @@
                 <tr class="altura" *ngFor="let item of payments;let i = index">
                     <td>{{i+1}}</td>
                     <td *ngIf="item.dateDeposit == 'null' || item.dateDeposit == null; else thenBlock">Pendiente</td>
-                    <td>{{item.amount | number:'1.2-2'}}</td>
-                    <td>{{item.interest | number:'1.2-2'}}</td>
+                    <td>{{item.amount | number:'1.2-3'}}</td>
+                    <td>{{item.interest | number:'1.2-3'}}</td>
                     <td>{{item.nextDatePayment | date: 'yyyy'}}-{{item.nextDatePayment | date:'MM'}}-{{item.nextDatePayment | date: 'dd'}}
                     </td>
                     <td>{{item.balanceLoand | number:'1.2-2'}}</td>
