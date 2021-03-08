@@ -1,5 +1,5 @@
 <div class="row">
-  <div  class="col-md-6 col-lg-6" style="margin-bottom: 50px">
+  <div *ngIf="clients"  class="col-md-6 col-lg-6" style="margin-bottom: 50px">
     <ng-select *ngIf="clients" [items]="clients" bindLabel="name" placeholder="Seleccione el cliente" [multiple]="false"
       maxSelectedItems="3" (add)="onAdd($event)" (add)="onRemove($event)" (change)="onChange($event)">
     </ng-select>
@@ -23,7 +23,7 @@
 
 
 <div style="margin-top: 50px" class="row" style="margin-left: 5px; margin-right: 5px">
-  <div *ngIf="payments.length !=0" class="col-md-12 col-lg-12 col-xs-12">
+  <div *ngIf="payments.length !=0" class="col-md-12 col-lg-12 col-xs-12 table-responsive">
     <table id="t" datatable [dtOptions]="dtOptions" class="row-border hover table table-striped table-bordered">
       <thead>
         <tr>
