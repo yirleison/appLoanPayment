@@ -187,7 +187,7 @@ export class ExpensesIcomesComponent implements OnInit {
   getExpensesIncomes() {
     this.dtOptions = {
       pagingType: "full_numbers",
-      pageLength: 5,
+      pageLength: 10,
       autoWidth: true,
       order: [[0, 'asc']],
       language: {
