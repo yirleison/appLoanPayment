@@ -171,7 +171,8 @@ export class PaytmentsComponent implements OnInit {
       this.paymentNormal.dateDeposit = 'null'
     }
     this.paymentNormal.dateDeposit = (dateTest == 'null' || dateTest == null ? 'null' : this.paymentNormal.dateDeposit = moment(new Date(dateTest)).format("YYYY-MM-DD"))
-    if (this.validateTotalPayment) {
+    //console.log(this.paymentNormal)
+   if (this.validateTotalPayment) {
       let value = this.paymentNormal.amount;
       let p = value.toString().split(',');
       this.paymentNormal.amount = p.join('');

@@ -29,6 +29,22 @@
   animation: spin 2s linear infinite;
 }
 
+.style-interest-pendiente {
+  background: red;
+  padding-left: 4px;
+  border-radius: 5px;
+  color: white;
+  text-align: center;
+}
+
+.style-interest-pagado {
+  background: #28a745;
+  padding-left: 4px;
+  border-radius: 5px;
+  color: white;
+  text-align: center;
+}
+
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }

@@ -54,7 +54,7 @@ export class LoansComponent implements OnInit {
     private http: HttpClient,
   ) {
     this.loan = new loansModel('12/02/2020', '', 0, false, '', "", "");
-    this.rateInterest = ['5',' 6','7', '7.5', '8', '9', '10'];
+    this.rateInterest = ['5',' 6','6.5','7', '7.5', '8', '9', '10'];
     this.loans = []
   }
 
@@ -133,7 +133,7 @@ export class LoansComponent implements OnInit {
     this.spinner = true
     this.dtOptions = {
       pagingType: "full_numbers",
-      pageLength: 5,
+      pageLength: 10,
       autoWidth: true,
       order: [[0, 'asc']],
       language: {

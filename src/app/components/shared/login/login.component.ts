@@ -67,6 +67,7 @@ export class LoginComponent implements OnInit {
                     console.log('Error-response-------->', err);
                     this.message = err.error.message
                     this.islogin = true
+                    this.flagPreload = false
                 })
             this.loginUser.reset()
         }

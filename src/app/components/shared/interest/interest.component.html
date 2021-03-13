@@ -20,7 +20,7 @@
 
 <div *ngIf="!spinner; else spinnerload" class="row container">
   <div style="margin-left: 20px;" class="row">
-    <div class="col-md-12">
+    <div class="col-md-12 table-responsive">
       <table *ngIf="showTable"  id="tableInterest"  class="table-striped table-bordered" style="width: 100%;
        padding: 12px">
         <thead>
@@ -49,7 +49,7 @@
               <td>{{formatDate(item.dayPayment)}}
             </td>
 
-            <td>{{item.interestPending | number:'1.2-2'}}</td>
+            <td>{{item.interestPending | number:'1.2-3'}}</td>
             <td *ngIf ="statusPaymenDate(item.state)=='Pagado'; else thenBlock"><div class="style-interest"> Pagado</div> </td>
             <td style="display: inline-flex">
               <div style="margin-left: 60px;">

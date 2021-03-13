@@ -49,6 +49,7 @@ export class SchedulePaymentComponent implements OnInit {
   }
 
   getUsers() {
+    //validar si el usuario tiene cuotas de pago pendientes.
     this.userService.listUsers().subscribe(
       (user: any) => {
         let us = user.message.map(x => {
@@ -99,7 +100,9 @@ export class SchedulePaymentComponent implements OnInit {
           if (payments.status != 'false' && payments.message.length > 0) {
             this.spinnerr = false
             this.message = ''
-            this.payments = payments.message
+            console.log(payments.message);
+
+            this.payments = payments.message.filter(this.filttrarData)
           }
           else {
             setTimeout(()=>{
@@ -115,6 +118,11 @@ export class SchedulePaymentComponent implements OnInit {
         }
       )
   }
+
+   filttrarData(element, index, array) {
+    return (element.statusDeposit === false);
+ }
+
 
   statusPaymenDate(status) {
     return status == false || status == null || status == 'null' ? 'Pendiente' : 'Pagado'
