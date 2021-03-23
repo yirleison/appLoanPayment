@@ -92,4 +92,16 @@
   .acciones-payments {
     width: 20% !important;
   }
+
+  #show-md-update-payment-normal {
+    margin-top: 38%;
+  }
+
+  #show-md-create-payment {
+    margin-top: 22%;
+  }
+
+  #show-md-update-payment {
+    margin-top: 5%;
+  }
 }

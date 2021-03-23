@@ -30,12 +30,14 @@
                         <th style="width: 10%">
                             Numero Cuenta
                         </th>
-                        <th style="width: 15%">
-                            Teléfono
-                        </th>
-                        <th style="width: 40px;text-align: center;">
-                            Acciones
-                        </th>
+                       <div  style="width: 15%; margin-top: 10px; margin-left: 19px ;">
+                        <th style="width: 15%;">
+                          Teléfono
+                      </th>
+                       </div>
+                          <th style="width: 40px;text-align: center;">
+                          Acciones
+                      </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -46,10 +48,10 @@
                         <td>{{getaccountType(user.accountType)}}</td>
                         <td>{{getBank(user.bank)}}</td>
                         <td>{{user.accountNumber}}</td>
-                        <td>{{user.phone}}</td>
+                        <td style="padding-bottom: 5px;">{{user.phone}}</td>
                         <td style="display: inline-flex">
-                            <div style="margin-left: -35px;">
-                                <a type="button" (click)="editUser('show-md-update-user', user._id)"
+                            <div style="margin-left: -19px; padding-left: 2px;">
+                                 <a type="button" (click)="editUser('show-md-update-user', user._id)"
                                     style="margin-right: 4px" class="btn btn-sm btn-primary edit mr-2 cursor-pinter btn-xs"
                                     title="Actualizar Usuario" data-target="#exampleModal">
                                     <span class="glyphicon glyphicon-edit button-magin"> </span>

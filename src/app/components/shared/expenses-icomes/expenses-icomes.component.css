@@ -27,3 +27,8 @@
   text-align: center;
 }
 
+@media only screen and (max-width: 450px) {
+  #md-create-or-update-expenses-icomes {
+    margin-top: 20%;
+  }
+}
