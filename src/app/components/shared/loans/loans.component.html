@@ -14,10 +14,11 @@
       </div>
     </div>
     </div>
-    <div *ngIf="!spinner; else spinnerload table-responsive">
+    <div *ngIf="!spinner; else spinnerload">
+    <div class="table-responsive">
       <!-- *ngIf="show_table" -->
       <table *ngIf="show_table"  id="example" #ref datatable [dtOptions]="dtOptions"
-        class="table table-striped table-bordere">
+        class="table table-striped table-bordere table-responsive">
         <thead>
           <tr>
             <th style="width: 3%">ID</th>
@@ -73,6 +74,7 @@
           </tr>
         </tbody>
       </table>
+    </div>
     </div>
 
   </div>

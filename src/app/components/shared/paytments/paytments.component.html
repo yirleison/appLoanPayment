@@ -80,9 +80,11 @@
                     <th style="width: 11%">
                         Estado Pago
                     </th>
-                    <th style="width: 160px;text-align: center;width: 80%;">
+                    <div>
+                      <th style="width: 160px;text-align: center;width: 80%;" class="acciones-payments">
                         Acciones
                     </th>
+                    </div>
                 </tr>
             </thead>
             <tbody>
@@ -97,7 +99,7 @@
                     <td *ngIf="statusPaymenDate(item.statusDeposit)=='Pagado'; else thenBlock2">
                         <div class="style-interest-pagado"> Pagado</div>
                     </td>
-                    <td style="display: inline-flex">
+                    <td style="display: inline-flex acciones-payments">
                         <div style="margin-left: 60px;">
                             <a type="button" class="btn btn-xs btn-primary edit mr-2 cursor-interes"
                                 (click)="goTo(item._id)" title="Ver intereses pendientes"

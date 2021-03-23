@@ -82,3 +82,14 @@
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+@media only screen and (max-width: 450px) {
+  .loader {
+    margin-left: 31% !important;
+    margin-top: 93px !important;
+  }
+
+  .acciones-payments {
+    width: 20% !important;
+  }
+}

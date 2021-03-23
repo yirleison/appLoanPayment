@@ -56,8 +56,8 @@
 </div>
 <div class="container">
   <div *ngIf="prueba">
-    <div *ngIf="!spinner; else spinnerload" class="col-md-12 col-lg-12 col-xs-12">
-      <table id="table" datatable [dtOptions]="dtOptions" datatable class="table table-bordered table-hover">
+    <div *ngIf="!spinner; else spinnerload" class="col-md-12 col-lg-12 col-xs-12 table-responsive">
+      <table id="table" datatable [dtOptions]="dtOptions" datatable class="table table-bordered table-hover table-responsive">
         <thead>
           <tr>
             <th style="width: 3%">

@@ -45,3 +45,9 @@
   text-align: center;
 }
 
+@media only screen and (max-width: 450px) {
+  .loader {
+    margin-left: 31% !important;
+    margin-top: 93px !important;
+  }
+}
