@@ -36,7 +36,7 @@
     "datatables.net-dt": "^1.10.20",
     "express": "^4.17.1",
     "ionicons": "^5.0.1",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "ngx-spinner": "^10.0.1",
     "ngx-toastr": "^12.0.0",
     "path": "^0.12.7",
